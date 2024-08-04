@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+<link rel="stylesheet" href="style.css">
+
+<head>
+    <title>
+        Angela Yang!!!
+    </title>
+</head>
+<body>
+<!-- Wrapper -->
+    <div id="wrapper">
+
+<!-- Header -->
+    <header>
+        <nav class="navigation">
+            <ul>
+                <a href="index.html" class="header-link" onclick="toggleBackground(this)">HOME</a>
+                <a href="projects.html" class="header-link" onclick="toggleBackground(this)">PROJECTS</a>
+                <a href="assets/resume.pdf" class="header-link" onclick="toggleBackground(this)">MY RESUME</a>
+                <a href="contacts.html" class="header-link" onclick="toggleBackground(this)">CONTACT</a>
+            </ul>
+        </nav>
+    </header>
+
+<!-- Title -->
+    <section class="parallax">
+        <h2 id="text">Angela Yang</h2>
+        <p id="text2">Junior at Redmond High</p>
+        <img src="images/jellyfish.png" id="back1">
+        <img src="images/fish.png" id="back2">
+        <img src="images/bubbles.png" id="back3">
+    </section>
+
+<!-- About Me ===============================================-->
+    <section class="aboutme">
+        <div id="portrait-container">
+            <img id="portrait" src="images/me.jpeg" alt="">
+        </div>
+        <h2>About</h2>
+        <p>
+            Hi I'm Angela! Welcome to my website :)
+            <br><br> I love coding and drawing, and you will see a showcase of both through this website.
+            Keep scrolling to learn about who I am and what I'm passionate about.
+        </p>
+    </section>
+
+<!-- Project Section
+    <section class="projects">
+        <a href="projects.html" class="my-button-2">View some of my projects!></a>
+    </section> -->
+
+
+<!-- Projects ================================================-->
+    <section id="projects">
+        <div class="title">
+            <h2 class="left-title" style="margin-bottom: 5px;"> Projects </h2>
+        </div>
+        <p class="body"> Here are some projects I've completed so far. 
+            I'm excited to add more to the list: </p>
+        <div id="project-items">
+
+            <div id="project1" class="p-item">
+                <div class="p-title"> 
+                    <p> <a href="" target="_blank"> 
+                        Hackathon <img class="link-pic" src="open-window.png" alt=""> </a> </p>
+                </div>
+
+                <div id="hackathon" class="p-blurb">
+                    <p> 
+                    </p>
+                </div>
+            </div>
+            
+            <div id="project2" class="p-item">
+                <div class="p-title"> 
+                    <p> <a href="" target="_blank"> 
+                        USACO <img class="link-pic" src="open-window.png" alt=""> </a> </p>
+                </div>
+
+                <img class="project-img" src="">
+                <a class="blurb-link" onclick="openBlurb('csrsef')"> <i class="fa-solid fa-circle-chevron-down"></i> </a>
+
+                <div id="usaco" class="p-blurb">
+                    <p> 
+                        
+                    </p>
+                </div>
+            </div>
+
+            <div id="billcit-item" class="p-item">
+                <div class="p-title"> 
+                    <p> <a href="" target="_blank"> 
+                        Robotics <img class="link-pic" src="open-window.png" alt=""> </a> </p>
+                </div>
+
+                <img class="project-img" src="billcit-pic.jpg">
+                <a class="blurb-link" onclick="openBlurb('billcit')"> <i class="fa-solid fa-circle-chevron-down"></i> </a>
+
+                <div id="robotics" class="p-blurb">
+                    <p> 
+                        
+                    </p>
+                </div>
+            </div>
+
+            <div id="csw-item" class="p-item">
+                <div class="p-title"> 
+                    <p> <a href="https://cswonders.com/" target="_blank"> CS Wonders LLC <img class="link-pic" src="open-window.png" alt=""> </a> </p>
+                </div>
+
+                <img class="project-img" src="csw-pic.jpg">
+                <a class="blurb-link" onclick="openBlurb('csw')"> <i class="fa-solid fa-circle-chevron-down"></i> </a>
+
+                <div id="csw-blurb" class="p-blurb">
+                    <p> 
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    
+<!-- OTHER PROJECTS ===========================================================-->
+    <section id="other-projects">
+        <div id="art-portfolio">
+            <div id="art-heading">
+                <p class="body" onclick="openMediaScroller()"> My Mini Art Portfolio (scroll through) </p>
+                <a id="art-link" onclick="openMediaScroller()"> <i class="fa-solid fa-circle-chevron-down"></i> </a>
+            </div>
+
+            <div id="media-scroller" class="snaps-inline">
+                <div class="art-piece">
+                    <img src="" alt="">
+                    <p> </p>
+                </div>
+                <div class="art-piece">
+                    <img src="" alt="">
+                    <p> </p>
+                </div>
+                <div class="art-piece">
+                    <img src="" alt="">
+                    <p> </p>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- EDUCATION ===========================================================-->
+    <section id="education">
+        <div class="title">
+            <h2 class="middle-title" style="margin-bottom: 5x; text-align: center;"> Education </h2>
+        </div>
+        
+        <div class="school-grid">
+            <div class="school-section">
+                <div class="school-name-grid">
+                    <img src="" alt="">
+                    <div class="school-name">
+                        <h2> Redmond High School </h2>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+<!-- CONTACT-SIDE ===========================================================-->
+
+    <div id="contact-sidebar"> 
+        <ul id="socials-list"> 
+            <li>
+                <a href="https://www.linkedin.com/in/angela-yang-83a195284/" target="_blank">
+                    <i class="fa-brands fa-linkedin-in"></i>
+                </a>
+            </li>
+            <li>
+                <a href="https://www.instagram.com/t.angie.rine/" target="_blank"> 
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+            </li>
+            <li>
+                <a href="https://www.github.com/angela-yang" target="_blank">
+                    <i class="fa-brands fa-github"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div id="email-sidebar"> 
+        <div id="email-link-container">
+            <a href="mailto:angela.xq.yang@gmail.com" id="email-link"> angela.xq.yang@gmail.com </a>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER ===========================================================-->
+
+<footer>
+        <div>
+            <a id="footer-content" href="https://github.com/angela-yang/angela-yang.github.io" target="_blank">
+                Angela Yang | angela.xq.yang@gmail.com
+            </a>
+        </div> 
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
