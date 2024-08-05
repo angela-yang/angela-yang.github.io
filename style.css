@@ -50,6 +50,26 @@ header {
     padding: 180px 80px;
 }
 
+.parallax h2 {
+    position: absolute;
+    top: 22%;
+    left: 18%;
+    justify-content: right;
+    font-size: 3em;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.parallax p {
+    position: absolute;
+    top: 22%;
+    left: 18%;
+    justify-content: right;
+    font-size: 1em;
+    color: #ffffff;
+    font-weight: 300;
+}
+
 #text {
     position: absolute;
     font-size: 4.9em;
