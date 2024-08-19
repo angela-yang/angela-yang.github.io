@@ -21,11 +21,11 @@ window.addEventListener('scroll', function () {
   var triggerPoint1 = textBox1.offsetTop - window.innerHeight + textBox1.offsetHeight;
   var triggerPoint2 = textBox2.offsetTop - window.innerHeight + textBox2.offsetHeight;
 
-  if (window.pageYOffset >= triggerPoint1) {
+  if (window.scrollY >= triggerPoint1) {
     textBox1.classList.add('animate');
   }
 
-  if (window.pageYOffset >= triggerPoint2) {
+  if (window.scrollY >= triggerPoint2) {
     textBox2.classList.add('animate');
   }
 });

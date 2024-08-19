@@ -97,13 +97,13 @@ header {
     padding: 90px 100px;
 }
 
-.aboutme h2 {
+#title {
     font-size: 3em;
     color: #ffffff;
     margin-bottom: 10px;
 }
 
-.aboutme p {
+#body {
     font-size: 1em;
     color: #ffffff;
     font-weight: 300;
@@ -122,12 +122,11 @@ header {
 }
 
 .projects {
-  margin-bottom: 50px;
-  padding-top: 70px;
-  padding-left: 800px;
-  background-color: #2c263a;
-  margin-top: 50px;
-  padding-bottom: 70px;
+    position: relative;
+    margin-top: 20px;
+    margin-bottom: 50px;
+    padding: 90px 100px;
+    background-color: #1f1726;
 }
 
 .my-button {
@@ -159,19 +158,64 @@ header {
     display: flex;
     align-items: flex-start;
     flex-wrap: wrap;
-    /* position: relative;
-    justify-self: center; */
-    align-content: center;
-    margin-right: -10rem;
+    position: relative;
+    justify-self: center;
+}
+
+#project1 {
+    width: 35vw;
+    height: 40vh;
+    object-fit: contain;
+    border-radius: 6px;
+    background: #55466c;
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+#project2 {
+    width: 35vw;
+    height: 40vh;
+    object-fit: contain;
+    border-radius: 6px;
+    background: #55466c;
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+#project3 {
+    width: 35vw;
+    height: 40vh;
+    object-fit: contain;
+    border-radius: 6px;
+    background: #55466c;
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+#project4 {
+    width: 35vw;
+    height: 40vh;
+    object-fit: contain;
+    border-radius: 6px;
+    background: #55466c;
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    position: relative;
 }
 
 .p-item {
     display: grid;
     width: 350px;
-    grid-template-rows: 60.5px 210.04px 0.5fr;
-    /* background-color: rgb(121, 100, 149); */
     margin-right: 3rem;
-    margin-top: 1.5rem;
+    margin-top: 3rem;
+    margin-bottom: 4rem;
     position: relative;
 }
 
@@ -180,13 +224,11 @@ header {
 }
 
 .p-title {
-    font-family: gill sans, sans-serif;
-    font-size: 18px;
-    grid-row-start: 1;
-    background-color: #2b2634;
-    text-align: center;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
+    padding-top: 20px;
+    padding-left: 20px;
+    font-size: 2em;
+    color: #d9c8e3;
+    margin-bottom: 10px;
 }
 
 .p-title > p > a {
@@ -195,8 +237,11 @@ header {
 }
 
 .project-img {
-    width: 350px;
-    /* padding: 1rem; */
+    width: 35vw;
+    height: 40vh;
+    object-fit: cover;
+    overflow: hidden;
+    border-radius: 10;
     grid-row-start: 2;
 }
 
