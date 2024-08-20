@@ -93,8 +93,8 @@ header {
 
 .aboutme {
     position: relative;
-    background: #2c263a;
-    padding: 90px 100px;
+    background: #2b2a53;
+    padding: 110px 100px;
 }
 
 #title {
@@ -107,10 +107,11 @@ header {
     font-size: 1em;
     color: #ffffff;
     font-weight: 300;
+    width: 65vw;
 }
 
 #portrait {
-    width: 220px;
+    width: 240px;
     object-fit: contain;
     border-radius: 6px;
 }
@@ -118,15 +119,15 @@ header {
 #portrait-container {
     display: flex;
     float: right;    
-    margin: -50px 15px 0 30px;
+    margin: -70px 15px 0 30px;
 }
 
 .projects {
     position: relative;
-    margin-top: 20px;
-    margin-bottom: 50px;
     padding: 90px 100px;
-    background-color: #1f1726;
+    background-color: #3A3968;
+    border-top: 2px solid #666699;
+    border-bottom: 2px solid #666699;
 }
 
 .my-button {
@@ -162,48 +163,15 @@ header {
     justify-self: center;
 }
 
-#project1 {
-    width: 35vw;
-    height: 40vh;
-    object-fit: contain;
-    border-radius: 6px;
-    background: #55466c;
-    display: flex;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    position: relative;
-}
-
-#project2 {
-    width: 35vw;
-    height: 40vh;
-    object-fit: contain;
-    border-radius: 6px;
-    background: #55466c;
-    display: flex;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    position: relative;
-}
-
-#project3 {
-    width: 35vw;
-    height: 40vh;
-    object-fit: contain;
-    border-radius: 6px;
-    background: #55466c;
-    display: flex;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    position: relative;
-}
-
+#project1,
+#project2,
+#project3,
 #project4 {
     width: 35vw;
     height: 40vh;
     object-fit: contain;
     border-radius: 6px;
-    background: #55466c;
+    background: #666699;
     display: flex;
     align-items: flex-start;
     flex-wrap: wrap;
@@ -214,7 +182,7 @@ header {
     display: grid;
     width: 350px;
     margin-right: 3rem;
-    margin-top: 3rem;
+    margin-top: 2rem;
     margin-bottom: 4rem;
     position: relative;
 }
@@ -227,7 +195,7 @@ header {
     padding-top: 20px;
     padding-left: 20px;
     font-size: 2em;
-    color: #d9c8e3;
+    color: #F8D296;
     margin-bottom: 10px;
 }
 

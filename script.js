@@ -74,9 +74,6 @@ function toggleBackground(event) {
 
 
 
-
-
-
 const inputs = document.querySelectorAll(".input");
 
 function focusFunc() {
