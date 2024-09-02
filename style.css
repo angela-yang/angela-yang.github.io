@@ -28,7 +28,7 @@ header {
 }
 
 section {
-    padding: 2.5rem;
+    padding: 5rem;
     width: 68%;
 }
 
@@ -85,14 +85,14 @@ section {
 
 #text {
     position: absolute;
-    font-size: 4.9em;
+    font-size: 4.9vw;
     color: #ffffff;
 }
 
 #text2 {
-    padding: 120px 10px;
+    padding: 14vh 1vh;
     position: absolute;
-    font-size: 1.4em;
+    font-size: 1.4vw;
     color: #cdc6df;
 }
 
@@ -100,7 +100,7 @@ section {
     position: absolute;
     top: 0%;
     left: 0%;
-    width: 100%;
+    width: 100vw;
     pointer-events: none;
 }
 
@@ -135,7 +135,7 @@ section {
         width: 0;
     }
     100% {
-        width: 60%;
+        width: 70%;
     }
 }
 
@@ -146,7 +146,7 @@ section {
     height: 1.5px;
     position: relative;
     vertical-align: middle;
-    width: 60%;
+    width: 70%;
     left: 2rem;
     margin-right: -50rem;
     animation: lineDrawToRight .8s ease-out;
@@ -166,7 +166,6 @@ section {
 
 #projects {
     position: relative;
-    padding: 5rem;
     background: #2b2a53;
 }
 
@@ -362,4 +361,60 @@ section {
 .w-text:hover {
     opacity: 1;
     background-color: rgba(0, 0, 0, 0.77);
+}
+
+#contact-sidebar {
+    width: 40px;
+    position: fixed;
+    bottom: 0rem;
+    left: 30px;
+    right: auto;
+}
+
+#socials-list {
+    font-size: 2rem;
+    display: grid;
+    grid-template-rows: 60px 60px 60px;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    filter: drop-shadow(1.4px 1.2px 1.2px #201744);
+}
+
+#email-sidebar {
+    height: 100%;
+    width: 60px;
+    position: fixed;
+    right: 20px;
+    bottom: 0;
+    display: flex;
+}
+
+#email-link-container {
+    align-self: flex-end;
+    display: flex;
+}
+
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: auto;
+    min-height: 70px;
+    padding: 15px;
+    bottom: 0;
+    text-align: center;
+    z-index:10;
+}
+
+#footer-content {
+    color: rgb(243, 225, 251);
+    font-size: 1em;
+    font-weight: 200;
+    line-height: 1;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.1s linear;
 }
