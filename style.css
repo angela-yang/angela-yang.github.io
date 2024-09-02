@@ -61,6 +61,7 @@ section {
     align-items: flex-end;
     padding: 180px 80px;
     background-color: #000000;
+    z-index: 0;
 }
 
 .parallax h2 {
@@ -83,25 +84,28 @@ section {
     font-weight: 300;
 }
 
+.parallax img {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    height: 100vh;
+    width: 100vw;
+    object-fit: cover;
+    pointer-events: none;
+    z-index: 0;
+}
+
 #text {
     position: absolute;
-    font-size: 4.9vw;
+    font-size: 4.9em;
     color: #ffffff;
 }
 
 #text2 {
     padding: 14vh 1vh;
     position: absolute;
-    font-size: 1.4vw;
+    font-size: 1.4em;
     color: #cdc6df;
-}
-
-.parallax img {
-    position: absolute;
-    top: 0%;
-    left: 0%;
-    width: 100vw;
-    pointer-events: none;
 }
 
 #aboutme {

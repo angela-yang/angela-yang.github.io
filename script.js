@@ -5,8 +5,8 @@ let back2 = document.getElementById('back2');
 let back3 = document.getElementById('back3');
 let back5 = document.getElementById('back5');
 var body = document.body;
-var height = Math.max( body.scrollHeight, body.offsetHeight);
-var width= Math.max( body.scrollWidth, body.offsetWidth);
+var height = Math.max(body.scrollHeight, body.offsetHeight);
+var width= Math.max(body.scrollWidth, body.offsetWidth);
 
 window.addEventListener('scroll', () => {
   const value = window.scrollY;
