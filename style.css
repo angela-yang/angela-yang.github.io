@@ -10,7 +10,7 @@
 }
 
 body {
-    background: #000000;
+    background: #2b2a53;
     min-height: 100vh;
     overflow-x: hidden;
 }
@@ -25,6 +25,18 @@ header {
     justify-content: right;
     align-items: center;
     z-index: 100;
+}
+
+section {
+    padding: 2.5rem;
+    width: 68%;
+}
+
+#main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 8rem;
 }
 
 .navigation a {
@@ -44,10 +56,11 @@ header {
 
 .parallax {
     position: relative;
-    display: flex;
-    justify-content: right;
     height: 100vh;
+    display: flex;
+    align-items: flex-end;
     padding: 180px 80px;
+    background-color: #000000;
 }
 
 .parallax h2 {
@@ -91,43 +104,70 @@ header {
     pointer-events: none;
 }
 
-.aboutme {
+#aboutme {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-gap: 30px;
     position: relative;
     background: #2b2a53;
-    padding: 110px 100px;
+    border-radius: 10px;
 }
 
-#title {
-    font-size: 3em;
+.title {
+    position:relative;
+    text-align: left;
+    grid-column-start: 1;
+    font-size: 2em;
     color: #ffffff;
     margin-bottom: 10px;
+    overflow: hidden;
 }
 
-#body {
+.body {
     font-size: 1em;
     color: #ffffff;
     font-weight: 300;
-    width: 65vw;
+    grid-column-start: 1;
+}
+
+@keyframes lineDrawToRight {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 60%;
+    }
+}
+
+.left-title::after {
+    background-color: #d9c8e381;
+    content: "";
+    display: inline-block;
+    height: 1.5px;
+    position: relative;
+    vertical-align: middle;
+    width: 60%;
+    left: 2rem;
+    margin-right: -50rem;
+    animation: lineDrawToRight .8s ease-out;
 }
 
 #portrait {
-    width: 240px;
+    width: 20rem;
     object-fit: contain;
     border-radius: 6px;
+    filter: drop-shadow(10px 11px 8px #1d193a);
 }
 
 #portrait-container {
     display: flex;
-    float: right;    
-    margin: -70px 15px 0 30px;
+    grid-column-start: 2;
 }
 
-.projects {
+#projects {
     position: relative;
-    padding: 90px 100px;
-    background-color: #3A3968;
-    border-top: 2px solid #666699;
-    border-bottom: 2px solid #666699;
+    padding: 5rem;
+    background: #2b2a53;
 }
 
 .my-button {
@@ -167,7 +207,7 @@ header {
 #project2,
 #project3,
 #project4 {
-    width: 35vw;
+    width: 33vw;
     height: 40vh;
     object-fit: contain;
     border-radius: 6px;

@@ -14,49 +14,57 @@
     </title>
 </head>
 <body>
-<!-- Wrapper -->
-    <div id="wrapper">
 
 <!-- Header -->
-    <header>
-        <nav class="navigation">
-            <ul>
-                <a href="index.html" class="header-link" onclick="toggleBackground(this)">HOME</a>
-                <a href="projects.html" class="header-link" onclick="toggleBackground(this)">PROJECTS</a>
-                <a href="assets/resume.pdf" class="header-link" onclick="toggleBackground(this)">MY RESUME</a>
-                <a href="contacts.html" class="header-link" onclick="toggleBackground(this)">CONTACT</a>
-            </ul>
-        </nav>
-    </header>
+<header>
+    <nav class="navigation">
+        <ul>
+            <a href="index.html" class="header-link" onclick="toggleBackground(this)">HOME</a>
+            <a href="projects.html" class="header-link" onclick="toggleBackground(this)">PROJECTS</a>
+            <a href="assets/resume.pdf" class="header-link" onclick="toggleBackground(this)">MY RESUME</a>
+            <a href="contacts.html" class="header-link" onclick="toggleBackground(this)">CONTACT</a>
+        </ul>
+    </nav>
+</header>
 
 <!-- Title -->
-    <section class="parallax">
-        <h2 id="text">Angela Yang</h2>
-        <p id="text2">Senior at Redmond High</p>
-        <img src="images/whale.png" id="back2">
-        <img src="images/jellyfish.png" id="back1">
-        <img src="images/girl.png" id="back3">
-    </section>
+<div class="parallax">
+    <h2 id="text">Angela Yang</h2>
+    <p id="text2">Senior at Redmond High</p>
+    <img src="images/whale.png" id="back2">
+    <img src="images/jellyfish.png" id="back1">
+    <img src="images/girl.png" id="back3">
+</div>
 
 <!-- About Me ===============================================-->
-    <section class="aboutme">
+<div id="main">
+    <section id="aboutme">
+        <div>
+            <div class="title">
+                <h2 class="left-title" id="line">About</h2>
+            </div>
+            <div class="body">
+                <p>
+                    Hi I'm Angela! Welcome to my website :)
+                    <br><br> I love coding and drawing, and you will see a showcase of both through this website.
+                    Keep scrolling to learn about who I am and what I'm passionate about.
+                </p>
+            </div>
+        </div>
         <div id="portrait-container">
             <img id="portrait" src="images/me.jpeg" alt="">
         </div>
-        <h2 id="title">About</h2>
-        <p id="body">
-            Hi I'm Angela! Welcome to my website :)
-            <br><br> I love coding and drawing, and you will see a showcase of both through this website.
-            Keep scrolling to learn about who I am and what I'm passionate about.
-        </p>
     </section>
 
 <!-- Projects ================================================-->
-    <section class="projects">
-        <h2 id="title"> Projects </h2>
-        <p id="body"> Here are some projects I've completed so far: </p>
+    <section id="projects">
+        <div class="title">
+            <h2 class="left-title">Projects</h2>
+        </div>
+        <div class="body"> 
+            <p>Here are some projects I've completed so far: </p>
+        </div>
         <div id="project-items">
-
             <div id="project1" class="p-item">
                 <h3 class="p-title">
                     Hackathon
@@ -110,10 +118,9 @@
                     </p>
                 </div>
             </div>
-
         </div>
     </section>
-    
+
 <!-- OTHER PROJECTS ===========================================================-->
     <section id="other-projects">
         <h1>Art Portfolio</h1>
@@ -131,7 +138,7 @@
 
     </section>
 
-    <!-- EDUCATION ===========================================================-->
+<!-- EDUCATION ===========================================================-->
     <section id="education">
         <div class="title">
             <h2 class="middle-title" style="margin-bottom: 5x; text-align: center;"> Education </h2>
@@ -151,7 +158,6 @@
     </section>
 
 <!-- CONTACT-SIDE ===========================================================-->
-
     <div id="contact-sidebar"> 
         <ul id="socials-list"> 
             <li>
