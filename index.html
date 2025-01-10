@@ -20,7 +20,7 @@
     <nav class="navigation">
         <ul>
             <a href="index.html" class="header-link" onclick="toggleBackground(this)">HOME</a>
-            <a href="projects.html" class="header-link" onclick="toggleBackground(this)">PROJECTS</a>
+            <a href="#projects" class="header-link" onclick="toggleBackground(this)">PROJECTS</a>
             <a href="assets/resume.pdf" class="header-link" onclick="toggleBackground(this)">MY RESUME</a>
             <a href="contacts.html" class="header-link" onclick="toggleBackground(this)">CONTACT</a>
         </ul>
@@ -30,7 +30,7 @@
 <!-- Title -->
 <div class="parallax">
     <h2 id="text">Angela Yang</h2>
-    <p id="text2">Senior at Redmond High</p>
+    <p id="text2">Senior at Redmond High School</p>
     <img src="images/whale.png" id="back2">
     <img src="images/jellyfish.png" id="back1">
     <img src="images/girl.png" id="back3">
@@ -41,9 +41,12 @@
     <section id="aboutme">
         <div>
             <div class="title">
-                <h2 class="left-title" id="line">About</h2>
+                <h2 class="left-title" id="line">About Me</h2>
             </div>
-            <div class="body">
+            <div id="portrait-container">
+                <img id="portrait" src="images/me.jpeg" alt="">
+            </div>
+            <div class="body" id="intro">
                 <p>
                     Hi I'm Angela! Welcome to my website :)
                     <br><br> I love coding and drawing, and you will see a showcase of both through this website.
@@ -51,60 +54,76 @@
                 </p>
             </div>
         </div>
-        <div id="portrait-container">
-            <img id="portrait" src="images/me.jpeg" alt="">
+        <div>
+            <a class="blurb-link" href="#projects">
+                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </a>
         </div>
     </section>
 
 <!-- Projects ================================================-->
     <section id="projects">
-        <div>
-            <div class="title">
-                <h2 class="left-title">Projects</h2>
-            </div>
-            <div class="body"> 
-                <p>Here are some projects I've completed so far: </p>
-            </div>
+        <div class="title">
+            <h2 class="left-title">Projects</h2>
+        </div>
+        <div class="body">
+            <p> Here are some of the projects I've completed so far!</p>
         </div>
         <div id="project-items">
             <div id="project1" class="p-item">
-                <h3 class="p-title">
-                    Hackathon
-                </h3>
-                <div id="hackathon" class="p-blurb">
-                    <p> 
+                <a href="https://github.com/angela-yang/Penguins" class="img-container" target="_blank">
+                    <img class="project-img" src="images/bear.png" alt="Bear go brr image">
+                    <p class="p-link-label"> View project </p>
+                </a>
+                <div class="title-container">
+                    <h3 class="project-name"> Bear Go Brr </h3>
+                    <p class="body">
+                        A project that incentivizes users to reduce their carbon 
+                        footprint. As you drive, the icebergs melt.
                     </p>
                 </div>
             </div>
             
             <div id="project2" class="p-item">
-                <h3 class="p-title">
-                    USACO
-                </h3>
-                <div id="usaco" class="p-blurb">
-                    <p> 
-                        
+                <a href="https://devpost.com/software/air-quality-health" class="img-container" target="_blank">
+                    <img class="project-img" src="images/aqi.png" alt="AQH project image">
+                    <p class="p-link-label"> View project </p>
+                </a>
+                <div class="title-container">
+                    <h3 class="project-name"> Air Quality Health </h3>
+                    <p class="body">
+                        A project that shows users their local air quality index, 
+                        and percentage of different elements. It can also take in 
+                        personalized health information to provide personalized 
+                        feedback on how users can safeguard their wellbeing.
                     </p>
                 </div>
             </div>
 
             <div id="project3" class="p-item">
-                <h3 class="p-title">
-                    Robotics
-                </h3>
-                <div id="robotics" class="p-blurb">
-                    <p> 
-                        
+                <a href="https://github.com/" class="img-container" target="_blank">
+                    <img class="project-img" src="images/quizble.png" alt="Quizble image">
+                    <p class="p-link-label"> View project </p>
+                </a>
+                <div class="title-container">
+                    <h3 class="project-name"> Quizble </h3>
+                    <p class="body">
+                        A study app that allows you to review and study flashcards, 
+                        offering fun games and quizzes. Bubble themed.
                     </p>
                 </div>
             </div>
 
             <div id="project4" class="p-item">
-                <h3 class="p-title"> 
-                    CS Wonders LLC
-                </h3>
-                <div id="csw-blurb" class="p-blurb">
-                    <p> 
+                <a href="https://devpost.com/software/conscious-closet-0li6j4" class="img-container" target="_blank">
+                    <img class="project-img" src="images/cc.png" alt="Conscious closet image">
+                    <p class="p-link-label"> View project </p>
+                </a>
+                <div class="title-container">
+                    <h3 class="project-name"> Conscious Closet </h3>
+                    <p class="body">
+                        A web app that allows you to type in an outfit, 
+                        and it finds sustainable and cheap options for you.
                     </p>
                 </div>
             </div>
@@ -118,20 +137,20 @@
                 <h2 class="left-title">Art Portfolio</h2>
             </div>
             <div class="body">
-                <p>Here are some of the pieces I am most proud of.</p>
+                <p>These are some of the pieces I am most proud of :)</p>
             </div>
         </div>
         <div id="art-portfolio">
-            <div class="art-piece">
-                <img src="" alt="">
-                <p> </p>
+            <div id="art1" class="a-item">
+                <img class="a-pic" src="images/bear.png" alt="Bear go brr image">
             </div>
-            <div class="art-piece">
-                <img src="" alt="">
-                <p> </p>
+            <div id="art2" class="a-item">
+                <img class="a-pic" src="images/bear.png" alt="Bear go brr image">
+            </div>
+            <div id="art3" class="a-item">
+                <img class="a-pic" src="images/bear.png" alt="Bear go brr image">
             </div>
         </div>
-
     </section>
 
 <!-- EDUCATION ===========================================================-->
@@ -141,16 +160,9 @@
                 <h2 class="left-title"> Education </h2>
             </div>
         </div>
-        <div class="school-grid">
-            <div class="school-section">
-                <div class="school-name-grid">
-                    <img src="" alt="">
-                    <div class="school-name">
-                        <h2> Redmond High School </h2>
-                    </div>
-                </div>
+            <div class="body">
+                <h2> Redmond High School </h2>
             </div>
-
         </div>
     </section>
 
