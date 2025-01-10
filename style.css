@@ -114,6 +114,7 @@ section {
     padding-top: 4rem;
     position: relative;
     background: #2b2a53;
+    border-radius: 10px;
 }
 
 .title {
@@ -169,9 +170,17 @@ section {
 
 #portrait-container {
     display: relative;
-    margin-left: 3rem;
+    padding-left: 2rem;
     float: right;
     margin-right: 7rem;
+}
+
+#gif {
+    position: absolute;
+    margin-left: 45rem;
+    width: 18rem;
+    object-fit: contain;
+    z-index: 10;
 }
 
 #projects {
@@ -373,4 +382,5 @@ p {
     text-decoration: none;
     text-align: center;
     transition: all 0.1s linear;
+    z-index:10;
 }
