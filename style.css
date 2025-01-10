@@ -371,7 +371,6 @@ p {
     padding: 15px;
     bottom: 0;
     text-align: center;
-    z-index:10;
 }
 
 #footer-content {
@@ -382,5 +381,4 @@ p {
     text-decoration: none;
     text-align: center;
     transition: all 0.1s linear;
-    z-index:10;
 }
