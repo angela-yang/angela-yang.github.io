@@ -31,6 +31,24 @@ section {
     width: 68%;
 }
 
+#bg {
+    position: absolute;
+    height: 90vh;
+    object-fit: cover;
+    margin-top: 110vh;
+    margin-left: 70rem;
+    z-index: 20;
+}
+
+#bg2 {
+    position: absolute;
+    height: 90vh;
+    object-fit: cover;
+    margin-top: 230vh;
+    margin-right: 75rem;
+    z-index: 20;
+}
+
 #main {
     display: flex;
     flex-direction: column;
@@ -177,9 +195,10 @@ section {
 
 #gif {
     position: absolute;
-    margin-left: 45rem;
+    margin-left: 9rem;
+    margin-top: 5rem;
     width: 18rem;
-    object-fit: contain;
+    object-fit: cover;
     z-index: 10;
 }
 
