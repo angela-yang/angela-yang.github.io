@@ -347,6 +347,22 @@ p {
     min-height: 100%;
 }
 
+#favs {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+    width: 80%;
+    padding-top: 4rem;
+    position: relative;
+}
+
+#education {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+    width: 80%;
+    padding-top: 4rem;
+    position: relative;
+}
+
 #contact-sidebar {
     width: 40px;
     position: fixed;
