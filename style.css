@@ -355,6 +355,18 @@ p {
     position: relative;
 }
 
+#fav {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 10rem;
+    align-content: center;
+}
+
+.list-item {
+    display: grid;
+}
+
 #education {
     padding-top: 2.5rem;
     padding-bottom: 2.5rem;
