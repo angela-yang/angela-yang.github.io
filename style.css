@@ -107,13 +107,14 @@ ul {
 }
 
 .navigation {
-    background-color: #3a3968e4;
+    background-color: #3a396871;
     border-radius: 100px;
     display: flex;
     transition: transform 0.3s ease, opacity 0.3s ease;
     opacity: 1;
     transform: scale(1);
     transform-origin: right center;
+    filter: drop-shadow(5px 5px 8px #27243e);
     order: 1;
 }
 
