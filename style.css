@@ -14,6 +14,10 @@ body {
     overflow-x: hidden;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 header {
     position: absolute;
     top: 0;
@@ -29,6 +33,14 @@ header {
 section {
     padding: 5rem;
     width: 68%;
+}
+
+ul {
+    list-style: none;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
 }
 
 #bg {
@@ -378,8 +390,8 @@ p {
 #contact-sidebar {
     width: 40px;
     position: fixed;
-    bottom: 0rem;
-    left: 30px;
+    bottom: 2.0rem;
+    left: 2.0rem;
     right: auto;
 }
 
@@ -391,7 +403,17 @@ p {
     margin: 0;
     padding: 0;
     list-style: none;
-    filter: drop-shadow(1.4px 1.2px 1.2px #201744);
+    filter: drop-shadow(1.4px 1.2px 1.2px #392c4f);
+}
+
+.fa-brands {
+    color:#cdc6df;
+    font-size: 1.7rem;
+}
+
+.fa-brands:hover {
+    color:#aaa8c9;
+    font-size: 1.9rem;
 }
 
 #email-sidebar {
@@ -408,6 +430,42 @@ p {
     display: flex;
 }
 
+#email-link {
+    align-self: flex-end;
+    text-align:end;
+
+    position: relative;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+
+    text-decoration: none;
+    color: #cdc6df;
+    font-size: 12px;
+
+    height: 500px;
+    padding-right: 10px;
+    padding-left: 30px;
+    letter-spacing: 0.2rem;
+    display: block;
+
+    transition: all 0.2s linear
+}
+
+#email-link:hover {
+    color:#aaa8c9;
+    padding-bottom: 7px;
+}
+
+#email-link::after {
+    background-color: #cdc6df;
+    content: "";
+    display: inline-block;
+    width: 1.3px;
+    position: relative;
+    vertical-align: auto;
+    height: 33%;
+}
+
 .footer {
     display: flex;
     justify-content: center;
@@ -421,11 +479,15 @@ p {
 }
 
 #footer-content {
-    color: rgb(243, 225, 251);
+    color: #cdc6df;
     font-size: 1em;
     font-weight: 200;
     line-height: 1;
     text-decoration: none;
     text-align: center;
     transition: all 0.1s linear;
+}
+
+#footer-content:hover {
+    color:#aaa8c9;
 }

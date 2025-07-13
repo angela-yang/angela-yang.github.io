@@ -16,23 +16,6 @@ window.addEventListener('scroll', () => {
   back3.style.top = Math.min(value * 2.5, height) + 'px';
 });
 
-window.addEventListener('scroll', function () {
-  var textBox1 = document.getElementById('text-container');
-  var textBox2 = document.getElementById('textcontainer2');
-  var triggerPoint1 = textBox1.offsetTop - window.innerHeight + textBox1.offsetHeight;
-  var triggerPoint2 = textBox2.offsetTop - window.innerHeight + textBox2.offsetHeight;
-
-  if (window.scrollY >= triggerPoint1) {
-    textBox1.classList.add('animate');
-  }
-
-  if (window.scrollY >= triggerPoint2) {
-    textBox2.classList.add('animate');
-  }
-});
-
-
-
 let back4 = document.getElementById('bg');
 let back5 = document.getElementById('bg2');
 window.addEventListener('scroll', () => {
