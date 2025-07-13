@@ -16,14 +16,23 @@
 
 <!-- Header -->
 <header>
-    <nav class="navigation">
-        <ul>
-            <a href="index.html" class="header-link" onclick="toggleBackground(this)">HOME</a>
-            <a href="#projects" class="header-link" onclick="toggleBackground(this)">PROJECTS</a>
-            <a href="assets/resume.pdf" class="header-link" onclick="toggleBackground(this)">MY RESUME</a>
-            <a href="mailto:angela.xq.yang@example.com" class="header-link" onclick="toggleBackground(this)">CONTACT</a>
-        </ul>
-    </nav>
+    <div id="nav-wrapper">
+        <div id="collapsed-nav">
+            <i class="fa-solid fa-house"></i>
+        </div>
+        <nav class="navigation">
+            <div class="nav-links">
+                <div class="nav-hover-bg"></div>
+                <ul>
+                    <a href="index.html" class="header-link">HOME</a>
+                    <a href="#projects" class="header-link">PROJECTS</a>
+                    <a href="/fun" class="header-link">FUN</a>
+                    <a href="assets/resume.pdf" class="header-link">MY RESUME</a>
+                    <a href="mailto:angela.xq.yang@example.com" class="header-link">CONTACT</a>
+                </ul>
+            </div>
+        </nav>
+    </div>
 </header>
 
 <!-- Title -->
@@ -52,9 +61,11 @@
                 <p>
                     Hi I'm Angela! Welcome to my website :)
                     <br><br> I'm currently pursuing a B.S. in Computer Science at the 
-                    Univeristy of Washington. I love coding and drawing, and you will 
-                    see a showcase of both through this website. Keep scrolling to learn 
-                    more about who I am and what I'm passionate about.
+                    Univeristy of Washington. I'm also interesting in design, strengthening 
+                    community, and discovering new things!
+                    <br><br> I love coding and drawing, and you will see a showcase of 
+                    both through this website. Keep scrolling to learn more about who I 
+                    am and what I'm passionate about.
                 </p>
             </div>
         </div>
@@ -147,7 +158,7 @@
         </div>
     </section>
 
-<!-- OTHER PROJECTS ===========================================================-->
+<!-- Other Projects ===========================================================
     <section id="other-projects">
         <div>
             <div class="title">
@@ -201,9 +212,9 @@
                 <img class="a-pic" src="images/robot.gif" alt="Robot animation">
             </div>
         </div>
-    </section>
+    </section> -->
 
-    <!-- FAVS ==============================================================-->
+    <!-- Favs ==============================================================-->
     <section id="favs">
         <div>
             <div class="title">
@@ -252,7 +263,7 @@
         </div>
     </section>
 
-<!-- CONTACT-SIDE ===========================================================-->
+<!-- Contact-Side ===========================================================-->
     <div id="contact-sidebar"> 
         <ul id="socials-list"> 
             <li>
@@ -281,11 +292,11 @@
     </div>
 </div>
 
-<!-- FOOTER ===========================================================-->
+<!-- Footer ===========================================================-->
 
 <div class="footer">
-    <a id="footer-content" href="https://github.com/angela-yang" target="_blank">
-        Angela Yang | angela.xq.yang@gmail.com
+    <a id="footer-content" href="https://github.com/angela-yang/portfolio" target="_blank">
+        © 2025 Angela Yang. All rights reserved.
     </a>
 </div>
 

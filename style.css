@@ -68,20 +68,94 @@ ul {
     margin-bottom: 8rem;
 }
 
+/* Navigation ==================================================================== */
+
+#nav-wrapper {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.navigation {
+    background-color: #3a3968b7;
+    border-radius: 100px;
+    display: flex;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 1;
+    transform: scale(1);
+    transform-origin: right center;
+    order: 1;
+}
+
 .navigation a {
     text-decoration: none;
     color: #97af9c;
     padding: 6px;
-    border-radius: 20px;
     margin: 0 10px;
+    border-radius: 100px;
     font-weight: 600;
+    transition: all 0.3s ease;
 }
 
-.navigation a:hover,
-.navigation a.active {
+.nav-hover-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    border-radius: 100px;
     background: #97af9c;
+    width: 0;
+    transition: all 0.3s ease;
+    z-index: 0;
+}
+
+.header-link {
+    position: relative;
+    z-index: 1;
+    text-decoration: none;
+    color: #97af9c;
+    padding: 6px 12px;
+    font-weight: 600;
+    border-radius: 100px;
+    transition: color 0.3s ease;
+}
+  
+.header-link:hover {
     color: #2c263a;
 }
+
+.nav-shrunk {
+    opacity: 0;
+    transform: scale(0);
+    pointer-events: none;
+ }
+
+#collapsed-nav {
+    display: none;
+    background-color: #6463a0b7;
+    padding: 10px 15px;
+    border-radius: 100px;
+    color: #97af9c;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    order: 2;
+}
+  
+#collapsed-nav:hover {
+    background-color: #3a3968;
+}
+  
+#nav-wrapper:hover .navigation {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+/* Parallax ===================================================================== */
 
 .parallax {
     position: relative;
@@ -124,6 +198,13 @@ ul {
     z-index: 0;
 }
 
+#back3 {
+    position: absolute;
+    z-index: 0;
+}
+
+/* Texts ======================================================================== */
+
 #text {
     position: absolute;
     font-size: 4.9em;
@@ -165,7 +246,7 @@ ul {
 }
 
 #intro {
-    margin-top: 8rem;
+    margin-top: 5rem;
     font-size: large;
 }
 
@@ -191,6 +272,8 @@ ul {
     animation: lineDrawToRight .8s ease-out;
 }
 
+/* About Me ===================================================================== */
+
 #portrait {
     width: 18rem;
     object-fit: contain;
@@ -213,6 +296,8 @@ ul {
     object-fit: cover;
     z-index: 10;
 }
+
+/* Projects ====================================================================== */
 
 #projects {
     padding-top: 2.5rem;
@@ -252,8 +337,6 @@ ul {
   color: #2c263a;
 }
 
-
-/* Projects ====================================================================== */
 #project-items {
     display: flex;
     align-items: flex-start;
@@ -283,7 +366,6 @@ ul {
     color: white;
     text-decoration: underline;
     text-shadow: #332d36;
-    -webkit-transition: all .2s ease-in-out;
     border-radius: 0.3rem;
     display: none;
 }
@@ -327,7 +409,7 @@ p {
     color:#4a424f;
 }
 
-/* OTHER-PROJECTS ====================================================================== */
+/* Other Projects ====================================================================== */
 
 #other-projects {
     padding-top: 2.5rem;
@@ -359,6 +441,8 @@ p {
     min-height: 100%;
 }
 
+/* Favs ======================================================================== */
+
 #favs {
     padding-top: 2.5rem;
     padding-bottom: 2.5rem;
@@ -379,13 +463,17 @@ p {
     display: grid;
 }
 
+/* Education ===================================================================== */
+
 #education {
     padding-top: 2.5rem;
-    padding-bottom: 2.5rem;
+    padding-bottom: 20rem;
     width: 80%;
     padding-top: 4rem;
     position: relative;
 }
+
+/* Sidebars ====================================================================== */
 
 #contact-sidebar {
     width: 40px;
@@ -393,6 +481,7 @@ p {
     bottom: 2.0rem;
     left: 2.0rem;
     right: auto;
+    z-index: 100;
 }
 
 #socials-list {
@@ -423,6 +512,7 @@ p {
     right: 20px;
     bottom: 0;
     display: flex;
+    z-index: 10;
 }
 
 #email-link-container {
@@ -466,16 +556,16 @@ p {
     height: 33%;
 }
 
+/* Footer ======================================================================= */
+
 .footer {
+    position: relative;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    height: auto;
-    min-height: 70px;
-    padding: 15px;
-    bottom: 0;
+    background: #3a39689a;
+    padding: 10px 20px;
     text-align: center;
+    justify-content: center;
+    z-index: 100;
 }
 
 #footer-content {
@@ -484,7 +574,6 @@ p {
     font-weight: 200;
     line-height: 1;
     text-decoration: none;
-    text-align: center;
     transition: all 0.1s linear;
 }
 
