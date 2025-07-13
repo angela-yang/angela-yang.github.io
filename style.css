@@ -574,9 +574,9 @@ p {
     color:#4a424f;
 }
 
-/* Other Projects ====================================================================== */
+/* Art Portfolio ==================================================================== */
 
-#other-projects {
+#art {
     padding-top: 2.5rem;
     padding-bottom: 2.5rem;
     width: 80%;
@@ -593,7 +593,7 @@ p {
 
 .a-item {
     display: grid;
-    width: clamp(250px, 45%, 600px);
+    width: clamp(225px, 45%, 300px);
     height: auto;
 }
 
