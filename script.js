@@ -68,3 +68,8 @@ navLinks.forEach(link => {
 navLinksContainer.addEventListener('mouseleave', () => {
   hoverBg.style.width = '0px';
 });
+
+//toggle mobile nav
+document.getElementById("collapsed-nav").addEventListener("click", function () {
+  document.querySelector("nav.navigation").classList.toggle("active");
+});
