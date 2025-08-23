@@ -597,6 +597,11 @@ p {
     height: auto;
 }
 
+/*
+.a-item:hover {
+    width: clamp(400px, 45%, 450px);
+}*/
+
 .a-pic {
     z-index: -10;
     grid-row-start: 1;
