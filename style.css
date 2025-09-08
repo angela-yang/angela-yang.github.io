@@ -540,6 +540,12 @@ p {
     margin-bottom: 0;
 }
 
+.subtitle {
+    font-size: 1em;
+    color: #cdc6df;
+    margin-bottom: 0;
+}
+
 @media (max-width: 768px) {
     .project-name,
     .title {
