@@ -27,6 +27,7 @@
                     <a href="index.html" class="header-link">HOME</a>
                     <a href="#projects" class="header-link">PROJECTS</a>
                     <a href="#art" class="header-link">ART</a>
+                    <a href="#favs" class="header-link">FUN</a>
                     <a href="assets/resume.pdf" class="header-link">MY RESUME</a>
                     <a href="mailto:angela.xq.yang@example.com" class="header-link">CONTACT</a>
                 </ul>
@@ -169,7 +170,7 @@
         </div>
     </section>
 
-    <!-- Art Portfolio =========================================================-->
+<!-- Art Portfolio =========================================================-->
     <section id="art">
         <div>
             <div class="title">
@@ -229,7 +230,7 @@
         </div>
     </section>
 
-    <!-- EDUCATION ===========================================================-->
+<!-- EDUCATION ===========================================================-->
     <section id="education">
         <div>
             <div class="title">
@@ -280,31 +281,69 @@
         </div> 
     </section>
 
-    <!-- Favs ==============================================================-->
+<!-- Favs ==============================================================-->
     <section id="favs">
         <div>
             <div class="title">
                 <h2 class="left-title"> My Favs </h2>
             </div>
+            <div class="body favs">
+                <p>
+                Hover to interact! :)
+                </p>
+            </div>
         </div>
         <div id="fav" class="body">
             <div class="list-item">
-                <h2> Songs: </h2>
-                <p> Mind Over Matter (Reprise) </p>
-                <p> The Night We Met </p>
-                <p> Sunsetz </p>
+                <h2>Songs: </h2>
+                <iframe style="border-radius:12px" 
+                    src="https://open.spotify.com/embed/track/5yJaXWIErrrsjQ3J0eR5aK?utm_source=generator" 
+                    width="100%" height="95" frameBorder="0" 
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                    loading="lazy">
+                </iframe>
+                <iframe style="border-radius:12px"
+                    src="https://open.spotify.com/embed/track/77KnJc8o5G1eKVwX5ywMeZ?utm_source=generator"
+                    width="100%" height="95" frameBorder="0" 
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                    loading="lazy">
+                </iframe>
+                <iframe style="border-radius:12px" 
+                    src="https://open.spotify.com/embed/track/0yuAWlxq59xT3agQ965OxE?utm_source=generator" 
+                    width="100%" height="95" frameBorder="0" 
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                    loading="lazy">
+                </iframe>
+                <!--
+                <iframe style="border-radius:12px" 
+                    src="https://open.spotify.com/embed/track/1fDsrQ23eTAVFElUMaf38X?utm_source=generator" 
+                    width="100%" height="90" frameBorder="0" 
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                    loading="lazy">
+                </iframe>
+                <iframe style="border-radius:12px" 
+                    src="https://open.spotify.com/embed/track/211LaT5hzPOKolVtgzwWnq?utm_source=generator" 
+                    width="100%" height="90" frameBorder="0"
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                    loading="lazy">
+                </iframe>-->
             </div>
-            <div class="list-item">
-                <h2> Food: </h2>
-                <p> Sushi </p>
-                <p> Grilled Cheese </p>
-                <p> Noodles </p>
+            <div class="list-item pics">
+                <h2>Food: </h2>
+                <p data-img="images/sushi.png">Sushi</p>
+                <p data-img="images/cheese.png">Grilled Cheese</p>
+                <p data-img="images/noodle.png">Noodles</p>
+                <div class="hover-img"></div>
+                <img class="f-pic" src="images/plate.png" alt="food plate"></img>
             </div>
-            <div class="list-item">
-                <h2> Movies: </h2>
-                <p> Interstellar </p>
-                <p> Lilo and Stitch </p>
-                <p> Castle in the Sky </p>
+            <div class="list-item pics">
+                <h2>Movies/Shows: </h2>
+                <p data-img="images/interstellar.png">Interstellar</p>
+                <p data-img="images/castle.png">Castle in the Sky</p>
+                <p data-img="images/atla.png">Avatar: The Last Airbender</p>
+                <!--<p data-img="images/cc.png">Arcane</p>-->
+                <div class="hover-img"></div>
+                <img class="f-pic" src="images/tv.png" alt="movie screen"></img>
             </div>
         </div>
     </section>

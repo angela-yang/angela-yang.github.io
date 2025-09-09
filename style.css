@@ -592,28 +592,108 @@ p {
 }
 
 #fav {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
 }
 
+@media (max-width: 768px) {
+    #fav {
+        grid-template-columns: 1fr;
+    }
+    .list-item:hover {
+        transform: translateY(-6px);
+    }
+    .list-item p:hover {
+        background: #7370ac;
+    }
+    .hover-img, 
+    .body.favs, 
+    .f-pic {
+        display: none;
+    }
+}
+
 .list-item {
-    flex: 1 1 200px;
+    flex: 1 1 250px;
+    position: relative;
+    background: #504d81;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.list-item:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.list-item h2 {
+    font-size: 1.25rem;
+    margin-bottom: .75rem;
+    color: #dedaee;
+}
+
+.list-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    border-radius: 12px 0 0 12px;
 }
 
 /*
-#fav {
-    display: flex;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 10rem;
-    align-content: center;
+.list-item:nth-child(1)::before {
+    background: linear-gradient(180deg, #b67ed6, #77589a);
+}
+.list-item:nth-child(2)::before {
+    background: linear-gradient(180deg, #7ab980, rgb(76, 148, 127));
+}
+.list-item:nth-child(3)::before {
+    background: linear-gradient(180deg, #83a0e5, #516aad);
+}*/
+
+.list-item p {
+    display: inline-block;
+    background: #7370ac;
+    padding: .4rem .8rem;
+    margin: .25rem;
+    border-radius: 20px;
+    font-size: .95rem;
 }
 
-.list-item {
-    display: grid;
-}*/
+.list-item p:hover {
+    background: #7370ac6f;
+    cursor: pointer;
+}
+
+.f-pic {
+    position: relative;
+    width: 15rem;
+    height: 15rem;
+    z-index: 2;
+}
+
+.hover-img {
+    position: absolute;
+    width: 15rem;
+    height: 15rem;
+    border-radius: 10px;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.list-item.pics p:hover + .hover-img,
+.list-item.pics p:hover ~ .hover-img {
+    opacity: 1;
+}
 
 /* Education ===================================================================== */
 

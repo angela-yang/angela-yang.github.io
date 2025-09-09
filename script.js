@@ -73,3 +73,14 @@ navLinksContainer.addEventListener('mouseleave', () => {
 document.getElementById("collapsed-nav").addEventListener("click", function () {
   document.querySelector("nav.navigation").classList.toggle("active");
 });
+
+document.querySelectorAll('.list-item.pics p').forEach(p => {
+  const imgDiv = p.closest('.list-item').querySelector('.hover-img');
+  p.addEventListener('mouseenter', () => {
+    imgDiv.style.backgroundImage = `url(${p.dataset.img})`;
+    imgDiv.style.opacity = 1;
+  });
+  p.addEventListener('mouseleave', () => {
+    imgDiv.style.opacity = 0;
+  });
+});
