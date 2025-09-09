@@ -601,12 +601,6 @@ p {
     #fav {
         grid-template-columns: 1fr;
     }
-    .list-item:hover {
-        transform: translateY(-6px);
-    }
-    .list-item p:hover {
-        background: #7370ac;
-    }
 }
 
 .list-item {
