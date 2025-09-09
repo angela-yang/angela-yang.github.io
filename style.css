@@ -607,11 +607,6 @@ p {
     .list-item p:hover {
         background: #7370ac;
     }
-    .hover-img, 
-    .body.favs, 
-    .f-pic {
-        display: none;
-    }
 }
 
 .list-item {
