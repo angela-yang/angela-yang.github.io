@@ -84,3 +84,144 @@ document.querySelectorAll('.list-item.pics p').forEach(p => {
     imgDiv.style.opacity = 0;
   });
 });
+
+// Image Modal Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.createElement('div');
+    modal.className = 'image-modal';
+    modal.innerHTML = `
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <button class="modal-nav modal-prev">&#8249;</button>
+            <button class="modal-nav modal-next">&#8250;</button>
+            <img class="modal-image" src="" alt="">
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    const modalBackdrop = modal.querySelector('.modal-backdrop');
+    const modalContent = modal.querySelector('.modal-content');
+    const modalImage = modal.querySelector('.modal-image');
+    const closeBtn = modal.querySelector('.modal-close');
+    const prevBtn = modal.querySelector('.modal-prev');
+    const nextBtn = modal.querySelector('.modal-next');
+
+    let currentImageIndex = -1;
+    let imageArray = [];
+    let isArtGallery = false;
+
+    function openModal(imgSrc, clickedElement, imageList = null) {
+        modalImage.src = imgSrc;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        if (imageList) {
+            isArtGallery = true;
+            imageArray = imageList;
+            currentImageIndex = Array.from(imageList).findIndex(img => img.src === imgSrc);
+            prevBtn.style.display = 'flex';
+            nextBtn.style.display = 'flex';
+            updateNavButtons();
+        } else {
+            isArtGallery = false;
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+        }
+
+        const rect = clickedElement.getBoundingClientRect();
+        modalContent.style.transformOrigin = `${rect.left + rect.width/2}px ${rect.top + rect.height/2}px`;
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        currentImageIndex = -1;
+        imageArray = [];
+        isArtGallery = false;
+    }
+
+    function showNextImage() {
+        if (!isArtGallery || currentImageIndex === -1) return;
+        
+        currentImageIndex = (currentImageIndex + 1) % imageArray.length;
+        modalImage.classList.add('image-transition');
+        
+        setTimeout(() => {
+            modalImage.src = imageArray[currentImageIndex].src;
+            modalImage.classList.remove('image-transition');
+            updateNavButtons();
+        }, 150);
+    }
+
+    function showPrevImage() {
+        if (!isArtGallery || currentImageIndex === -1) return;
+        
+        currentImageIndex = (currentImageIndex - 1 + imageArray.length) % imageArray.length;
+        modalImage.classList.add('image-transition');
+        
+        setTimeout(() => {
+            modalImage.src = imageArray[currentImageIndex].src;
+            modalImage.classList.remove('image-transition');
+            updateNavButtons();
+        }, 150);
+    }
+
+    function updateNavButtons() {
+        prevBtn.disabled = false;
+        nextBtn.disabled = false;
+    }
+
+    const artImages = document.querySelectorAll('.a-pic');
+    artImages.forEach(img => {
+        img.style.cursor = 'pointer';
+        img.addEventListener('click', function(e) {
+            e.preventDefault();
+            openModal(this.src, this, artImages);
+        });
+    });
+
+    const portrait = document.querySelector('#portrait');
+    if (portrait) {
+        portrait.style.cursor = 'pointer';
+        portrait.addEventListener('click', function(e) {
+            e.preventDefault();
+            openModal(this.src, this, null);
+        });
+    }
+
+    // Close modal on X button click
+    closeBtn.addEventListener('click', closeModal);
+
+    // Close modal on backdrop click
+    modalBackdrop.addEventListener('click', closeModal);
+
+    // Navigation button clicks
+    prevBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showPrevImage();
+    });
+
+    nextBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showNextImage();
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (!modal.classList.contains('active')) return;
+        
+        if (e.key === 'Escape') {
+            closeModal();
+        } else if (e.key === 'ArrowRight' && isArtGallery) {
+            showNextImage();
+        } else if (e.key === 'ArrowLeft' && isArtGallery) {
+            showPrevImage();
+        }
+    });
+
+    // Prevent closing when clicking on the image itself
+    modalImage.addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+});
