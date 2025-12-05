@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        Art Gallery
+    </title>
+    <link rel="icon" href="images/icon.png" type="image/png">
+</head>
+
+<!-- Header -->
+ <header>
+    <div id="nav-wrapper">
+        <div id="collapsed-nav">
+            <i class="fa-solid fa-house"></i>
+        </div>
+        <nav class="navigation">
+            <div class="nav-links">
+                <div class="nav-hover-bg"></div>
+                <ul>
+                    <a href="index.html" class="header-link">HOME</a>
+                    <a href="assets/resume.pdf" class="header-link">MY RESUME</a>
+                    <a href="mailto:angela.xq.yang@example.com" class="header-link">CONTACT</a>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<!-- Art Gallery ===============================================-->
+<body>
+    <div class="gallery-container">
+        <div class="gallery-header">
+            <h1>Art Gallery</h1>
+            <p>
+                Here are some of my favorite art pieces :)
+            </p>
+        </div>
+
+        <div id="collectionsGrid" class="collections-grid"></div>
+
+        <div id="collectionView" class="collection-view">
+            <button class="back-button" onclick="closeCollection()">
+                <span style="font-size: 1.5rem;">←</span> Back to Collections
+            </button>
+            <div class="collection-title">
+                <h2 id="collectionName"></h2>
+                <p id="collectionCount"></p>
+            </div>
+            <div id="artworksGrid" class="artworks-grid"></div>
+        </div>
+    </div>
+
+    <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+        <button class="lightbox-button close-button" onclick="closeLightbox(event)">×</button>
+        <button class="lightbox-button prev-button" onclick="prevArtwork(event)">‹</button>
+        <button class="lightbox-button next-button" onclick="nextArtwork(event)">›</button>
+        <div class="lightbox-content" onclick="event.stopPropagation()">
+            <img id="lightboxImage" class="lightbox-image" src="" alt="">
+            <div class="lightbox-info">
+                <h3 id="lightboxTitle"></h3>
+                <p id="lightboxYear"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Artworks + Functions ===============================================-->
+    <script>
+        const artCollections = [
+            {
+                id: 1,
+                title: "Commissions",
+                count: 6,
+                artworks: [
+                    { id: 1, image: "images/gallery/commissions/Mango.png", title: "Mango - Pet Commission", year: "2025" },
+                    { id: 2, image: "images/gallery/commissions/Atem.png", title: "Atem - Pet Commission", year: "2025" },
+                    { id: 3, image: "images/gallery/commissions/Pierogi.png", title: "Pierogi - Pet Commission", year: "2025" },
+                    { id: 4, image: "images/gallery/commissions/Ducks.png", title: "Ducks - Pet Commission", year: "2025" },
+                    { id: 5, image: "images/gallery/commissions/Luna.png", title: "Luna - Fanart", year: "2025" },
+                    { id: 6, image: "images/gallery/commissions/Krusty.png", title: "Krusty - Pet Commission", year: "2025" },
+                ]
+            },
+            {
+                id: 2,
+                title: "Fanarts",
+                count: 10,
+                artworks: [
+                    { id: 1, image: "images/gallery/fanarts/Hornet.png", title: "Hornet Personified", year: "2025" },
+                    { id: 2, image: "images/gallery/fanarts/Derpy.png", title: "Derpy from Kpop Demon Hunters", year: "2025" },
+                    { id: 3, image: "images/gallery/fanarts/appa-pfp.png", title: "Appa Drawing", year: "2023" },
+                    { id: 4, image: "images/gallery/fanarts/val.png", title: "Kazuha x Valorant", year: "2023" },
+                    { id: 5, image: "images/gallery/fanarts/jett.png", title: "Jett x Lofi Girl", year: "2023" },
+                    { id: 6, image: "images/gallery/fanarts/kazuha.png", title: "Kazuha Drawing", year: "2022" },
+                    { id: 7, image: "images/gallery/fanarts/wefatcats.png", title: "We Fat Cats", year: "2022" },
+                    { id: 8, image: "images/gallery/fanarts/megumi.png", title: "Megumi from JJK", year: "2022" },
+                    { id: 9, image: "images/gallery/fanarts/genshin.png", title: "Genshin Fanart", year: "2022" },
+                    { id: 10, image: "images/gallery/fanarts/spiritedaway.png", title: "Spirited Away Fanart", year: "2022" },
+                ]
+            },
+            {
+                id: 3,
+                title: "Character Designs",
+                count: 6,
+                artworks: [
+                    { id: 1, image: "images/gallery/characters/Eli.png", title: "Eli Heung", year: "2023" },
+                    { id: 2, image: "images/gallery/characters/Ashe.png", title: "Ashe Kamal", year: "2023" },
+                    { id: 3, image: "images/gallery/characters/Tian.png", title: "Tian Zheng", year: "2023" },
+                    { id: 4, image: "images/gallery/characters/ren.png", title: "Ren - Kitsune Mask", year: "2022" },
+                    { id: 5, image: "images/gallery/characters/hana.png", title: "Hana", year: "2022" },
+                    { id: 6, image: "images/gallery/characters/Miya.png", title: "Miya - School Girl", year: "2022" },
+                ]
+            },
+            {
+                id: 4,
+                title: "Design Work",
+                count: 6,
+                artworks: [
+                    { id: 1, image: "images/gallery/designs/rca.png", title: "Redmond Code Association Hoodie Design", year: "2024" },
+                    { id: 2, image: "images/gallery/designs/banner.png", title: "Redmond Code Association Sustainability Drive Banner", year: "2024" },
+                    { id: 3, image: "images/gallery/designs/robot.gif", title: "RCA Robot Animation", year: "2023" },
+                    { id: 4, image: "images/gallery/designs/rocket.gif", title: "RCA Rocket Animation", year: "2023" },
+                    { id: 5, image: "images/gallery/designs/people.png", title: "Future Scholar Foundation Team", year: "2023" },
+                    { id: 6, image: "images/gallery/designs/me.gif", title: "GIF of myself", year: "2023" },
+                ]
+            },
+            {
+                id: 5,
+                title: "Traditional Works",
+                count: 15,
+                artworks: [
+                    { id: 1, image: "images/gallery/traditional/art1.jpg", title: "Comfort Food - Colored Pencil", year: "2025" },
+                    { id: 2, image: "images/gallery/traditional/art3.jpg", title: "Mom and Me - Crayon", year: "2025" },
+                    { id: 3, image: "images/gallery/traditional/art2.jpg", title: "Africa Memory Project", year: "2025" },
+                    { id: 4, image: "images/gallery/traditional/art4.jpg", title: "Love", year: "2025" },
+                    { id: 5, image: "images/gallery/traditional/art5.jpg", title: "Fairytale Romance", year: "2025" },
+                    { id: 6, image: "images/gallery/traditional/painting1.jpg", title: "Window to the Soul", year: "2024" },
+                    { id: 7, image: "images/gallery/traditional/painting2.jpg", title: "Digital Mind", year: "2024" },
+                    { id: 8, image: "images/gallery/traditional/painting3.jpg", title: "Imagination", year: "2024" },
+                    { id: 9, image: "images/gallery/traditional/painting4.jpg", title: "Global Warming", year: "2024" },
+                    { id: 10, image: "images/gallery/traditional/painting5.jpg", title: "Statue Study - Oil Painting", year: "2024" },
+                    { id: 11, image: "images/gallery/traditional/painting6.jpg", title: "Statue Study - Oil Painting", year: "2023" },
+                    { id: 12, image: "images/gallery/traditional/painting7.jpg", title: "Vase + Fruit - Oil Painting", year: "2023" },
+                    { id: 13, image: "images/gallery/traditional/sketch1.jpg", title: "Statue Study - Graphite", year: "2023" },
+                    { id: 14, image: "images/gallery/traditional/sketch2.jpg", title: "Statue Study - Graphite", year: "2022" },
+                    { id: 15, image: "images/gallery/traditional/sketch3.jpg", title: "Statue Study - Graphite", year: "2022" },
+                ]
+            },
+        ];
+
+        let currentCollection = null;
+        let currentArtworkIndex = 0;
+
+        function renderCollections() {
+            const grid = document.getElementById('collectionsGrid');
+            grid.innerHTML = '';
+
+            artCollections.forEach(collection => {
+                const collectionDiv = document.createElement('div');
+                collectionDiv.className = 'collection-stack';
+                collectionDiv.onclick = () => openCollection(collection);
+
+                const stackContainer = document.createElement('div');
+                stackContainer.className = 'stack-container';
+
+                const randomOffsets = [
+                    { x: -5, y: 0, rot: 2 },
+                    { x: -8, y: -4, rot: -3 },
+                    { x: 12, y: -7, rot: 4 },
+                    { x: -6, y: 5, rot: 2 },
+                    { x: 10, y: -8, rot: -3 },
+                ];
+
+                collection.artworks.slice(0, 5).forEach((art, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'art-card';
+                    card.style.zIndex = 10 - index;
+
+                    const offset = randomOffsets[index];
+                    const stackedX = offset.x * 0.5;
+                    const stackedY = index * 3;
+                    const stackedRot = offset.rot * 0.7;
+
+                    card.style.transform = `translate(${stackedX}px, ${stackedY}px) rotate(${stackedRot}deg)`;
+                    card.dataset.spreadX = offset.x * 3;
+                    card.dataset.spreadY = index * 8 + offset.y * 2;
+                    card.dataset.spreadRot = offset.rot * 2.5;
+                    card.dataset.stackedX = stackedX;
+                    card.dataset.stackedY = stackedY;
+                    card.dataset.stackedRot = stackedRot;
+
+                    const img = document.createElement('img');
+                    img.src = art.image;
+                    img.alt = art.title;
+
+                    const overlay = document.createElement('div');
+                    overlay.className = 'art-card-overlay';
+
+                    card.appendChild(img);
+                    card.appendChild(overlay);
+                    stackContainer.appendChild(card);
+                });
+
+                const overlayText = document.createElement('div');
+                overlayText.className = 'overlay-text';
+                overlayText.textContent = `View ${collection.title}`;
+
+                const info = document.createElement('div');
+                info.className = 'collection-info';
+                info.innerHTML = `
+                    <h3>${collection.title}</h3>
+                    <p>${collection.count} artworks</p>
+                `;
+
+                collectionDiv.appendChild(stackContainer);
+                collectionDiv.appendChild(overlayText);
+                collectionDiv.appendChild(info);
+                grid.appendChild(collectionDiv);
+
+                collectionDiv.addEventListener('mouseenter', () => {
+                    const cards = stackContainer.querySelectorAll('.art-card');
+                    cards.forEach(card => {
+                        card.style.transform = `translate(${card.dataset.spreadX}px, ${card.dataset.spreadY}px) rotate(${card.dataset.spreadRot}deg)`;
+                    });
+                });
+
+                collectionDiv.addEventListener('mouseleave', () => {
+                    const cards = stackContainer.querySelectorAll('.art-card');
+                    cards.forEach(card => {
+                        card.style.transform = `translate(${card.dataset.stackedX}px, ${card.dataset.stackedY}px) rotate(${card.dataset.stackedRot}deg)`;
+                    });
+                });
+            });
+        }
+
+        function openCollection(collection) {
+            currentCollection = collection;
+            document.getElementById('collectionsGrid').style.display = 'none';
+            document.getElementById('collectionView').classList.add('active');
+            document.querySelector('.gallery-header').style.display = 'none';
+
+            document.getElementById('collectionName').textContent = collection.title;
+            document.getElementById('collectionCount').textContent = `${collection.artworks.length} artworks`;
+
+            const grid = document.getElementById('artworksGrid');
+            grid.innerHTML = '';
+
+            collection.artworks.forEach((art, index) => {
+                const artDiv = document.createElement('div');
+                artDiv.className = 'artwork-item';
+                artDiv.onclick = () => openLightbox(index);
+
+                artDiv.innerHTML = `
+                    <div class="artwork-image">
+                        <img src="${art.image}" alt="${art.title}">
+                    </div>
+                    <div class="artwork-details">
+                        <h3>${art.title}</h3>
+                        <p>${art.year}</p>
+                    </div>
+                `;
+
+                grid.appendChild(artDiv);
+            });
+        }
+
+        function closeCollection() {
+            currentCollection = null;
+            document.getElementById('collectionsGrid').style.display = 'grid';
+            document.getElementById('collectionView').classList.remove('active');
+            document.querySelector('.gallery-header').style.display = 'block';
+        }
+
+        function openLightbox(index) {
+            if (!currentCollection) return;
+            currentArtworkIndex = index;
+            const art = currentCollection.artworks[index];
+
+            document.getElementById('lightboxImage').src = art.image;
+            document.getElementById('lightboxTitle').textContent = art.title;
+            document.getElementById('lightboxYear').textContent = art.year;
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        function closeLightbox(event) {
+            if (event) event.stopPropagation();
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        function nextArtwork(event) {
+            event.stopPropagation();
+            if (!currentCollection) return;
+            currentArtworkIndex = (currentArtworkIndex + 1) % currentCollection.artworks.length;
+            const art = currentCollection.artworks[currentArtworkIndex];
+            document.getElementById('lightboxImage').src = art.image;
+            document.getElementById('lightboxTitle').textContent = art.title;
+            document.getElementById('lightboxYear').textContent = art.year;
+        }
+
+        function prevArtwork(event) {
+            event.stopPropagation();
+            if (!currentCollection) return;
+            currentArtworkIndex = (currentArtworkIndex - 1 + currentCollection.artworks.length) % currentCollection.artworks.length;
+            const art = currentCollection.artworks[currentArtworkIndex];
+            document.getElementById('lightboxImage').src = art.image;
+            document.getElementById('lightboxTitle').textContent = art.title;
+            document.getElementById('lightboxYear').textContent = art.year;
+        }
+
+        renderCollections();
+    </script>
+</body>
+</html>
