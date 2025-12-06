@@ -46,7 +46,6 @@ document.getElementById("collapsed-nav").addEventListener("click", () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
-
 //navbar hovering smooth background animation
 const hoverBg = document.querySelector('.nav-hover-bg');
 const navLinks = document.querySelectorAll('.header-link');
@@ -84,6 +83,8 @@ document.querySelectorAll('.list-item.pics p').forEach(p => {
     imgDiv.style.opacity = 0;
   });
 });
+
+
 
 // Image Modal Functionality
 document.addEventListener('DOMContentLoaded', function() {
