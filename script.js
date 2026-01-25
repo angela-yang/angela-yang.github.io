@@ -225,4 +225,27 @@ document.addEventListener('DOMContentLoaded', function() {
     modalImage.addEventListener('click', function(e) {
         e.stopPropagation();
     });
+
+    // Bubbles!
+    const container = document.getElementById('bubble-container');
+    document.addEventListener('mousemove', (e) => {
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        
+        // Random size between 5px and 15px
+        const size = Math.random() * 10 + 5;
+        bubble.style.width = size + 'px';
+        bubble.style.height = size + 'px';
+        
+        // Position at cursor
+        bubble.style.left = e.clientX - size / 2 + 'px';
+        bubble.style.top = e.clientY - size / 2 + 'px';
+        
+        container.appendChild(bubble);
+        
+        // Remove bubble after animation completes
+        setTimeout(() => {
+            bubble.remove();
+        }, 1000);
+    });
 });

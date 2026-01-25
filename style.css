@@ -13,6 +13,11 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
     color: white;
+    cursor: url('assets/cursor/cursor.png'), auto;
+}
+
+a, button {
+  cursor: url('assets/cursor/pointer-cursor.png'), pointer;
 }
 
 @media (max-width: 768px) {
@@ -93,6 +98,35 @@ ul {
     flex-direction: column;
     align-items: center;
     margin-bottom: 8rem;
+}
+
+#bubble-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+    animation: float-up 1s ease-out forwards;
+}
+
+@keyframes float-up {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-100px) scale(0);
+    }
 }
 
 /* Navigation ==================================================================== */
