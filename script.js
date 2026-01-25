@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
         bubble.className = 'bubble';
         
         // Random size between 5px and 15px
-        const size = Math.random() * 10 + 5;
+        const size = Math.random() * 6 + 5;
         bubble.style.width = size + 'px';
         bubble.style.height = size + 'px';
         

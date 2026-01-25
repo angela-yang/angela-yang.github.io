@@ -125,7 +125,7 @@ ul {
     }
     100% {
         opacity: 0;
-        transform: translateY(-100px) scale(0);
+        transform: translateY(-60px) scale(0);
     }
 }
 
