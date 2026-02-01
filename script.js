@@ -227,25 +227,27 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Bubbles!
-    const container = document.getElementById('bubble-container');
-    document.addEventListener('mousemove', (e) => {
-        const bubble = document.createElement('div');
-        bubble.className = 'bubble';
-        
-        // Random size between 5px and 15px
-        const size = Math.random() * 6 + 5;
-        bubble.style.width = size + 'px';
-        bubble.style.height = size + 'px';
-        
-        // Position at cursor
-        bubble.style.left = e.clientX - size / 2 + 'px';
-        bubble.style.top = e.clientY - size / 2 + 'px';
-        
-        container.appendChild(bubble);
-        
-        // Remove bubble after animation completes
-        setTimeout(() => {
-            bubble.remove();
-        }, 1000);
+    const container = document.getElementById("bubble-container");
+    let lastBubbleTime = 0;
+    const BUBBLE_INTERVAL = 80; // ms → try 60–120
+
+    document.addEventListener("mousemove", (e) => {
+      const now = performance.now();
+      if (now - lastBubbleTime < BUBBLE_INTERVAL) return;
+      lastBubbleTime = now;
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+
+      const size = Math.random() * 6 + 5;
+      bubble.style.width = size + "px";
+      bubble.style.height = size + "px";
+
+      bubble.style.left = e.clientX - size / 2 + "px";
+      bubble.style.top = e.clientY - size / 2 + "px";
+
+      container.appendChild(bubble);
+
+      setTimeout(() => bubble.remove(), 1000);
     });
 });
