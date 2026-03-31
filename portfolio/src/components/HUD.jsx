@@ -1,5 +1,5 @@
 const NAV_LABELS = ['Intro', 'About', 'Projects', 'Art', 'Contact']
-const NAV_COLORS = ['#BE9DB5', '#A984A0', '#AA6787', '#7879AA', '#504F8C']
+const NAV_COLORS = ['#BE9DB5', '#A984A0', '#AA6787', '#787caa', '#4f598c']
 
 export default function HUD({ zones, cameraY, onNavigate }) {
   const progress = Math.min(1, Math.abs(cameraY) / 24)

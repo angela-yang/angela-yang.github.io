@@ -31,7 +31,7 @@ export default function App() {
   }, [])
 
   const t = Math.min(1, Math.abs(cameraY) / 32)
-  const bgColor = lerpColor('#17162a', '#050508', t)
+  const bgColor = lerpColor('#1f2f41', '#12141b', t)
 
   const [activeProject, setActiveProject] = useState(null)
 
@@ -62,7 +62,13 @@ export default function App() {
         width: '100%', height: '100%',
         pointerEvents: 'none',
       }}>
-        <HUD zones={ZONES} cameraY={cameraY} onNavigate={setTargetDepth} />
+        <HUD
+          zones={ZONES}
+          cameraY={cameraY}
+          onNavigate={setTargetDepth}
+          expandedProject={activeProject}
+          onCloseProject={() => setActiveProject(null)}
+        />
       </div>
     </div>
   )
