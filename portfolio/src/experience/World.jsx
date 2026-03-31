@@ -1,6 +1,9 @@
-import { useRef, useMemo, useState } from 'react'
+import { useRef, useMemo, useState, useEffect } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { Html, useTexture } from '@react-three/drei'
+import { FaLinkedin, FaGithub } from 'react-icons/fa'
+import { IoDocumentSharp } from 'react-icons/io5'
+import { IoMdMail } from 'react-icons/io'
 import * as THREE from 'three'
 
 const C = {
@@ -260,7 +263,7 @@ const BUBBLE_CONFIGS = [
   { x: -1.5, y: 0.5, z: 2.0, size: 120 },
   { x: 1.2, y: 0.8, z: 2.6, size: 115 },
   { x: -0.2, y: -0.3, z: 2.5, size: 125 },
-  { x: 0.6, y: 0.4, z: 1.5, size: 100 },
+  { x: 0.6, y: 0.6, z: 1.5, size: 100 },
   { x: -1.6, y: -0.7, z: 2.0, size: 95 },
   { x: 1.5, y: -0.6, z: 2.0, size: 88 },
   { x: -0.5, y: 1.0, z: 1.0, size: 90 },
@@ -558,6 +561,17 @@ function ArtZone({ y }) {
   const { camera } = useThree()
   const targetCamZ = useRef(5)
 
+  useEffect(() => {
+    const onKey = (e) => {
+      if (!galleryMode) return
+      if (e.key === 'ArrowLeft')  setActiveIndex(i => (i - 1 + ARTWORKS.length) % ARTWORKS.length)
+      if (e.key === 'ArrowRight') setActiveIndex(i => (i + 1) % ARTWORKS.length)
+      if (e.key === 'Escape')     exitGallery()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [galleryMode])
+
   useFrame(() => { camera.position.z += (targetCamZ.current - camera.position.z) * 0.05 })
 
   const enterGallery = (i) => { setActiveIndex(i); setGalleryMode(true);  targetCamZ.current = 6 }
@@ -680,14 +694,9 @@ function ArtZone({ y }) {
 
 // -- CONTACT -----------------------------
 function ContactZone({ y }) {
-  const bottle = useRef()
   const rings = useRef([])
 
   useFrame((state) => {
-    if (bottle.current) {
-      bottle.current.rotation.y += 0.005
-      bottle.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.15
-    }
     rings.current.forEach((ring, i) => {
       if (!ring) return
       ring.rotation.z += 0.003 * (i % 2 === 0 ? 1 : -1)
@@ -695,19 +704,111 @@ function ContactZone({ y }) {
     })
   })
 
+  const links = [
+    {
+      icon: <FaLinkedin size={28} />,
+      label: 'LinkedIn',
+      href: 'https://linkedin.com/in/angelaxy',
+      color: C.lightpurple,
+    },
+    {
+      icon: <FaGithub size={28} />,
+      label: 'GitHub',
+      href: 'https://github.com/angela-yang',
+      color: C.light,
+    },
+    {
+      icon: <IoMdMail size={28} />,
+      label: 'Email',
+      href: 'mailto:angelay2@uw.edu',
+      color: C.lightpink,
+    },
+    {
+      icon: <IoDocumentSharp size={28} />,
+      label: 'Resume',
+      href: '/resume.pdf',
+      color: C.pink,
+    },
+  ]
+
   return (
     <group position={[0, y, 0]}>
       <Html center position={[0, 2.2, 0]}>
         <div style={{ textAlign: 'center', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
-          <h2 style={{ fontFamily: 'Cinzel, serif', fontSize: '2.2rem', color: C.purple, margin: 0, letterSpacing: '0.15em', textShadow: `0 0 30px ${C.purple}88` }}>Contact</h2>
-          <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: '1.5rem', color: C.purple, margin: '1.0rem 0 2.5rem', opacity: 0.7, letterSpacing: '0.1em' }}>angelay2@uw.edu</p>
+          <h2 style={{
+            fontFamily: 'Cinzel, serif', fontSize: '2.2rem',
+            color: C.purple, margin: 0, letterSpacing: '0.15em',
+            textShadow: `0 0 30px ${C.purple}88`,
+          }}>
+            Contact
+          </h2>
+          <p style={{
+            fontFamily: 'Nunito, sans-serif', fontSize: '1.2rem',
+            color: C.purple, margin: '0.8rem 0 0', opacity: 0.7, letterSpacing: '0.1em',
+          }}>
+            let's build something together
+          </p>
+        </div>
+      </Html>
+
+      <Html center position={[0, 0, 0]}>
+        <div style={{
+          display: 'flex',
+          gap: '2rem',
+          alignItems: 'center',
+          pointerEvents: 'all',
+        }}>
+          {links.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              target={link.href.startsWith('mailto') ? undefined : '_blank'}
+              rel="noreferrer"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '6px',
+                color: link.color,
+                textDecoration: 'none',
+                transition: 'transform 0.2s, opacity 0.2s',
+                opacity: 0.8,
+              }}
+              onMouseOver={e => {
+                e.currentTarget.style.transform = 'translateY(-4px) scale(1.1)'
+                e.currentTarget.style.opacity = '1'
+              }}
+              onMouseOut={e => {
+                e.currentTarget.style.transform = 'translateY(0) scale(1)'
+                e.currentTarget.style.opacity = '0.8'
+              }}
+            >
+              {link.icon}
+              <span style={{
+                fontFamily: 'Nunito, sans-serif',
+                fontSize: '0.72rem',
+                letterSpacing: '0.1em',
+                color: link.color,
+              }}>
+                {link.label.toUpperCase()}
+              </span>
+            </a>
+          ))}
         </div>
       </Html>
 
       {[1.0, 1.5, 2.0].map((radius, i) => (
-        <mesh key={i} ref={(el) => (rings.current[i] = el)} position={[0, 0, 0]} rotation={[Math.PI / 3 + i * 0.4, 0, i * 0.5]}>
+        <mesh
+          key={i}
+          ref={(el) => (rings.current[i] = el)}
+          position={[0, 0, 0]}
+          rotation={[Math.PI / 3 + i * 0.4, 0, i * 0.5]}
+        >
           <torusGeometry args={[radius, 0.02, 15, 40]} />
-          <meshStandardMaterial color={C.purple} emissive={C.purple} emissiveIntensity={0.5} transparent opacity={0.4} />
+          <meshStandardMaterial
+            color={C.purple} emissive={C.purple}
+            emissiveIntensity={0.5} transparent opacity={0.4}
+          />
         </mesh>
       ))}
     </group>
@@ -736,10 +837,10 @@ export default function World({ targetDepth, onDepthChange, activeProject, onPro
       <Particles />
       <CameraRig targetDepth={targetDepth} onDepthChange={onDepthChange} />
 
-      <AboutZone y={-10} />
-      <ProjectsZone y={-20} activeProject={activeProject} onProjectClick={onProjectClick} />
-      <ArtZone y={-30} />
-      <ContactZone y={-40} />
+      <AboutZone y={-10.5} />
+      <ProjectsZone y={-20.5} activeProject={activeProject} onProjectClick={onProjectClick} />
+      <ArtZone y={-30.5} />
+      <ContactZone y={-40.5} />
     </>
   )
 }

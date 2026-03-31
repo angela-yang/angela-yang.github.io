@@ -1,5 +1,8 @@
 const NAV_LABELS = ['Intro', 'About', 'Projects', 'Art', 'Contact']
 const NAV_COLORS = ['#BE9DB5', '#A984A0', '#AA6787', '#787caa', '#4f598c']
+import { FaLinkedin, FaGithub } from 'react-icons/fa'
+import { IoDocumentSharp } from 'react-icons/io5'
+import { IoMdMail } from 'react-icons/io'
 
 export default function HUD({ zones, cameraY, onNavigate }) {
   const progress = Math.min(1, Math.abs(cameraY) / 24)
@@ -99,31 +102,10 @@ export default function HUD({ zones, cameraY, onNavigate }) {
         </span>
       </div>
 
-      {/* Section label */}
-      <div style={{
-        position: 'absolute',
-        top: '2rem',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        opacity: progress > 0.05 ? 1 : 0,
-        transition: 'opacity 0.4s',
-        textAlign: 'center',
-        pointerEvents: 'none',
-      }}>
-        <span style={{
-          fontFamily: 'Cinzel, serif',
-          fontSize: '1.2rem',
-          color: NAV_COLORS[activeIndex],
-          letterSpacing: '0.3em',
-        }}>
-          {NAV_LABELS[activeIndex].toUpperCase()}
-        </span>
-      </div>
-
       {/* Bottom nav */}
       <nav style={{
         position: 'absolute',
-        bottom: '2rem',
+        top: '2rem',
         left: '50%',
         transform: 'translateX(-50%)',
         display: 'flex',
@@ -135,7 +117,7 @@ export default function HUD({ zones, cameraY, onNavigate }) {
             onClick={() => onNavigate(zone.y)}
             style={{
               background: activeIndex === i
-                ? `${NAV_COLORS[i]}22`
+                ? `${NAV_COLORS[i]}40`
                 : 'none',
               border: `1px solid ${NAV_COLORS[i]}`,
               color: NAV_COLORS[i],
@@ -145,7 +127,7 @@ export default function HUD({ zones, cameraY, onNavigate }) {
               padding: '0.4rem 1.1rem',
               borderRadius: '999px',
               cursor: 'pointer',
-              opacity: activeIndex === i ? 1 : 0.5,
+              opacity: activeIndex === i ? 1 : 0.7,
               transition: 'opacity 0.3s, background 0.3s',
             }}
           >
@@ -153,6 +135,56 @@ export default function HUD({ zones, cameraY, onNavigate }) {
           </button>
         ))}
       </nav>
+      <div style={{
+        position: 'absolute',
+        left: '1.5rem',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '1.4rem',
+        pointerEvents: 'all',
+        zIndex: 20,
+      }}>
+        {[
+          { icon: <FaLinkedin size={24} />, href: 'https://linkedin.com/in/angelaxy', color: '#787caa' },
+          { icon: <FaGithub size={24} />, href: 'https://github.com/angela-yang', color: '#BE9DB5' },
+          { icon: <IoMdMail size={24} />, href: 'mailto:angelay2@uw.edu', color: '#A984A0' },
+          { icon: <IoDocumentSharp size={24} />, href: '/resume.pdf', color: '#AA6787' },
+        ].map((item, i) => (
+          <a
+            key={i}
+            href={item.href}
+            target={item.href.startsWith('mailto') ? undefined : '_blank'}
+            rel="noreferrer"
+            style={{
+              color: item.color,
+              opacity: 0.5,
+              transition: 'opacity 0.2s, transform 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onMouseOver={e => {
+              e.currentTarget.style.opacity = '1'
+              e.currentTarget.style.transform = 'scale(1.2)'
+            }}
+            onMouseOut={e => {
+              e.currentTarget.style.opacity = '0.5'
+              e.currentTarget.style.transform = 'scale(1)'
+            }}
+          >
+            {item.icon}
+          </a>
+        ))}
+
+        <div style={{
+          width: '1px',
+          height: '60px',
+          background: '#787caa8f',
+        }} />
+      </div>
     </>
   )
 }
