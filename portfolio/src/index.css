@@ -1,0 +1,43 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --deep:    #0a1628;
+  --surface: #0f3460;
+  --teal:    #1a9e8f;
+  --aqua:    #4ecdc4;
+  --foam:    #a8e6e0;
+  --gold:    #f4c542;
+  --light:   #e8f4f8;
+}
+
+body {
+  background: var(--deep);
+  color: var(--light);
+  font-family: 'Nunito', sans-serif;
+  overflow: hidden;
+}
+
+canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+}
+
+#hud {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 10;
+  pointer-events: none; 
+}
+
+#hud button,
+#hud a,
+#hud nav {
+  pointer-events: all;
+}
