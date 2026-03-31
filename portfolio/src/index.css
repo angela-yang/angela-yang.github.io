@@ -5,27 +5,28 @@
 }
 
 :root {
-  --deep:    #0a1628;
+  --deep: #0a1628;
   --surface: #0f3460;
-  --teal:    #1a9e8f;
-  --aqua:    #4ecdc4;
-  --foam:    #a8e6e0;
-  --gold:    #f4c542;
-  --light:   #e8f4f8;
+  --teal: #1a9e8f;
+  --aqua: #4ecdc4;
+  --foam: #a8e6e0;
+  --gold: #f4c542;
+  --light: #e8f4f8;
 }
 
-body {
-  background: var(--deep);
-  color: var(--light);
-  font-family: 'Nunito', sans-serif;
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
+  background: #000000;
 }
 
 canvas {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  z-index: 0;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 #hud {

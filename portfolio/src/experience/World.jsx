@@ -1,29 +1,44 @@
-import { useRef } from 'react'
+import { useRef, useMemo } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
-import { OrbitControls, Stars } from '@react-three/drei'
+import { Html } from '@react-three/drei'
 
-function Particles({ count = 80 }) {
-  const mesh = useRef()
+const C = {
+  light: '#BE9DB5',
+  lightpink: '#A984A0',
+  pink: '#AA6787',
+  lightpurple: '#7879AA',
+  purple: '#504F8C',
+  darkpurple: '#3A396E',
+  accent: '#FF606A',
+  accent1: '#FF896D',
+  accent2: '#FFCE82',
+}
 
-  const positions = new Float32Array(count * 3)
-  for (let i = 0; i < count; i++) {
-    positions[i * 3 + 0] = (Math.random() - 0.5) * 20  // x
-    positions[i * 3 + 1] = (Math.random() - 0.5) * 40  // y 
-    positions[i * 3 + 2] = (Math.random() - 0.5) * 10  // z
-  }
+// -- Particles --------------------
+function Particles({ count = 120 }) {
+  const ref = useRef()
 
-  useFrame((state) => {
-    // Particle movement
-    const pos = mesh.current.geometry.attributes.position
+  const positions = useMemo(() => {
+    const arr = new Float32Array(count * 3)
     for (let i = 0; i < count; i++) {
-      pos.array[i * 3 + 1] += 0.005
-      if (pos.array[i * 3 + 1] > 20) pos.array[i * 3 + 1] = -20
+      arr[i * 3] = (Math.random() - 0.5) * 20
+      arr[i * 3 + 1] = (Math.random() - 0.5) * 40
+      arr[i * 3 + 2] = (Math.random() - 0.5) * 10
     }
-    pos.needsUpdate = true
+    return arr
+  }, [])
+
+  useFrame(() => {
+    const pos = ref.current.geometry.attributes.position.array
+    for (let i = 0; i < count; i++) {
+      pos[i * 3 + 1] += 0.003
+      if (pos[i * 3 + 1] > 20) pos[i * 3 + 1] = -20
+    }
+    ref.current.geometry.attributes.position.needsUpdate = true
   })
 
   return (
-    <points ref={mesh}>
+    <points ref={ref}>
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
@@ -32,42 +47,353 @@ function Particles({ count = 80 }) {
           itemSize={3}
         />
       </bufferGeometry>
-      <pointsMaterial color="#4ecdc4" size={0.05} transparent opacity={0.6} />
+      <pointsMaterial color={C.lightpink} size={0.08} transparent opacity={0.8} />
     </points>
   )
 }
 
-function CameraRig() {
+// -- Camera --------------------
+function CameraRig({ targetDepth, onDepthChange }) {
   const { camera } = useThree()
-  const targetY = useRef(0)
 
   useFrame(() => {
-    camera.position.y += (targetY.current - camera.position.y) * 0.05
+    camera.position.y += (targetDepth - camera.position.y) * 0.03
+    onDepthChange(camera.position.y)
   })
-
-  const attached = useRef(false)
-  if (!attached.current) {
-    attached.current = true
-    window.addEventListener('wheel', (e) => {
-      targetY.current = Math.min(0, Math.max(-30, targetY.current - e.deltaY * 0.01))
-    })
-  }
 
   return null
 }
 
-export default function World() {
+// -- ABOUT -----------------------------
+function AboutZone({ y }) {
+  const group = useRef()
+  const ringRef = useRef()
+  const cubeRefs = useRef([])
+
+  const cubes = [
+    { pos: [-2.5, 0.3, 0.0], scale: 0.35 },
+    { pos: [ 2.5, 0.1, -0.2], scale: 0.3 },
+    { pos: [-1.8, -1.0, 0.5], scale: 0.25 },
+    { pos: [ 1.8, -0.8, 0.3], scale: 0.28 },
+  ]
+
+  useFrame((state) => {
+    group.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.2) * 0.1
+    if (ringRef.current) {
+      ringRef.current.rotation.z += 0.004
+      ringRef.current.rotation.x += 0.002
+    }
+    cubeRefs.current.forEach((ref, i) => {
+      if (!ref) return
+      ref.rotation.x += 0.005
+      ref.rotation.y += 0.007
+      ref.position.y = cubes[i].pos[1] + Math.sin(state.clock.elapsedTime * 0.5 + i * 1.2) * 0.12
+    })
+  })
+
+  return (
+    <group ref={group} position={[0, y, 0]}>
+      <Html center position={[0, 2.2, 0]}>
+        <div style={{ textAlign: 'center', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
+          <h2 style={{
+            fontFamily: 'Cinzel, serif',
+            fontSize: '2.2rem',
+            color: C.lightpink,
+            margin: 0,
+            letterSpacing: '0.15em',
+            textShadow: `0 0 30px ${C.lightpink}88`,
+          }}>
+            About Me
+          </h2>
+          <p style={{
+            fontFamily: 'Nunito, sans-serif',
+            fontSize: '1.5rem',
+            color: C.lightpink,
+            margin: '1.0rem 0 0',
+            opacity: 0.7,
+            letterSpacing: '0.1em',
+          }}>
+            CS @ UW · 4.0 GPA · Designer · Builder
+          </p>
+        </div>
+      </Html>
+
+      <mesh ref={ringRef} position={[0, 0, 0]}>
+        <torusGeometry args={[0.9, 0.06, 26, 60]} />
+        <meshStandardMaterial
+          color={C.lightpink}
+          emissive={C.lightpink}
+          emissiveIntensity={0.6}
+          transparent
+          opacity={0.9}
+        />
+      </mesh>
+
+      {cubes.map((cfg, i) => (
+        <mesh
+          key={i}
+          ref={(el) => (cubeRefs.current[i] = el)}
+          position={cfg.pos}
+          scale={cfg.scale}
+        >
+          <boxGeometry args={[1, 1, 1]} />
+          <meshStandardMaterial
+            color={C.lightpink}
+            emissive={C.lightpink}
+            emissiveIntensity={0.3}
+            wireframe={i % 2 === 0}
+            transparent
+            opacity={0.7}
+          />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
+// -- PROJECT -----------------------------
+function ProjectsZone({ y }) {
+  const group = useRef()
+
+  const orbs = [
+    [-1.8, 0.5, 0.5, 0.5],
+    [ 1.5, 0.8, -0.3, 0.6],
+    [ 0.2, -0.6, 1.0, 0.4],
+    [-0.8, -0.8, -0.8, 0.5],
+    [ 2.2, -0.2, 0.2, 0.35],
+    [-2.2, 0.0, -0.5, 0.4],
+  ]
+
+  useFrame((state) => {
+    group.current.children.forEach((child, i) => {
+      child.position.y = orbs[i][1] + Math.sin(state.clock.elapsedTime * 0.5 + i) * 0.15
+      child.rotation.y += 0.004
+    })
+  })
+
+  return (
+    <group position={[0, y, 0]}>
+      <Html center position={[0, 2.2, 0]}>
+        <div style={{ textAlign: 'center', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
+          <h2 style={{
+            fontFamily: 'Cinzel, serif',
+            fontSize: '2.2rem',
+            color: C.pink,
+            margin: 0,
+            letterSpacing: '0.15em',
+            textShadow: `0 0 30px ${C.pink}88`,
+          }}>
+            Projects
+          </h2>
+          <p style={{
+            fontFamily: 'Nunito, sans-serif',
+            fontSize: '1.5rem',
+            color: C.pink,
+            margin: '1.0rem 0 2.0rem',
+            opacity: 0.7,
+            letterSpacing: '0.1em',
+          }}>
+            click an orb to explore
+          </p>
+        </div>
+      </Html>
+
+      <group ref={group}>
+        {orbs.map(([x, oy, z, scale], i) => (
+          <mesh key={i} position={[x, oy, z]} scale={scale}>
+            <icosahedronGeometry args={[1, 1]} />
+            <meshStandardMaterial
+              color={C.pink}
+              emissive={C.pink}
+              emissiveIntensity={0.4}
+              wireframe={i % 2 === 0}
+              transparent
+              opacity={0.85}
+            />
+          </mesh>
+        ))}
+      </group>
+    </group>
+  )
+}
+
+// -- ART -----------------------------
+function ArtZone({ y }) {
+  const frames = useRef([])
+
+  const frameConfigs = [
+    { pos: [-2.2, 0.3, 0.0], rot: [0.1, 0.3, 0.05] },
+    { pos: [ 0.0, 0.0, 0.5], rot: [0.0, 0.0, 0.0] },
+    { pos: [ 2.2, 0.3, -0.2], rot: [0.1, -0.3, 0.05] },
+    { pos: [-1.0, -1.2, 0.3], rot: [0.2, 0.1, 0.08] },
+    { pos: [ 1.2, -1.1, -0.1], rot: [0.1, -0.1, 0.06] },
+  ]
+
+  useFrame((state) => {
+    frames.current.forEach((ref, i) => {
+      if (!ref) return
+      ref.rotation.y = frameConfigs[i].rot[1] + Math.sin(state.clock.elapsedTime * 0.3 + i) * 0.08
+      ref.position.y = frameConfigs[i].pos[1] + Math.sin(state.clock.elapsedTime * 0.4 + i * 1.3) * 0.1
+    })
+  })
+
+  return (
+    <group position={[0, y, 0]}>
+      <Html center position={[0, 2.2, 0]}>
+        <div style={{ textAlign: 'center', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
+          <h2 style={{
+            fontFamily: 'Cinzel, serif',
+            fontSize: '2.2rem',
+            color: C.lightpurple,
+            margin: 0,
+            letterSpacing: '0.15em',
+            textShadow: `0 0 30px ${C.lightpurple}88`,
+          }}>
+            Art Gallery
+          </h2>
+          <p style={{
+            fontFamily: 'Nunito, sans-serif',
+            fontSize: '1.5rem',
+            color: C.lightpurple,
+            margin: '1.0rem 0 1.0rem',
+            opacity: 0.7,
+            letterSpacing: '0.1em',
+          }}>
+            illustrations · paintings · digital
+          </p>
+        </div>
+      </Html>
+
+      {frameConfigs.map((cfg, i) => (
+        <mesh
+          key={i}
+          ref={(el) => (frames.current[i] = el)}
+          position={cfg.pos}
+          rotation={cfg.rot}
+        >
+          <planeGeometry args={[1.1, 1.4]} />
+          <meshStandardMaterial
+            color={C.lightpurple}
+            emissive={C.lightpurple}
+            emissiveIntensity={0.15}
+            transparent
+            opacity={0.25}
+            side={2}
+          />
+        </mesh>
+      ))}
+
+      {frameConfigs.map((cfg, i) => (
+        <mesh
+          key={`border-${i}`}
+          position={cfg.pos}
+          rotation={cfg.rot}
+        >
+          <planeGeometry args={[1.15, 1.45]} />
+          <meshStandardMaterial
+            color={C.pink}
+            wireframe
+            transparent
+            opacity={0.5}
+          />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
+// -- CONTACT -----------------------------
+function ContactZone({ y }) {
+  const bottle = useRef()
+  const rings = useRef([])
+
+  useFrame((state) => {
+    if (bottle.current) {
+      bottle.current.rotation.y += 0.005
+      bottle.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.15
+    }
+    rings.current.forEach((ring, i) => {
+      if (!ring) return
+      ring.rotation.z += 0.003 * (i % 2 === 0 ? 1 : -1)
+      ring.rotation.x += 0.002
+    })
+  })
+
+  return (
+    <group position={[0, y, 0]}>
+      <Html center position={[0, 2.2, 0]}>
+        <div style={{ textAlign: 'center', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
+          <h2 style={{
+            fontFamily: 'Cinzel, serif',
+            fontSize: '2.2rem',
+            color: C.purple,
+            margin: 0,
+            letterSpacing: '0.15em',
+            textShadow: `0 0 30px ${C.purple}88`,
+          }}>
+            Contact
+          </h2>
+          <p style={{
+            fontFamily: 'Nunito, sans-serif',
+            fontSize: '1.5rem',
+            color: C.purple,
+            margin: '1.0rem 0 2.5rem',
+            opacity: 0.7,
+            letterSpacing: '0.1em',
+          }}>
+            angelay2@uw.edu
+          </p>
+        </div>
+      </Html>
+
+      {[1.0, 1.5, 2.0].map((radius, i) => (
+        <mesh
+          key={i}
+          ref={(el) => (rings.current[i] = el)}
+          position={[0, 0, 0]}
+          rotation={[Math.PI / 3 + i * 0.4, 0, i * 0.5]}
+        >
+          <torusGeometry args={[radius, 0.02, 15, 40]} />
+          <meshStandardMaterial
+            color={C.purple}
+            emissive={C.purple}
+            emissiveIntensity={0.5}
+            transparent
+            opacity={0.4}
+          />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
+export const ZONES = [
+  { y: 0, color: C.light, title: 'Angela Yang', subtitle: 'CS @ UW · Designer · Builder · Artist' },
+  { y: -10, color: C.lightpink, title: 'About', subtitle: 'Who I am' },
+  { y: -20, color: C.pink, title: 'Projects', subtitle: 'Things I have built' },
+  { y: -30, color: C.lightpurple, title: 'Art Gallery', subtitle: 'Things I have drawn' },
+  { y: -40, color: C.purple, title: 'Contact', subtitle: 'Say hello' },
+]
+
+export default function World({ targetDepth, onDepthChange }) {
   return (
     <>
-      <fog attach="fog" args={['#0a1628', 8, 35]} />
+      <fog attach="fog" args={[C.darkpurple, 10, 40]} />
 
-      <ambientLight intensity={0.3} />
-      <pointLight position={[0, 5, 5]} intensity={1.5} color="#4ecdc4" />
-      <pointLight position={[0, -10, 3]} intensity={0.8} color="#1a9e8f" />
-      <pointLight position={[0, -25, 3]} intensity={0.6} color="#f4c542" />
+      <ambientLight intensity={0.4} />
+      <pointLight position={[0, 0, 5]} intensity={1.5} color={C.light} />
+      <pointLight position={[0, -8, 5]} intensity={1.0} color={C.lightpink} />
+      <pointLight position={[0, -16, 5]} intensity={1.0} color={C.pink} />
+      <pointLight position={[0, -24, 5]} intensity={0.8} color={C.lightpurple} />
+      <pointLight position={[0, -32, 5]} intensity={0.8} color={C.purple} />
 
       <Particles />
-      <CameraRig />
+      <CameraRig targetDepth={targetDepth} onDepthChange={onDepthChange} />
+
+      <AboutZone y={-10}  />
+      <ProjectsZone y={-20} />
+      <ArtZone y={-30} />
+      <ContactZone y={-40} />
     </>
   )
 }
