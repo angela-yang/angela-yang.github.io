@@ -15,15 +15,15 @@ const C = {
 }
 
 // -- Particles --------------------
-function Particles({ count = 120 }) {
+function Particles({ count = 200 }) {
   const ref = useRef()
 
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3)
     for (let i = 0; i < count; i++) {
-      arr[i * 3] = (Math.random() - 0.5) * 20
-      arr[i * 3 + 1] = (Math.random() - 0.5) * 40
-      arr[i * 3 + 2] = (Math.random() - 0.5) * 10
+      arr[i * 3]     = (Math.random() - 0.5) * 20   // x
+      arr[i * 3 + 1] = (Math.random() - 0.5) * 80   // y
+      arr[i * 3 + 2] = (Math.random() - 0.5) * 10   // z
     }
     return arr
   }, [])
@@ -32,7 +32,7 @@ function Particles({ count = 120 }) {
     const pos = ref.current.geometry.attributes.position.array
     for (let i = 0; i < count; i++) {
       pos[i * 3 + 1] += 0.003
-      if (pos[i * 3 + 1] > 20) pos[i * 3 + 1] = -20
+      if (pos[i * 3 + 1] > 40) pos[i * 3 + 1] = -40
     }
     ref.current.geometry.attributes.position.needsUpdate = true
   })
@@ -47,7 +47,7 @@ function Particles({ count = 120 }) {
           itemSize={3}
         />
       </bufferGeometry>
-      <pointsMaterial color={C.lightpink} size={0.08} transparent opacity={0.8} />
+      <pointsMaterial color={C.lavender} size={0.06} transparent opacity={0.6} />
     </points>
   )
 }
@@ -57,7 +57,7 @@ function CameraRig({ targetDepth, onDepthChange }) {
   const { camera } = useThree()
 
   useFrame(() => {
-    camera.position.y += (targetDepth - camera.position.y) * 0.03
+    camera.position.y += (targetDepth - camera.position.y) * 0.06  // was 0.03 — snappier
     onDepthChange(camera.position.y)
   })
 
@@ -152,66 +152,158 @@ function AboutZone({ y }) {
 }
 
 // -- PROJECT -----------------------------
-function ProjectsZone({ y }) {
-  const group = useRef()
+const PROJECTS = [
+  { title: 'UW Pawprint', desc: 'Course + housing reviews for UW students.', url: 'https://uw-pawprint.vercel.app/', img: '/projects/pawprint.png' },
+  { title: 'CSEED Buildspace', desc: 'CSEED project showcase site as Design Engineer.', url: 'https://cseed-buildspace.vercel.app/', img: '/projects/buildspace.png' },
+  { title: 'My Art Shop', desc: 'E-commerce site for my artwork.', url: 'https://tangierine.vercel.app', img: '/projects/tangierine.png' },
+  { title: 'Paint-A-Hike', desc: 'Draw a sketch, find your real hike.', url: 'https://github.com/angela-yang/Dubhacks-25', img: '/projects/paint.png' },
+  { title: 'Air Quality Health', desc: 'Simple way to track air quality and learn its health implications', url: 'https://devpost.com/software/air-quality-health', img: '/projects/aqi.png' },
+  { title: 'Bear Go Brr', desc: 'Reduce carbon footprint with a pet bear.', url: 'https://github.com/angela-yang/Penguins', img: '/projects/bear.png' },
+  { title: 'Crane Game', desc: 'Find ten cranes in the dark.', url: 'https://angela-yang.github.io/crane-game/', img: '/projects/crane.png' },
+]
 
-  const orbs = [
-    [-1.8, 0.5, 0.5, 0.5],
-    [ 1.5, 0.8, -0.3, 0.6],
-    [ 0.2, -0.6, 1.0, 0.4],
-    [-0.8, -0.8, -0.8, 0.5],
-    [ 2.2, -0.2, 0.2, 0.35],
-    [-2.2, 0.0, -0.5, 0.4],
-  ]
+const orbs = [
+  [ -2.5, 0.5, 0.5, 0.55 ],
+  [ 2.2, 0.8, -0.3, 0.6 ],
+  [ 0.2, -0.6, 1.0, 0.5 ],
+  [ -2.0, -0.8, -0.8, 0.5 ],
+  [ 2.8, -0.2, 0.2, 0.45 ],
+  [ -3.0, 0.0, -0.5, 0.45 ],
+]
+
+function ProjectsZone({ y, activeProject, onProjectClick }) {
+  const groupRef = useRef()
+  const meshRefs = useRef([])
 
   useFrame((state) => {
-    group.current.children.forEach((child, i) => {
-      child.position.y = orbs[i][1] + Math.sin(state.clock.elapsedTime * 0.5 + i) * 0.15
-      child.rotation.y += 0.004
+    meshRefs.current.forEach((mesh, i) => {
+      if (!mesh) return
+      const isActive = activeProject === i
+
+      mesh.rotation.y += isActive ? 0.02 : 0.004
+      mesh.rotation.x += isActive ? 0.01 : 0.002
+
+      if (!isActive) {
+        mesh.position.y = orbs[i][1] + Math.sin(state.clock.elapsedTime * 0.5 + i) * 0.15
+      }
     })
   })
 
   return (
     <group position={[0, y, 0]}>
-      <Html center position={[0, 2.2, 0]}>
-        <div style={{ textAlign: 'center', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
-          <h2 style={{
-            fontFamily: 'Cinzel, serif',
-            fontSize: '2.2rem',
-            color: C.pink,
-            margin: 0,
-            letterSpacing: '0.15em',
-            textShadow: `0 0 30px ${C.pink}88`,
-          }}>
-            Projects
-          </h2>
-          <p style={{
-            fontFamily: 'Nunito, sans-serif',
-            fontSize: '1.5rem',
-            color: C.pink,
-            margin: '1.0rem 0 2.0rem',
-            opacity: 0.7,
-            letterSpacing: '0.1em',
-          }}>
-            click an orb to explore
-          </p>
-        </div>
-      </Html>
+      {activeProject === null && (
+        <Html center position={[0, 2.5, 0]}>
+          <div style={{ textAlign: 'center', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
+            <h2 style={{ 
+              fontFamily: 'Cinzel, serif', 
+              fontSize: '2.2rem', 
+              color: C.pink, 
+              margin: 0, 
+              letterSpacing: '0.15em', 
+              textShadow: `0 0 30px ${C.pink}88` 
+            }}>
+              Projects
+            </h2>
+            <p style={{ 
+              fontFamily: 'Nunito, sans-serif', 
+              fontSize: '1.5rem', 
+              color: C.pink, 
+              margin: '1.0rem 0 0', 
+              opacity: 0.7, 
+              letterSpacing: '0.1em' 
+            }}>
+              click an orb to explore
+            </p>
+          </div>
+        </Html>
+      )}
 
-      <group ref={group}>
-        {orbs.map(([x, oy, z, scale], i) => (
-          <mesh key={i} position={[x, oy, z]} scale={scale}>
-            <icosahedronGeometry args={[1, 1]} />
-            <meshStandardMaterial
-              color={C.pink}
-              emissive={C.pink}
-              emissiveIntensity={0.4}
-              wireframe={i % 2 === 0}
-              transparent
-              opacity={0.85}
+      {/* Active project */}
+      {activeProject !== null && (
+        <Html center position={[0, 0.2, 3]}>
+          <div style={{
+            width: '320px',
+            background: '#aa67879d',
+            borderRadius: '20px',
+            padding: '1.5rem',
+            fontFamily: 'Nunito, sans-serif',
+            color: 'white',
+            pointerEvents: 'all',
+          }}>
+            <img
+              src={PROJECTS[activeProject].img}
+              alt={PROJECTS[activeProject].title}
+              style={{ width: '100%', borderRadius: '8px', marginBottom: '1rem', display: 'block' }}
             />
-          </mesh>
-        ))}
+            <h3 style={{ 
+              fontFamily: 'Cinzel, serif', 
+              color: 'white', 
+              margin: '0 0 0.5rem', 
+              fontSize: '1.1rem' 
+            }}>
+              {PROJECTS[activeProject].title}
+            </h3>
+            <p style={{ 
+              fontSize: '0.875rem', 
+              opacity: 0.75, 
+              margin: '0 0 1rem', 
+              lineHeight: 1.5 
+            }}>
+              {PROJECTS[activeProject].desc}
+            </p>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <a
+                href={PROJECTS[activeProject].url}
+                target="_blank"
+                rel="noreferrer"
+                style={{ 
+                  color: 'white', 
+                  fontSize: '0.8rem', 
+                  border: `1px solid ${C.light}`, 
+                  padding: '0.3rem 0.9rem', 
+                  borderRadius: '999px', 
+                  textDecoration: 'none' 
+                }}
+              >
+                View →
+              </a>
+              <button
+                onClick={() => onProjectClick(null)}
+                style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', fontSize: '0.8rem' }}
+              >
+                close ✕
+              </button>
+            </div>
+          </div>
+        </Html>
+      )}
+
+      {/* Orbs */}
+      <group ref={groupRef}>
+        {orbs.map(([x, oy, z, scale], i) => {
+          const isActive = activeProject === i
+          return (
+            <mesh
+              key={i}
+              ref={(el) => (meshRefs.current[i] = el)}
+              position={isActive ? [0, 0, 2] : [x, oy, z]}
+              scale={isActive ? scale * 4.5 : scale}
+              onClick={() => onProjectClick(isActive ? null : i)}
+              onPointerOver={() => { document.body.style.cursor = 'pointer' }}
+              onPointerOut={() =>  { document.body.style.cursor = 'default'  }}
+            >
+              <icosahedronGeometry args={[1, 1]} />
+              <meshStandardMaterial
+                color={isActive ? C.lightpink : C.pink}
+                emissive={C.pink}
+                emissiveIntensity={isActive ? 0.9 : 0.4}
+                wireframe={i % 2 === 0}
+                transparent
+                opacity={isActive ? 1 : 0.85}
+              />
+            </mesh>
+          )
+        })}
       </group>
     </group>
   )
@@ -375,10 +467,10 @@ export const ZONES = [
   { y: -40, color: C.purple, title: 'Contact', subtitle: 'Say hello' },
 ]
 
-export default function World({ targetDepth, onDepthChange }) {
+export default function World({ targetDepth, onDepthChange, activeProject, onProjectClick }) {
   return (
     <>
-      <fog attach="fog" args={[C.darkpurple, 10, 40]} />
+      <fog attach="fog" args={['#050508', 10, 45]} />
 
       <ambientLight intensity={0.4} />
       <pointLight position={[0, 0, 5]} intensity={1.5} color={C.light} />
@@ -391,7 +483,7 @@ export default function World({ targetDepth, onDepthChange }) {
       <CameraRig targetDepth={targetDepth} onDepthChange={onDepthChange} />
 
       <AboutZone y={-10}  />
-      <ProjectsZone y={-20} />
+      <ProjectsZone y={-20} activeProject={activeProject} onProjectClick={onProjectClick} />
       <ArtZone y={-30} />
       <ContactZone y={-40} />
     </>
