@@ -56,106 +56,37 @@ function Particles({ count = 200 }) {
   )
 }
 
-// -- Light rays but i didnt like (might add back later) -----------------
-function LightRays() {
-  const groupRef = useRef()
-  const raysRef = useRef([])
-
-  const rays = [
-    { x: 3.3, rotZ: -0.08, w: 0.4, h: 5.5, op: 0.04 },
-    { x: 3.8, rotZ: -0.15, w: 0.2, h: 5.5, op: 0.06 },
-    { x: 4.7, rotZ: -0.15, w: 0.5, h: 5.8, op: 0.07 },
-    { x: 5.5, rotZ: -0.25, w: 0.35, h: 6, op: 0.05 },
-    { x: 6.3, rotZ: -0.28, w: 0.35, h: 6.1, op: 0.04 },
-    { x: 7.2, rotZ: -0.36, w: 0.3, h: 5.8, op: 0.03 },
-    { x: 8.0, rotZ: -0.45, w: 0.25, h: 5.5, op: 0.03 },
-  ]
-
-  useFrame((state) => {
-    const t = state.clock.elapsedTime
-    raysRef.current.forEach((ray, i) => {
-      if (!ray) return
-      ray.material.opacity = rays[i].op + Math.sin(t * 0.6 + i * 0.8) * 0.02
-      ray.rotation.z = rays[i].rotZ + Math.sin(t * 0.3 + i * 0.5) * 0.01
-    })
-  })
-
-  return (
-    <group position={[0, 2, -3]}>
-      {rays.map((ray, i) => (
-        <mesh
-          key={i}
-          ref={el => raysRef.current[i] = el}
-          position={[ray.x, 7 - ray.h, 0]}
-          rotation={[0, 0, ray.rotZ]}
-        >
-          <cylinderGeometry args={[ray.w, ray.w * 0.1, ray.h, 6, 1, true]} />
-          <meshBasicMaterial
-            color="#a8c8ff"
-            transparent
-            opacity={ray.op}
-            side={2}
-            depthWrite={false}
-          />
-        </mesh>
-      ))}
-
-      {[0, 1, 2].map(i => (
-        <RippleRing key={i} delay={i * 1.5} radius={1.5 + i * 0.8} y={0.5} />
-      ))}
-    </group>
-  )
-}
-
-function RippleRing({ delay, radius, y }) {
-  const ref = useRef()
-
-  useFrame((state) => {
-    if (!ref.current) return
-    const t = ((state.clock.elapsedTime + delay) % 3) / 3 // 0 to 1 looping every 3s
-    ref.current.scale.setScalar(0.3 + t * 1.4)
-    ref.current.material.opacity = (1 - t) * 0.12
-  })
-
-  return (
-    <mesh ref={ref} position={[0, y, 0]} rotation={[Math.PI / 2, 0, 0]}>
-      <ringGeometry args={[radius * 0.9, radius, 48]} />
-      <meshBasicMaterial color="#c0d8ff" transparent opacity={0.1} depthWrite={false} side={2} />
-    </mesh>
-  )
-}
-
 // -- Camera --------------------
 function CameraRig({ targetDepth, onDepthChange }) {
   const { camera } = useThree()
-
   useFrame(() => {
     camera.position.y += (targetDepth - camera.position.y) * 0.06
     onDepthChange(camera.position.y)
   })
-
   return null
 }
 
 // -- ABOUT -----------------------------
-function AboutZone({ y }) {
+function AboutZone({ y, mobile }) {
   const group = useRef()
-  const ringRef = useRef()
   const cubeRefs = useRef([])
 
-  const cubes = [
-    { pos: [-2.5, 0.3, 0.0], scale: 0.35 },
-    { pos: [ 2.5, 0.1, -0.2], scale: 0.3 },
-    { pos: [-1.8, -1.0, 0.5], scale: 0.25 },
-    { pos: [ 1.8, -0.8, 0.3], scale: 0.28 },
-  ]
+  const cubes = mobile
+    ? [
+        { pos: [-1.1, 0.3, 0.0], scale: 0.22 },
+        { pos: [ 1.1, 0.1,-0.2], scale: 0.2  },
+        { pos: [-0.8,-0.9, 0.3], scale: 0.17 },
+        { pos: [ 0.8,-0.8, 0.2], scale: 0.18 },
+      ]
+    : [
+        { pos: [-2.5, 0.3, 0.0], scale: 0.35 },
+        { pos: [ 2.5, 0.1,-0.2], scale: 0.3  },
+        { pos: [-1.8,-1.0, 0.5], scale: 0.25 },
+        { pos: [ 1.8,-0.8, 0.3], scale: 0.28 },
+      ]
 
   useFrame((state) => {
     group.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.2) * 0.1
-    if (ringRef.current) {
-      ringRef.current.rotation.z += 0.004
-      ringRef.current.rotation.x += 0.002
-    }
     cubeRefs.current.forEach((ref, i) => {
       if (!ref) return
       ref.rotation.x += 0.005
@@ -166,89 +97,62 @@ function AboutZone({ y }) {
 
   return (
     <group ref={group} position={[0, y, 0]}>
-      <Html center position={[0, 2.2, 0]}>
-        <div style={{ textAlign: 'center', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
+      <Html center position={[0, mobile ? 2.8 : 2.2, 0]}>
+        <div style={{ textAlign: 'center', pointerEvents: 'none' }}>
           <h2 style={{
             fontFamily: 'Cinzel, serif',
-            fontSize: '2.2rem',
-            color: C.lightpink,
-            margin: 0,
-            letterSpacing: '0.15em',
+            fontSize: mobile ? '1.5rem' : '2.2rem',
+            color: C.lightpink, margin: 0, letterSpacing: '0.15em',
           }}>
             About Me
           </h2>
           <p style={{
             fontFamily: 'Nunito, sans-serif',
-            fontSize: '1.5rem',
-            color: C.lightpink,
-            margin: '1.0rem 0 0',
-            opacity: 0.7,
-            letterSpacing: '0.1em',
+            fontSize: mobile ? '0.9rem' : '1.5rem',
+            color: C.lightpink, margin: '0.8rem 0 0', opacity: 0.7, letterSpacing: '0.08em',
           }}>
             Hi I'm Angela! Welcome to my website :)
           </p>
           <p style={{
             fontFamily: 'Nunito, sans-serif',
-            fontSize: '1.5rem',
-            color: C.lightpink,
-            margin: '1.0rem 0 0',
-            opacity: 0.7,
-            letterSpacing: '0.1em',
-            whiteSpace: 'wrap',
-            width: '60vw',
+            fontSize: mobile ? '0.8rem' : '1.5rem',
+            color: C.lightpink, margin: '0.7rem 0 0', opacity: 0.7,
+            letterSpacing: '0.04em',
+            whiteSpace: 'normal',
+            width: mobile ? '78vw' : '62vw',
+            lineHeight: 1.6,
           }}>
-            I'm pursuing a B.S. in Computer Science at the University of Washington, and 
-            I love building things at the intersection of code and creativity. When I'm not 
+            I'm pursuing a B.S. in Computer Science at the University of Washington, and
+            I love building things at the intersection of code and creativity. When I'm not
             coding, I'm probably drawing, crocheting little whales, or playing tennis.
           </p>
         </div>
       </Html>
-      
+
       <Html center position={[0, 0, 0]}>
         <div style={{
-          width: '30vw',
-          height: '30vw',
-          marginTop: '20vh',
-          borderRadius: '50%',
-          overflow: 'hidden',
+          width: mobile ? '40vw' : '30vw',
+          height: mobile ? '40vw' : '30vw',
+          marginTop: mobile ? '12vh' : '15vh',
+          borderRadius: '50%', overflow: 'hidden',
           boxShadow: `0 0 30px ${C.lightpink}44`,
           pointerEvents: 'none',
         }}>
-          <img
-            src="/me.jpg"
-            alt="Angela"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-            }}
-          />
+          <img src="/me.jpg" alt="Angela" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         </div>
       </Html>
 
       {cubes.map((cfg, i) => (
-        <mesh
-          key={i}
-          ref={(el) => (cubeRefs.current[i] = el)}
-          position={cfg.pos}
-          scale={cfg.scale}
-        >
+        <mesh key={i} ref={(el) => (cubeRefs.current[i] = el)} position={cfg.pos} scale={cfg.scale}>
           <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial
-            color={C.lightpink}
-            emissive={C.lightpink}
-            emissiveIntensity={0.3}
-            wireframe={i % 2 === 0}
-            transparent
-            opacity={0.7}
-          />
+          <meshStandardMaterial color={C.lightpink} emissive={C.lightpink} emissiveIntensity={0.3} wireframe={i % 2 === 0} transparent opacity={0.7} />
         </mesh>
       ))}
     </group>
   )
 }
 
-// -- PROJECTS -----------------------------]
+// -- PROJECTS -----------------------------
 const PROJECTS = [
   { title: 'UW Pawprint', desc: 'Course + housing reviews for UW students.', url: 'https://uw-pawprint.vercel.app/', img: '/projects/pawprint.png', bubble: '/projects/bubble1.png', tags: ['React', 'Next.js', 'Supabase', 'Python'] },
   { title: 'CSEED Buildspace', desc: 'Club showcase site as Design Engineer.', url: 'https://cseed-buildspace.vercel.app/', img: '/projects/buildspace.png', bubble: '/projects/bubble2.png', tags: ['React', 'Next.js', 'TailwindCSS'] },
@@ -259,7 +163,7 @@ const PROJECTS = [
   { title: 'Crane Game', desc: 'Find ten paper cranes in the dark.', url: 'https://angela-yang.github.io/crane-game/', img: '/projects/crane.png', bubble: '/projects/bubble7.png', tags: ['p5.js', 'HTML', 'CSS'] },
 ]
 
-const BUBBLE_CONFIGS = [
+const BUBBLE_CONFIGS_DESKTOP = [
   { x: -1.5, y: 0.5, z: 2.0, size: 120 },
   { x: 1.2, y: 0.8, z: 2.6, size: 115 },
   { x: -0.2, y: -0.3, z: 2.5, size: 125 },
@@ -269,7 +173,17 @@ const BUBBLE_CONFIGS = [
   { x: -0.5, y: 1.0, z: 1.0, size: 90 },
 ]
 
-function ProjectBubble({ cfg, index, project, isActive, onClick }) {
+const BUBBLE_CONFIGS_MOBILE = [
+  { x: -0.6, y: 0.5, z: 2.5, size: 78 },
+  { x: 0.7, y: 0.8, z: 2.8, size: 75 },
+  { x: 0.0, y: -0.2, z: 2.6, size: 82 },
+  { x: 0.5, y: 0.5, z: 2.0, size: 66 },
+  { x: -0.8, y: -0.6, z: 2.2, size: 62 },
+  { x: 0.9, y: -0.5, z: 2.1, size: 60 },
+  { x: -0.3, y: 0.9, z: 1.6, size: 58 },
+]
+
+function ProjectBubble({ cfg, index, project, isActive, onClick, mobile }) {
   const [expanded, setExpanded] = useState(false)
   const bobRef = useRef()
 
@@ -285,8 +199,8 @@ function ProjectBubble({ cfg, index, project, isActive, onClick }) {
     bobRef.current.position.y = cfg.y + Math.sin(state.clock.elapsedTime * 0.45 + index * 1.1) * 0.18
   })
 
-  const handleClick = () => { setExpanded(true); onClick(index) }
-  const handleClose = () => { setExpanded(false); onClick(null) }
+  const handleClick = () => { setExpanded(true);  onClick(index) }
+  const handleClose = () => { setExpanded(false); onClick(null)  }
 
   return (
     <>
@@ -304,26 +218,16 @@ function ProjectBubble({ cfg, index, project, isActive, onClick }) {
               userSelect: 'none',
               textAlign: 'center',
               width: `${SIZE}px`,
+              WebkitTapHighlightColor: 'transparent',
             }}
           >
-            <img
-              src={project.bubble}
-              alt={project.title}
-              style={{
-                width: '80%', 
-                aspectRatio: '1',
-                objectFit: 'cover', 
-                display: 'block', 
-                margin: '0 auto',
-              }}
-            />
+            <img src={project.bubble} alt={project.title}
+              style={{ width: '80%', aspectRatio: '1', objectFit: 'cover', display: 'block', margin: '0 auto' }} />
             <div style={{
               marginTop: '7px',
               fontFamily: 'Nunito, sans-serif',
-              fontSize: `${Math.max(10, SIZE * 0.13)}px`,
-              color, 
-              letterSpacing: '0.06em',
-              whiteSpace: 'nowrap',
+              fontSize: `${Math.max(9, SIZE * 0.12)}px`,
+              color, letterSpacing: '0.06em', whiteSpace: 'nowrap',
             }}>
               {project.title}
             </div>
@@ -334,110 +238,108 @@ function ProjectBubble({ cfg, index, project, isActive, onClick }) {
       {expanded && (
         <group position={[0, 0, 2.8]}>
           <Html>
-            <div
-              onClick={handleClose}
-              style={{
-                position: 'fixed', 
-                inset: 0,
-                width: '100vw',
-                height: '100vh',
-                zIndex: 9999,
-                pointerEvents: 'all',
-              }}
-            />
+            <div onClick={handleClose} style={{ position: 'fixed', inset: 0, width: '100vw', height: '100vh', zIndex: 9999, pointerEvents: 'all' }} />
 
             <div style={{
-              position: 'fixed',
-              top: '50%', left: '50%',
-              zIndex: 1000,
-              pointerEvents: 'all',
+              position: 'fixed', top: '50%', left: '50%',
+              zIndex: 10000, pointerEvents: 'all',
               animation: 'bubbleDropFlip 0.55s cubic-bezier(0.34, 1.2, 0.64, 1) forwards',
             }}>
               <div style={{
-                width: '45vw', height: '45vw',
-                borderRadius: '50%',
+                width: mobile ? 'min(88vw, 380px)' : '45vw',
+                height: mobile ? 'min(88vw, 380px)' : '45vw',
+                borderRadius: mobile ? '2rem' : '50%',
                 background: C.purple,
-                opacity: 0.95,
-                border: `5px solid rgba(255,255,255,0.3)`,
+                opacity: 0.97,
+                border: '5px solid rgba(255,255,255,0.3)',
                 boxShadow: `0 0 80px ${color}44, inset 0 0 60px ${color}11`,
                 display: 'flex', flexDirection: 'column',
                 alignItems: 'center', justifyContent: 'center',
-                padding: '3rem', boxSizing: 'border-box',
-                textAlign: 'center', overflow: 'hidden',
+                padding: mobile ? '1.4rem' : '3rem',
+                boxSizing: 'border-box', textAlign: 'center', overflow: 'hidden',
               }}>
-                <img
-                  src={project.img}
-                  alt={project.title}
-                  style={{
-                    width: '75%', aspectRatio: '16/9',
-                    objectFit: 'cover', borderRadius: '5px',
-                    border: `1px solid ${color}66`,
-                    marginBottom: '0.6rem', flexShrink: 0,
-                  }}
+                <img src={project.img} alt={project.title}
+                  style={{ 
+                    width: '75%', 
+                    aspectRatio: '16/9', 
+                    objectFit: 'cover', 
+                    borderRadius: '5px', 
+                    border: `1px solid ${color}66`, 
+                    marginBottom: '0.5rem', 
+                    flexShrink: 0 
+                  }} 
                 />
 
-                <h3 style={{
-                  fontFamily: 'Cinzel, serif', color: 'white',
-                  fontSize: '1.8rem', letterSpacing: '0.1em', margin: '0 0 0.25rem',
+                <h3 style={{ 
+                  fontFamily: 'Cinzel, serif', 
+                  color: 'white', 
+                  fontSize: mobile ? '1.05rem' : '1.8rem', 
+                  letterSpacing: '0.1em', 
+                  margin: '0 0 0.2rem' 
                 }}>
                   {project.title}
                 </h3>
 
-                <p style={{
-                  fontFamily: 'Nunito, sans-serif',
-                  color: 'rgba(255,255,255,0.6)',
-                  fontSize: '1.2rem', lineHeight: 1.5, margin: '0 0 0.5rem',
+                <p style={{ 
+                  fontFamily: 'Nunito, sans-serif', 
+                  color: 'rgba(255,255,255,0.6)', 
+                  fontSize: mobile ? '0.78rem' : '1.2rem', 
+                  lineHeight: 1.5, 
+                  margin: '0 0 0.4rem' 
                 }}>
                   {project.desc}
                 </p>
 
                 {project.tags && (
-                  <div style={{
-                    display: 'flex', flexWrap: 'wrap',
-                    gap: '4px', justifyContent: 'center', marginBottom: '0.55rem',
-                  }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', justifyContent: 'center', marginBottom: '0.5rem' }}>
                     {project.tags.map(tag => (
-                      <span key={tag} style={{
+                      <span key={tag} style={{ 
                         fontFamily: 'Nunito, sans-serif', 
-                        fontSize: '1.2rem',
-                        color: 'rgba(255,255,255,0.6)',
-                        background: "#ffffff2a",
-                        border: `1px solid #ffffff6a`,
+                        fontSize: mobile ? '0.68rem' : '1.2rem', 
+                        color: 'rgba(255,255,255,0.6)', 
+                        background: '#ffffff2a', 
+                        border: '1px solid #ffffff6a', 
                         borderRadius: '999px', 
-                        padding: '2px 8px',
+                        padding: '2px 7px' 
                       }}>
                         {tag}
                       </span>
                     ))}
                   </div>
                 )}
-                <a
-                  href={project.url} target="_blank" rel="noreferrer"
-                  style={{
-                    color: 'white', fontSize: '1.2rem',
-                    border: `1px solid ${color}99`,
-                    padding: '0.28rem 1rem', borderRadius: '999px',
-                    textDecoration: 'none', fontFamily: 'Nunito, sans-serif',
-                    background: `${color}33`,
+
+                <a href={project.url} target="_blank" rel="noreferrer"
+                  style={{ 
+                    color: 'white', 
+                    fontSize: mobile ? '0.78rem' : '1.2rem', 
+                    border: `1px solid ${color}99`, 
+                    padding: '0.25rem 0.9rem', 
+                    borderRadius: '999px', 
+                    textDecoration: 'none', 
+                    fontFamily: 'Nunito, sans-serif', 
+                    background: `${color}33` 
                   }}
                 >
                   View Project →
                 </a>
 
-                <button
-                  onClick={handleClose}
-                  style={{
-                    position: 'absolute', top: '78px', right: '78px',
-                    width: '32px', height: '32px',
-                    borderRadius: '50%',
-                    background: 'rgba(255,255,255,0.15)',
-                    border: '1px solid rgba(255,255,255,0.4)',
-                    color: 'white',
-                    fontSize: '1.2rem', cursor: 'pointer',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    lineHeight: 1,
-                  }}
-                >
+                <button onClick={handleClose}
+                  style={{ 
+                    position: 'absolute', 
+                    top: mobile ? '12px' : '78px', 
+                    right: mobile ? '12px' : '78px', 
+                    width: '28px', 
+                    height: '28px', 
+                    borderRadius: '50%', 
+                    background: 'rgba(255,255,255,0.15)', 
+                    border: '1px solid rgba(255,255,255,0.4)', 
+                    color: 'white', 
+                    fontSize: '0.9rem', 
+                    cursor: 'pointer', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center' 
+                  }}>
                   ✕
                 </button>
               </div>
@@ -445,9 +347,9 @@ function ProjectBubble({ cfg, index, project, isActive, onClick }) {
 
             <style>{`
               @keyframes bubbleDropFlip {
-                0%   { transform: translate(-50%, -140%) scale(0.4) rotateY(90deg); opacity: 0; }
-                60%  { transform: translate(-50%, -50%) scale(1.05) rotateY(0deg);  opacity: 1; }
-                100% { transform: translate(-50%, -50%) scale(1)    rotateY(0deg);  opacity: 1; }
+                0% { transform: translate(-50%, -140%) scale(0.4) rotateY(90deg); opacity: 0; }
+                60% { transform: translate(-50%, -50%) scale(1.05) rotateY(0deg); opacity: 1; }
+                100% { transform: translate(-50%, -50%) scale(1) rotateY(0deg); opacity: 1; }
               }
             `}</style>
           </Html>
@@ -457,25 +359,25 @@ function ProjectBubble({ cfg, index, project, isActive, onClick }) {
   )
 }
 
-function ProjectsZone({ y, activeProject, onProjectClick }) {
+function ProjectsZone({ y, activeProject, onProjectClick, mobile }) {
+  const configs = mobile ? BUBBLE_CONFIGS_MOBILE : BUBBLE_CONFIGS_DESKTOP
   return (
     <group position={[0, y, 0]}>
       <Html center position={[0, 2.5, 0]}>
         <div style={{ textAlign: 'center', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
           <h2 style={{ 
             fontFamily: 'Cinzel, serif', 
-            fontSize: '2.2rem', 
+            fontSize: mobile ? '1.5rem' : '2.2rem', 
             color: C.pink, 
             margin: 0, 
-            letterSpacing: '0.15em',
+            letterSpacing: '0.15em' 
           }}>
             Projects
           </h2>
           <p style={{ 
             fontFamily: 'Nunito, sans-serif', 
-            fontSize: '1.5rem', 
-            color: C.pink, 
-            margin: '1.0rem 0 0', 
+            fontSize: mobile ? '0.9rem' : '1.5rem', 
+            color: C.pink, margin: '1.0rem 0 0', 
             opacity: 0.7, 
             letterSpacing: '0.1em' 
           }}>
@@ -484,7 +386,7 @@ function ProjectsZone({ y, activeProject, onProjectClick }) {
         </div>
       </Html>
       {PROJECTS.map((project, i) => (
-        <ProjectBubble key={i} cfg={BUBBLE_CONFIGS[i]} index={i} project={project} isActive={activeProject === i} onClick={onProjectClick} />
+        <ProjectBubble key={i} cfg={configs[i]} index={i} project={project} isActive={activeProject === i} onClick={onProjectClick} mobile={mobile} />
       ))}
     </group>
   )
@@ -499,12 +401,20 @@ const ARTWORKS = [
   { title: 'Fairytale Love', img: '/art/piece5.jpg', desc: 'Charcoal' },
 ]
 
-const FRAME_CONFIGS = [
+const FRAME_CONFIGS_DESKTOP = [
   { pos: [-2.2, 0.3, 0.0], rot: [0.1, 0.3, 0.05] },
   { pos: [0.0, 0.0, 0.5], rot: [0.0, 0.0, 0.00] },
   { pos: [2.2, 0.3, -0.2], rot: [0.1, -0.3, 0.05] },
   { pos: [-1.0, -1.2, 0.3], rot: [0.2, 0.1, 0.08] },
   { pos: [1.2, -1.1, -0.1], rot: [0.1, -0.1, 0.06] },
+]
+
+const FRAME_CONFIGS_MOBILE = [
+  { pos: [-0.9, 0.3, 0.2], rot: [0.05, 0.18, 0.03] },
+  { pos: [0.0, 0.0, 0.5], rot: [0.0, 0.0, 0.0 ] },
+  { pos: [0.9, 0.3, -0.1], rot: [0.05, -0.18, 0.03] },
+  { pos: [-0.5, -1.0, 0.2], rot: [0.1, 0.1, 0.05] },
+  { pos: [0.6, -0.9, 0.0], rot: [0.05, -0.1, 0.04] },
 ]
 
 function ArtFrame({ index, totalCount, artwork, floatConfig, isGallery, activeIndex, onFrameClick }) {
@@ -516,11 +426,7 @@ function ArtFrame({ index, totalCount, artwork, floatConfig, isGallery, activeIn
     let d = ((i - activeIndex) % totalCount + totalCount) % totalCount
     if (d > totalCount / 2) d -= totalCount
     const angle = d * ANGLE_STEP
-    return {
-      x: 0, y: 0,
-      z: 3.5 * Math.cos(angle) - 0.9,
-      rotY: -angle
-    }
+    return { x: 0, y: 0, z: 3.5 * Math.cos(angle) - 0.9, rotY: -angle }
   }
 
   useFrame((state) => {
@@ -533,29 +439,26 @@ function ArtFrame({ index, totalCount, artwork, floatConfig, isGallery, activeIn
       meshRef.current.scale.setScalar(1)
     } else {
       const t = getGalleryTransform(index)
-      meshRef.current.position.x = (t.x + meshRef.current.position.x)
-      meshRef.current.position.y += (t.y - meshRef.current.position.y) * 0.08
-      meshRef.current.position.z += (t.z - meshRef.current.position.z) * 0.08
-      meshRef.current.rotation.y += (t.rotY - meshRef.current.rotation.y) * 0.08
-      meshRef.current.rotation.x += (0 - meshRef.current.rotation.x) * 0.08
-      meshRef.current.rotation.z += (0 - meshRef.current.rotation.z) * 0.08
+      meshRef.current.position.y += (t.y - meshRef.current.position.y)  * 0.08
+      meshRef.current.position.z += (t.z - meshRef.current.position.z)  * 0.08
+      meshRef.current.rotation.y += (t.rotY - meshRef.current.rotation.y)  * 0.08
+      meshRef.current.rotation.x += (0 - meshRef.current.rotation.x)  * 0.08
+      meshRef.current.rotation.z += (0 - meshRef.current.rotation.z)  * 0.08
     }
   })
 
   return (
-    <>
-      <mesh ref={meshRef} position={floatConfig.pos} rotation={floatConfig.rot}
-        onClick={() => onFrameClick(index)}
-        onPointerOver={() => { document.body.style.cursor = 'pointer' }}
-        onPointerOut={()  => { document.body.style.cursor = 'default'  }}>
-        <planeGeometry args={[1.1, 1.1 / 0.8]} />
-        <meshBasicMaterial map={texture} side={THREE.DoubleSide} />
-      </mesh>
-    </>
+    <mesh ref={meshRef} position={floatConfig.pos} rotation={floatConfig.rot}
+      onClick={() => onFrameClick(index)}
+      onPointerOver={() => { document.body.style.cursor = 'pointer' }}
+      onPointerOut={() => { document.body.style.cursor = 'default' }}>
+      <planeGeometry args={[1.1, 1.1 / 0.8]} />
+      <meshBasicMaterial map={texture} side={THREE.DoubleSide} />
+    </mesh>
   )
 }
 
-function ArtZone({ y }) {
+function ArtZone({ y, mobile }) {
   const [galleryMode, setGalleryMode] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
   const { camera } = useThree()
@@ -579,37 +482,30 @@ function ArtZone({ y }) {
   const prev = () => setActiveIndex(i => (i - 1 + ARTWORKS.length) % ARTWORKS.length)
   const next = () => setActiveIndex(i => (i + 1) % ARTWORKS.length)
 
-  const btnStyle = { background: 'none', border: `1px solid ${C.lightpurple}88`, color: C.lightpurple, borderRadius: '50%', width: '44px', height: '44px', fontSize: '1.4rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }
+  const frameConfigs = mobile ? FRAME_CONFIGS_MOBILE : FRAME_CONFIGS_DESKTOP
+
+  const btnStyle = {
+    background: 'none', border: `1px solid ${C.lightpurple}88`, color: C.lightpurple,
+    borderRadius: '50%', width: mobile ? '36px' : '44px', height: mobile ? '36px' : '44px',
+    fontSize: mobile ? '1.1rem' : '1.4rem', cursor: 'pointer',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    WebkitTapHighlightColor: 'transparent',
+  }
 
   return (
     <group position={[0, y, 0]}>
       <Html center position={[0, 2.2, 0]}>
         <div style={{ textAlign: 'center', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
-          <h2 style={{ 
-            fontFamily: 'Cinzel, serif', 
-            fontSize: '2.2rem', 
-            color: C.lightpurple, 
-            margin: 0, 
-            letterSpacing: '0.15em',
-          }}>
-            Art Gallery
-          </h2>
-          <p style={{ 
-            fontFamily: 'Nunito, sans-serif', 
-            fontSize: '1.5rem', 
-            color: C.lightpurple, 
-            margin: '1.0rem 0 1.0rem', 
-            opacity: 0.7, 
-            letterSpacing: '0.1em' 
-          }}>
-            {galleryMode ? 'click arrows to explore' : 'illustrations · paintings · digital'}
+          <h2 style={{ fontFamily: 'Cinzel, serif', fontSize: mobile ? '1.5rem' : '2.2rem', color: C.lightpurple, margin: 0, letterSpacing: '0.15em' }}>Art Gallery</h2>
+          <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: mobile ? '0.9rem' : '1.5rem', color: C.lightpurple, margin: '1.0rem 0 1.0rem', opacity: 0.7, letterSpacing: '0.1em' }}>
+            {galleryMode ? 'use arrows to explore' : 'tap a painting to view'}
           </p>
         </div>
       </Html>
 
       {ARTWORKS.map((artwork, i) => (
         <ArtFrame key={i} index={i} totalCount={ARTWORKS.length} artwork={artwork}
-          floatConfig={FRAME_CONFIGS[i % FRAME_CONFIGS.length]}
+          floatConfig={frameConfigs[i % frameConfigs.length]}
           isGallery={galleryMode} activeIndex={activeIndex}
           onFrameClick={(idx) => {
             if (!galleryMode) enterGallery(idx)
@@ -621,68 +517,23 @@ function ArtZone({ y }) {
       {galleryMode && (
         <>
           <Html center position={[0, -2.2, 0]}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', fontFamily: 'Nunito, sans-serif', pointerEvents: 'all' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontFamily: 'Nunito, sans-serif', pointerEvents: 'all' }}>
               <button onClick={prev} style={btnStyle}>‹</button>
-              <div style={{ textAlign: 'center', minWidth: '30vw' }}>
-                <div style={{ 
-                  fontFamily: 'Cinzel, serif', 
-                  fontSize: '1.5rem', 
-                  color: C.light, 
-                  letterSpacing: '0.1em', 
-                  marginBottom: '4px' 
-                }}>
-                  {ARTWORKS[activeIndex].title}
-                </div>
-                <div style={{ 
-                  fontSize: '1.2rem', 
-                  color: C.lightpurple, 
-                  opacity: 0.7 
-                }}>
-                  {ARTWORKS[activeIndex].desc}
-                </div>
-                <div style={{ 
-                  marginTop: '8px', 
-                  fontSize: '1.0rem', 
-                  color: C.lightpurple,
-                  opacity: 0.5 
-                }}>
-                  {activeIndex + 1} / {ARTWORKS.length}
-                </div>
+              <div style={{ textAlign: 'center', minWidth: mobile ? '44vw' : '30vw' }}>
+                <div style={{ fontFamily: 'Cinzel, serif', fontSize: mobile ? '1rem' : '1.5rem', color: C.light, letterSpacing: '0.1em', marginBottom: '4px' }}>{ARTWORKS[activeIndex].title}</div>
+                <div style={{ fontSize: mobile ? '0.8rem' : '1.2rem', color: C.lightpurple, opacity: 0.7 }}>{ARTWORKS[activeIndex].desc}</div>
+                <div style={{ marginTop: '6px', fontSize: mobile ? '0.75rem' : '1.0rem', color: C.lightpurple, opacity: 0.5 }}>{activeIndex + 1} / {ARTWORKS.length}</div>
               </div>
               <button onClick={next} style={btnStyle}>›</button>
             </div>
-            <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-              <button onClick={exitGallery} 
-                style={{ 
-                  background: 'none', 
-                  border: 'none', 
-                  color: C.lightpurple, 
-                  opacity: 0.5, 
-                  fontSize: '1.0rem', 
-                  cursor: 'pointer', 
-                  letterSpacing: '0.1em', 
-                  fontFamily: 'Nunito, sans-serif' 
-                }}
-              >
-                ✕ close gallery
-              </button>
+            <div style={{ textAlign: 'center', marginTop: '0.8rem' }}>
+              <button onClick={exitGallery} style={{ background: 'none', border: 'none', color: C.lightpurple, opacity: 0.5, fontSize: mobile ? '0.8rem' : '1.0rem', cursor: 'pointer', letterSpacing: '0.1em', fontFamily: 'Nunito, sans-serif' }}>✕ close gallery</button>
             </div>
           </Html>
           <Html center position={[0, -3.2, 0]}>
             <div style={{ display: 'flex', gap: '6px', justifyContent: 'center', pointerEvents: 'all' }}>
               {ARTWORKS.map((_, i) => (
-                <div 
-                  key={i} 
-                  onClick={() => setActiveIndex(i)} 
-                  style={{ 
-                    width: i === activeIndex ? '20px' : '8px', 
-                    height: '8px', 
-                    borderRadius: '4px', 
-                    background: i === activeIndex ? C.lightpurple : `${C.lightpurple}44`, 
-                    cursor: 'pointer', 
-                    transition: 'all 0.3s ease' 
-                  }} 
-                />
+                <div key={i} onClick={() => setActiveIndex(i)} style={{ width: i === activeIndex ? '20px' : '8px', height: '8px', borderRadius: '4px', background: i === activeIndex ? C.lightpurple : `${C.lightpurple}44`, cursor: 'pointer', transition: 'all 0.3s ease' }} />
               ))}
             </div>
           </Html>
@@ -693,10 +544,10 @@ function ArtZone({ y }) {
 }
 
 // -- CONTACT -----------------------------
-function ContactZone({ y }) {
+function ContactZone({ y, mobile }) {
   const rings = useRef([])
 
-  useFrame((state) => {
+  useFrame(() => {
     rings.current.forEach((ring, i) => {
       if (!ring) return
       ring.rotation.z += 0.003 * (i % 2 === 0 ? 1 : -1)
@@ -705,46 +556,30 @@ function ContactZone({ y }) {
   })
 
   const links = [
-    {
-      icon: <FaLinkedin size={28} />,
-      label: 'LinkedIn',
-      href: 'https://linkedin.com/in/angelaxy',
-      color: C.lightpurple,
-    },
-    {
-      icon: <FaGithub size={28} />,
-      label: 'GitHub',
-      href: 'https://github.com/angela-yang',
-      color: C.light,
-    },
-    {
-      icon: <IoMdMail size={28} />,
-      label: 'Email',
-      href: 'mailto:angelay2@uw.edu',
-      color: C.lightpink,
-    },
-    {
-      icon: <IoDocumentSharp size={28} />,
-      label: 'Resume',
-      href: '/resume.pdf',
-      color: C.pink,
-    },
+    { icon: <FaLinkedin size={mobile ? 22 : 28} />, label: 'LinkedIn', href: 'https://linkedin.com/in/angelaxy', color: C.lightpurple },
+    { icon: <FaGithub size={mobile ? 22 : 28} />, label: 'GitHub', href: 'https://github.com/angela-yang', color: C.light },
+    { icon: <IoMdMail size={mobile ? 22 : 28} />, label: 'Email', href: 'mailto:angelay2@uw.edu', color: C.lightpink },
+    { icon: <IoDocumentSharp size={mobile ? 22 : 28} />, label: 'Resume',   href: '/resume.pdf', color: C.pink },
   ]
 
   return (
     <group position={[0, y, 0]}>
       <Html center position={[0, 2.2, 0]}>
         <div style={{ textAlign: 'center', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
-          <h2 style={{
-            fontFamily: 'Cinzel, serif', fontSize: '2.2rem',
-            color: C.purple, margin: 0, letterSpacing: '0.15em',
-            textShadow: `0 0 30px ${C.purple}88`,
+          <h2 style={{ 
+            fontFamily: 'Cinzel, serif', 
+            fontSize: mobile ? '1.5rem' : '2.2rem', 
+            color: C.purple, margin: 0, 
+            letterSpacing: '0.15em' 
           }}>
             Contact
           </h2>
-          <p style={{
-            fontFamily: 'Nunito, sans-serif', fontSize: '1.2rem',
-            color: C.purple, margin: '0.8rem 0 0', opacity: 0.7, letterSpacing: '0.1em',
+          <p style={{ 
+            fontFamily: 'Nunito, sans-serif', 
+            fontSize: mobile ? '0.9rem' : '1.2rem', 
+            color: C.purple, margin: '0.8rem 0 0', 
+            opacity: 0.7, 
+            letterSpacing: '0.1em' 
           }}>
             let's build something together
           </p>
@@ -752,63 +587,35 @@ function ContactZone({ y }) {
       </Html>
 
       <Html center position={[0, 0, 0]}>
-        <div style={{
-          display: 'flex',
-          gap: '2rem',
-          alignItems: 'center',
-          pointerEvents: 'all',
-        }}>
+        <div style={{ display: 'flex', gap: mobile ? '1.2rem' : '2rem', alignItems: 'center', pointerEvents: 'all', flexWrap: 'wrap', justifyContent: 'center', maxWidth: mobile ? '72vw' : 'none' }}>
           {links.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              target={link.href.startsWith('mailto') ? undefined : '_blank'}
-              rel="noreferrer"
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '6px',
-                color: link.color,
-                textDecoration: 'none',
-                transition: 'transform 0.2s, opacity 0.2s',
-                opacity: 0.8,
+            <a key={link.label} href={link.href}
+              target={link.href.startsWith('mailto') ? undefined : '_blank'} rel="noreferrer"
+              style={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center', 
+                gap: '6px', color: link.color, 
+                textDecoration: 'none', 
+                transition: 'transform 0.2s, opacity 0.2s', 
+                opacity: 0.8, 
+                WebkitTapHighlightColor: 'transparent' 
               }}
-              onMouseOver={e => {
-                e.currentTarget.style.transform = 'translateY(-4px) scale(1.1)'
-                e.currentTarget.style.opacity = '1'
-              }}
-              onMouseOut={e => {
-                e.currentTarget.style.transform = 'translateY(0) scale(1)'
-                e.currentTarget.style.opacity = '0.8'
-              }}
-            >
+              onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-4px) scale(1.1)'; e.currentTarget.style.opacity = '1' }}
+              onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.opacity = '0.8' }}
+              onTouchStart={e => { e.currentTarget.style.transform = 'scale(1.15)'; e.currentTarget.style.opacity = '1' }}
+              onTouchEnd={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.opacity = '0.8' }}>
               {link.icon}
-              <span style={{
-                fontFamily: 'Nunito, sans-serif',
-                fontSize: '0.72rem',
-                letterSpacing: '0.1em',
-                color: link.color,
-              }}>
-                {link.label.toUpperCase()}
-              </span>
+              <span style={{ fontFamily: 'Nunito, sans-serif', fontSize: mobile ? '0.6rem' : '0.72rem', letterSpacing: '0.1em', color: link.color }}>{link.label.toUpperCase()}</span>
             </a>
           ))}
         </div>
       </Html>
 
       {[1.0, 1.5, 2.0].map((radius, i) => (
-        <mesh
-          key={i}
-          ref={(el) => (rings.current[i] = el)}
-          position={[0, 0, 0]}
-          rotation={[Math.PI / 3 + i * 0.4, 0, i * 0.5]}
-        >
+        <mesh key={i} ref={(el) => (rings.current[i] = el)} position={[0, 0, 0]} rotation={[Math.PI / 3 + i * 0.4, 0, i * 0.5]}>
           <torusGeometry args={[radius, 0.02, 15, 40]} />
-          <meshStandardMaterial
-            color={C.purple} emissive={C.purple}
-            emissiveIntensity={0.5} transparent opacity={0.4}
-          />
+          <meshStandardMaterial color={C.purple} emissive={C.purple} emissiveIntensity={0.5} transparent opacity={0.4} />
         </mesh>
       ))}
     </group>
@@ -823,7 +630,7 @@ export const ZONES = [
   { y: -40, color: C.purple, title: 'Contact', subtitle: 'Say hello' },
 ]
 
-export default function World({ targetDepth, onDepthChange, activeProject, onProjectClick }) {
+export default function World({ targetDepth, onDepthChange, activeProject, onProjectClick, mobile }) {
   return (
     <>
       <fog attach="fog" args={['#050508', 10, 45]} />
@@ -837,10 +644,10 @@ export default function World({ targetDepth, onDepthChange, activeProject, onPro
       <Particles />
       <CameraRig targetDepth={targetDepth} onDepthChange={onDepthChange} />
 
-      <AboutZone y={-10.5} />
-      <ProjectsZone y={-20.5} activeProject={activeProject} onProjectClick={onProjectClick} />
-      <ArtZone y={-30.5} />
-      <ContactZone y={-40.5} />
+      <AboutZone y={-10.7} mobile={mobile} />
+      <ProjectsZone y={-20.5} activeProject={activeProject} onProjectClick={onProjectClick} mobile={mobile} />
+      <ArtZone y={-30.5} mobile={mobile} />
+      <ContactZone  y={-40.5} mobile={mobile} />
     </>
   )
 }
