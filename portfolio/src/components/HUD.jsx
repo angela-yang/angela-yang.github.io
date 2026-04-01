@@ -50,7 +50,7 @@ export default function HUD({ zones, cameraY, onNavigate, mobile }) {
           marginTop: '0.5rem',
           letterSpacing: mobile ? '0.08em' : '0.2em',
         }}>
-          CS @ UW · Designer · Builder · Artist
+          CS @ UW · Developer · Builder · Artist
         </p>
         <p style={{
           fontFamily: 'Nunito, sans-serif',

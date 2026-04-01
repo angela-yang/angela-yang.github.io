@@ -1,6 +1,6 @@
 import { useRef, useMemo, useState, useEffect } from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
-import { Html, useTexture } from '@react-three/drei'
+import { useFrame, useThree, extend } from '@react-three/fiber'
+import { Html, useTexture, useGLTF, shaderMaterial, useAnimations, Clone} from '@react-three/drei'
 import { FaLinkedin, FaGithub } from 'react-icons/fa'
 import { IoDocumentSharp } from 'react-icons/io5'
 import { IoMdMail } from 'react-icons/io'
@@ -51,7 +51,7 @@ function Particles({ count = 200 }) {
           itemSize={3}
         />
       </bufferGeometry>
-      <pointsMaterial color={C.light} size={0.06} transparent opacity={0.6} />
+      <pointsMaterial color={C.light} size={0.06} transparent opacity={0.6} depthWrite={false}/>
     </points>
   )
 }
@@ -66,38 +66,151 @@ function CameraRig({ targetDepth, onDepthChange }) {
   return null
 }
 
+function Jellyfish({
+  position = [0, 0, 0],
+  scale = 1.0,
+  speed = 0.6,
+  phase = 0,
+  color = C.lightpink,
+}) {
+  const groupRef = useRef()
+  const { scene } = useGLTF('/models/jellyfish3.glb')
+
+  const currentRotY = useRef(0)
+  const glowIntensity = useRef(0.4)
+  const targetGlow = useRef(0.4)
+  const squishRef = useRef({ active: false, t: 0 })
+  const materialsRef = useRef([])
+
+  const clonedScene = useMemo(() => {
+    const clone = scene.clone(true)
+    materialsRef.current = []
+    clone.traverse((child) => {
+      if (child.isMesh && child.material) {
+        child.material = child.material.clone()
+        child.material.emissive = new THREE.Color(color)
+        child.material.emissiveIntensity = 0.4
+        child.material.needsUpdate = true
+        materialsRef.current.push(child.material)
+      }
+    })
+    return clone
+  }, [scene, color])
+
+  useEffect(() => {
+  clonedScene.traverse((child) => {
+    if (child.isMesh) {
+      child.frustumCulled = false
+      if (!child.material.isMeshStandardMaterial) {
+        const old = child.material
+        child.material = new THREE.MeshStandardMaterial({
+          color: old.color ?? new THREE.Color(color),
+          transparent: true,
+          opacity: old.opacity ?? 1,
+          depthWrite: false, 
+        })
+      }
+      child.material.emissive = new THREE.Color(color)
+      child.material.emissiveIntensity = 0.6
+      child.material.depthWrite = false 
+      child.material.needsUpdate = true
+      materialsRef.current.push(child.material)
+    }
+  })
+}, [clonedScene, color])
+
+  useFrame((state, delta) => {
+    if (!groupRef.current) return
+
+    groupRef.current.position.y =
+      position[1] + Math.sin(state.clock.elapsedTime * speed + phase) * 0.3
+
+    currentRotY.current += 0.004
+    groupRef.current.rotation.y = currentRotY.current
+
+    groupRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.4 + phase) * 0.05
+
+    if (squishRef.current.active) {
+      squishRef.current.t += delta * 8
+      const t = squishRef.current.t
+      const squish = 1 - Math.sin(t) * 0.4 * Math.exp(-t * 0.8)
+      groupRef.current.scale.y = squish * scale
+      if (t > Math.PI) {
+        squishRef.current.active = false
+        squishRef.current.t = 0
+        groupRef.current.scale.y = scale
+      }
+    }
+
+    glowIntensity.current += (targetGlow.current - glowIntensity.current) * 0.08
+    materialsRef.current.forEach(mat => {
+      mat.emissiveIntensity = glowIntensity.current
+    })
+  })
+
+  const handlePointerEnter = (e) => {
+    e.stopPropagation()
+    targetGlow.current = 1.5
+    document.body.style.cursor = 'pointer'
+  }
+
+  const handlePointerLeave = () => {
+    targetGlow.current = 0.4
+    document.body.style.cursor = 'default'
+  }
+
+  const handleClick = (e) => {
+    e.stopPropagation()
+    squishRef.current.active = true
+    squishRef.current.t = 0
+  }
+
+  return (
+    <group
+      ref={groupRef}
+      position={position}
+      scale={[scale, scale, scale]}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
+      onClick={handleClick}
+    >
+      <primitive object={clonedScene} />
+    </group>
+  )
+}
+
+useGLTF.preload('/models/jellyfish3.glb')
+
 // -- ABOUT -----------------------------
 function AboutZone({ y, mobile }) {
   const group = useRef()
-  const cubeRefs = useRef([])
+  const bubbleRefs = useRef([])
 
-  const cubes = mobile
-    ? [
-        { pos: [-1.1, 0.3, 0.0], scale: 0.22 },
-        { pos: [ 1.1, 0.1,-0.2], scale: 0.2  },
-        { pos: [-0.8,-0.9, 0.3], scale: 0.17 },
-        { pos: [ 0.8,-0.8, 0.2], scale: 0.18 },
-      ]
-    : [
-        { pos: [-2.5, 0.3, 0.0], scale: 0.35 },
-        { pos: [ 2.5, 0.1,-0.2], scale: 0.3  },
-        { pos: [-1.8,-1.0, 0.5], scale: 0.25 },
-        { pos: [ 1.8,-0.8, 0.3], scale: 0.28 },
-      ]
+  const bubbles = [
+    { pos: [-2.8, 0.4, 0.2], size: 0.5 },
+    { pos: [2.6, 0.6, -0.3], size: 0.4 },
+    { pos: [-1.8, -1.0, 0.5], size: 0.3 },
+    { pos: [2.0, -0.9, 0.4], size: 0.35 },
+    { pos: [0.8, 1.0, -0.5], size: 0.22 },
+    { pos: [-0.6, -1.6, 0.3], size: 0.18 },
+  ]
 
   useFrame((state) => {
     group.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.2) * 0.1
-    cubeRefs.current.forEach((ref, i) => {
+
+    bubbleRefs.current.forEach((ref, i) => {
       if (!ref) return
-      ref.rotation.x += 0.005
-      ref.rotation.y += 0.007
-      ref.position.y = cubes[i].pos[1] + Math.sin(state.clock.elapsedTime * 0.5 + i * 1.2) * 0.12
+      ref.position.y = bubbles[i].pos[1] + Math.sin(state.clock.elapsedTime * 0.5 + i * 1.1) * 0.15
+      ref.position.x = bubbles[i].pos[0] + Math.sin(state.clock.elapsedTime * 0.3 + i * 0.8) * 0.05
     })
   })
 
   return (
     <group ref={group} position={[0, y, 0]}>
-      <Html center position={[0, mobile ? 2.8 : 2.2, 0]}>
+      <Jellyfish position={[4.0, 3.0, -0.5]} scale={0.4} phase={0} speed={0.6} color={C.purple} />
+      <Jellyfish position={[-4.0, -1.5, -1.0]} scale={0.4} phase={1.5} speed={0.5} color={C.lightpurple} />
+      <Jellyfish position={[3.0, -4.5, -1.5]} scale={0.4} phase={1.5} speed={0.5} color={C.pink} />
+      <Html center position={[0, mobile ? 2.8 : 2.2, 0]} transform={false}>
         <div style={{ textAlign: 'center', pointerEvents: 'none' }}>
           <h2 style={{
             fontFamily: 'Cinzel, serif',
@@ -117,7 +230,6 @@ function AboutZone({ y, mobile }) {
             fontFamily: 'Nunito, sans-serif',
             fontSize: mobile ? '0.8rem' : '1.5rem',
             color: C.lightpink, margin: '0.7rem 0 0', opacity: 0.7,
-            letterSpacing: '0.04em',
             whiteSpace: 'normal',
             width: mobile ? '78vw' : '62vw',
             lineHeight: 1.6,
@@ -129,24 +241,51 @@ function AboutZone({ y, mobile }) {
         </div>
       </Html>
 
-      <Html center position={[0, 0, 0]}>
+      <Html center position={[0, -0.3, 0]} transform={false}>
         <div style={{
-          width: mobile ? '40vw' : '30vw',
-          height: mobile ? '40vw' : '30vw',
-          marginTop: mobile ? '12vh' : '15vh',
-          borderRadius: '50%', overflow: 'hidden',
-          boxShadow: `0 0 30px ${C.lightpink}44`,
+          width: mobile ? '40vw' : '22vw',
+          height: mobile ? '40vw' : '22vw',
+          borderRadius: '50%',
+          overflow: 'hidden',
+          border: `2px solid ${C.lightpink}66`,
           pointerEvents: 'none',
         }}>
           <img src="/me.jpg" alt="Angela" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         </div>
       </Html>
 
-      {cubes.map((cfg, i) => (
-        <mesh key={i} ref={(el) => (cubeRefs.current[i] = el)} position={cfg.pos} scale={cfg.scale}>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color={C.lightpink} emissive={C.lightpink} emissiveIntensity={0.3} wireframe={i % 2 === 0} transparent opacity={0.7} />
-        </mesh>
+      {bubbles.map((b, i) => (
+        <group
+          key={i}
+          ref={el => bubbleRefs.current[i] = el}
+          position={b.pos}
+        >
+          <mesh>
+            <sphereGeometry args={[b.size, 32, 32]} />
+            <meshStandardMaterial
+              color={C.lightpink}
+              emissive={C.lightpink}
+              emissiveIntensity={0.3}
+              transparent
+              opacity={0.06}
+              depthWrite={false}
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+
+          <mesh>
+            <sphereGeometry args={[b.size, 16, 16]} />
+            <meshStandardMaterial
+              color={C.light}
+              emissive={C.light}
+              emissiveIntensity={0.8}
+              wireframe
+              transparent
+              opacity={0.35}
+              depthWrite={false}
+            />
+          </mesh>
+        </group>
       ))}
     </group>
   )
@@ -633,7 +772,6 @@ export const ZONES = [
 export default function World({ targetDepth, onDepthChange, activeProject, onProjectClick, mobile }) {
   return (
     <>
-      <fog attach="fog" args={['#050508', 10, 45]} />
       <ambientLight intensity={0.4} />
       <pointLight position={[0, 0, 5]} intensity={1.5} color={C.light} />
       <pointLight position={[0, -10, 5]} intensity={1.0} color={C.lightpink} />

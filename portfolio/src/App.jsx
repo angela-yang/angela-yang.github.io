@@ -1,7 +1,9 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
+import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import World, { ZONES } from './experience/World'
 import HUD from './components/HUD'
+import * as THREE from 'three'
 
 function lerpColor(a, b, t) {
   const ah = a.replace('#', '')
@@ -105,9 +107,10 @@ export default function App() {
       touchAction: 'none',
     }}>
       <Canvas
-        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block' }}
-        camera={{ position: [0, 0, 8], fov }}
-        gl={{ antialias: true }}
+        camera={{ position: [0, 0, 8], fov: 60, near: 0.01, far: 1000 }}
+        gl={{ antialias: true, sortObjects: true }}
+        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+        onPointerMissed={() => {}}
       >
         <World
           targetDepth={targetDepth}
@@ -116,6 +119,15 @@ export default function App() {
           onProjectClick={setActiveProject}
           mobile={mobile}
         />
+        <EffectComposer>
+          <Bloom
+            intensity={1.5}
+            luminanceThreshold={0.6} 
+            luminanceSmoothing={0.9}
+            mipmapBlur
+            radius={0.8}
+          />
+        </EffectComposer>
       </Canvas>
 
       <div id="hud" style={{
