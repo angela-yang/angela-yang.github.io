@@ -417,7 +417,7 @@ const SKILLS = [
   { name: 'Supabase', level: 75, category: 'backend' },
   { name: 'Figma', level: 85, category: 'design' },
   { name: 'Procreate', level: 90, category: 'design' },
-  { name: 'p5.js', level: 60, category: 'creative' },
+  { name: 'p5.js', level: 60, category: 'other' },
 ]
 
 const CATEGORY_COLORS = {
@@ -425,7 +425,7 @@ const CATEGORY_COLORS = {
   backend: C.lightpurple,
   '3d': C.pink,
   design: C.light,
-  creative: C.purple,
+  other: C.purple,
 }
 
 function SkillsZone({ y, mobile }) {
@@ -576,7 +576,7 @@ function SkillsZone({ y, mobile }) {
                 {hoveredSkill === i && (
                   <span style={{
                     fontFamily: 'Nunito, sans-serif',
-                    fontSize: `${Math.max(8, p.size * 0.1)}px`,
+                    fontSize: `${Math.max(10, p.size * 0.2)}px`,
                     color,
                     opacity: 0.6,
                     marginTop: '2px',
@@ -903,7 +903,7 @@ function ArcadeZone({ y, mobile }) {
               <style>{`
                 @keyframes gameIn {
                   from { transform: scale(0.9); opacity: 0; }
-                  to   { transform: scale(1);   opacity: 1; }
+                  to { transform: scale(1);   opacity: 1; }
                 }
               `}</style>
 
@@ -923,7 +923,7 @@ function ArcadeZone({ y, mobile }) {
               >✕</button>
 
               {activeGame === 'memory' && <MemoryGame mobile={mobile} />}
-              {activeGame === 'dodge'  && <DodgeGame  mobile={mobile} />}
+              {activeGame === 'dodge' && <DodgeGame mobile={mobile} />}
             </div>
           )}
         </div>
@@ -932,7 +932,7 @@ function ArcadeZone({ y, mobile }) {
   )
 }
 
-const EMOJI_POOL = ['🐙','🐠','🦑','🦀','🐚','🫧','🪸','🐋']
+const EMOJI_POOL = ['🐢','🐍','🦆','🦋','🪼','🐋','🪸','🐙']
 
 function MemoryGame({ mobile }) {
   const N = 4 
@@ -978,7 +978,7 @@ function MemoryGame({ mobile }) {
         <button onClick={reset} style={{ background: 'none', border: `1px solid ${C.lightpurple}55`, color: C.lightpurple, borderRadius: '999px', padding: '2px 10px', fontSize: '0.75rem', cursor: 'pointer', fontFamily: 'Nunito, sans-serif' }}>Reset</button>
       </div>
       {won && (
-        <div style={{ textAlign: 'center', marginBottom: '8px', fontFamily: 'Cinzel, serif', fontSize: '0.85rem', color: C.accent2 }}>
+        <div style={{ textAlign: 'center', marginBottom: '8px', fontFamily: 'Cinzel, serif', fontSize: '0.85rem', color: C.lightpink }}>
           You won in {moves} moves! :D
         </div>
       )}
@@ -1164,7 +1164,7 @@ function ContactZone({ y, mobile }) {
         <div style={{ textAlign: 'center', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
           <h2 style={{ 
             fontFamily: 'Cinzel, serif', 
-            fontSize: mobile ? '1.5rem' : '2.2rem', 
+            fontSize: mobile ? '2.0rem' : '2.2rem', 
             color: C.purple, margin: 0, 
             letterSpacing: '0.15em' 
           }}>
@@ -1172,7 +1172,7 @@ function ContactZone({ y, mobile }) {
           </h2>
           <p style={{ 
             fontFamily: 'Nunito, sans-serif', 
-            fontSize: mobile ? '0.9rem' : '1.2rem', 
+            fontSize: mobile ? '1.2rem' : '1.5rem', 
             color: C.purple, margin: '0.8rem 0 0', 
             opacity: 0.7, 
             letterSpacing: '0.1em' 

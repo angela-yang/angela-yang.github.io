@@ -1,8 +1,9 @@
 const NAV_LABELS = ['Intro', 'About', 'Projects', 'Skills', 'Arcade', 'Contact']
-const NAV_COLORS = ['#BE9DB5', '#A984A0', '#AA6787', '#787caa', '#4f598c', '#354079']
+const NAV_COLORS = ['#BE9DB5', '#A984A0', '#AA6787', '#787caa', '#636da1', '#4f5b92']
 import { FaLinkedin, FaGithub } from 'react-icons/fa'
 import { IoDocumentSharp } from 'react-icons/io5'
 import { IoMdMail } from 'react-icons/io'
+import { useRef } from 'react'
 
 const SOCIAL_LINKS = [
   { icon: <FaLinkedin size={24} />, href: 'https://linkedin.com/in/angelaxy', color: '#787caa' },
@@ -21,6 +22,16 @@ export default function HUD({ zones, cameraY, onNavigate, mobile }) {
     Math.abs(zone.y - cameraY) < Math.abs(closest.y - cameraY) ? zone : closest
   , zones[0])
   const activeIndex = zones.indexOf(activeZone)
+
+  const trackRef = useRef(null)
+  const isDraggingDepth = useRef(false)
+  
+  const depthFromEvent = (clientY) => {
+    const rect = trackRef.current.getBoundingClientRect()
+    const pct = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height))
+    const minDepth = Math.min(...zones.map(z => z.y))
+    return pct * minDepth
+  }
 
   return (
     <>
@@ -99,48 +110,102 @@ export default function HUD({ zones, cameraY, onNavigate, mobile }) {
       </nav>
 
       {/* -- Depth meter ------------------------- */}
-      <div style={{
-        position: 'absolute',
-        right: mobile ? '0.6rem' : '2rem',
-        top: '50%',
-        transform: 'translateY(-50%)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '0.5rem',
-        pointerEvents: 'none',
-      }}>
-        <div style={{
-          width: '2px',
-          height: mobile ? '90px' : '160px',
-          background: '#cfc6e1aa',
-          borderRadius: '999px',
-          position: 'relative',
-        }}>
+      {(() => {
+        const trackRef = useRef(null)
+        const isDraggingDepth = useRef(false)
+
+        const depthFromEvent = (clientY) => {
+          const rect = trackRef.current.getBoundingClientRect()
+          const pct = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height))
+          const minDepth = Math.min(...zones.map(z => z.y))  // e.g. -40
+          return pct * minDepth  // 0 at top, minDepth at bottom
+        }
+
+        return (
           <div style={{
             position: 'absolute',
-            top: `${progress * 100}%`,
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: mobile ? '6px' : '8px',
-            height: mobile ? '6px' : '8px',
-            borderRadius: '50%',
-            background: NAV_COLORS[activeIndex],
-            boxShadow: `0 0 8px ${NAV_COLORS[activeIndex]}`,
-            transition: 'top 0.1s, background 0.3s',
-          }} />
-        </div>
-        <span style={{
-          fontFamily: 'Nunito, sans-serif',
-          fontSize: '1.0rem',
-          color: '#a984a0ba',
-          letterSpacing: '0.1em',
-          width: '2.8rem',
-          textAlign: 'center',
-        }}>
-          {depthMeters}m
-        </span>
-      </div>
+            right: mobile ? '0.6rem' : '2rem',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '0.5rem',
+            pointerEvents: 'all',   // changed from 'none' so it receives events
+            zIndex: 20,
+            userSelect: 'none',
+          }}>
+            <div
+              ref={trackRef}
+              style={{
+                width: '20px',           // wider hit area than the visual bar
+                height: mobile ? '90px' : '160px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'ns-resize',
+              }}
+              onMouseDown={(e) => {
+                isDraggingDepth.current = true
+                onNavigate(depthFromEvent(e.clientY))
+                e.preventDefault()
+              }}
+              onMouseMove={(e) => {
+                if (!isDraggingDepth.current) return
+                onNavigate(depthFromEvent(e.clientY))
+              }}
+              onMouseUp={() => { isDraggingDepth.current = false }}
+              onMouseLeave={() => { isDraggingDepth.current = false }}
+              onTouchStart={(e) => {
+                isDraggingDepth.current = true
+                onNavigate(depthFromEvent(e.touches[0].clientY))
+              }}
+              onTouchMove={(e) => {
+                if (!isDraggingDepth.current) return
+                onNavigate(depthFromEvent(e.touches[0].clientY))
+                e.stopPropagation()
+              }}
+              onTouchEnd={() => { isDraggingDepth.current = false }}
+            >
+              {/* Visual track */}
+              <div style={{
+                width: '2px',
+                height: '100%',
+                background: '#cfc6e1aa',
+                borderRadius: '999px',
+                position: 'relative',
+                pointerEvents: 'none',
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  top: `${progress * 100}%`,
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: mobile ? '8px' : '10px',
+                  height: mobile ? '8px' : '10px',
+                  borderRadius: '50%',
+                  background: NAV_COLORS[activeIndex],
+                  boxShadow: `0 0 8px ${NAV_COLORS[activeIndex]}`,
+                  transition: isDraggingDepth.current ? 'none' : 'top 0.1s, background 0.3s',
+                  cursor: 'ns-resize',
+                }} />
+              </div>
+            </div>
+
+            <span style={{
+              fontFamily: 'Nunito, sans-serif',
+              fontSize: '1.0rem',
+              color: '#a984a0ba',
+              letterSpacing: '0.1em',
+              width: '2.8rem',
+              textAlign: 'center',
+              pointerEvents: 'none',
+            }}>
+              {depthMeters}m
+            </span>
+          </div>
+        )
+      })()}
 
       {/* -- Social links ---------------------- */}
       {mobile ? (
