@@ -475,60 +475,60 @@ function SkillsZone({ y, mobile }) {
           }}>
             Skills
           </h2>
-          <p style={{
-            fontFamily: 'Nunito, sans-serif',
-            fontSize: mobile ? '1.2rem' : '1.5rem',
-            color: C.pinkpurple, margin: '0.6rem 0 0', opacity: 0.6, letterSpacing: '0.08em',
-          }}>
-            hover to inspect
-          </p>
+          { !mobile && (
+            <p style={{
+              fontFamily: 'Nunito, sans-serif',
+              fontSize: mobile ? '1.2rem' : '1.5rem',
+              color: C.pinkpurple, margin: '0.6rem 0 0', opacity: 0.6, letterSpacing: '0.08em',
+            }}>
+              hover to inspect
+            </p>
+          )}
         </div>
       </Html>
 
-      <Html position={[mobile ? 0 : -4.2, 1.2, 0]} zIndexRange={[0, 0]}>
+      <Html position={mobile ? [-0.7, 2.5, 0] : [-4.2, 1.2, 0]} zIndexRange={[0, 0]}>
         <div style={{
-          width: mobile ? '0px' : '200px',
+          width: mobile ? '50vw' : '200px',
           overflow: 'hidden',
           pointerEvents: 'none',
         }}>
-          {!mobile && (
+          <div style={{
+            background: 'rgba(10, 6, 22, 0.85)',
+            border: `1px solid ${C.lightpurple}44`,
+            borderRadius: '12px',
+            padding: '1rem 1.2rem',
+            fontFamily: 'Nunito, sans-serif',
+          }}>
             <div style={{
-              background: 'rgba(10, 6, 22, 0.85)',
-              border: `1px solid ${C.lightpurple}44`,
-              borderRadius: '12px',
-              padding: '1rem 1.2rem',
-              fontFamily: 'Nunito, sans-serif',
+              fontFamily: 'Cinzel, serif', fontSize: '1.0rem',
+              color: C.pinkpurple, letterSpacing: '0.15em',
+              marginBottom: '0.8rem', opacity: 0.8,
             }}>
-              <div style={{
-                fontFamily: 'Cinzel, serif', fontSize: '1.0rem',
-                color: C.pinkpurple, letterSpacing: '0.15em',
-                marginBottom: '0.8rem', opacity: 0.8,
-              }}>
-                PLAYER STATS
-              </div>
-              {Object.entries(CATEGORY_COLORS).map(([cat, color]) => {
-                const catSkills = SKILLS.filter(s => s.category === cat)
-                const avg = Math.round(catSkills.reduce((a, s) => a + s.level, 0) / catSkills.length)
-                return (
-                  <div key={cat} style={{ marginBottom: '0.6rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3px' }}>
-                      <span style={{ fontSize: '0.8rem', color, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                        {cat}
-                      </span>
-                      <span style={{ fontSize: '0.8rem', color, opacity: 0.7 }}>{avg}</span>
-                    </div>
-                    <div style={{ height: '4px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', overflow: 'hidden' }}>
-                      <div style={{
-                        height: '100%', width: `${avg}%`,
-                        background: color, borderRadius: '2px',
-                        transition: 'width 1s ease',
-                      }} />
-                    </div>
-                  </div>
-                )
-              })}
+              PLAYER STATS
             </div>
-          )}
+            {Object.entries(CATEGORY_COLORS).map(([cat, color]) => {
+              const catSkills = SKILLS.filter(s => s.category === cat)
+              const avg = Math.round(catSkills.reduce((a, s) => a + s.level, 0) / catSkills.length)
+              return (
+                <div key={cat} style={{ marginBottom: '0.6rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3px' }}>
+                    <span style={{ fontSize: '0.8rem', color, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                      {cat}
+                    </span>
+                    <span style={{ fontSize: '0.8rem', color, opacity: 0.7 }}>{avg}</span>
+                  </div>
+                  <div style={{ height: '4px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', overflow: 'hidden' }}>
+                    <div style={{
+                      height: '100%', width: `${avg}%`,
+                      background: color, borderRadius: '2px',
+                      transition: 'width 1s ease',
+                    }} />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
         </div>
       </Html>
 
@@ -539,7 +539,7 @@ function SkillsZone({ y, mobile }) {
           <group
             key={skill.name}
             ref={el => bubbleRefs.current[i] = el}
-            position={[mobile? p.x : p.x + 1.0, p.y, p.z]}
+            position={[mobile ? p.x / 1.5 : p.x + 1.0, p.y, p.z]}
           >
             <Html center zIndexRange={[0, 0]}>
               <div
@@ -556,6 +556,7 @@ function SkillsZone({ y, mobile }) {
                   display: 'flex', flexDirection: 'column',
                   alignItems: 'center', justifyContent: 'center',
                   cursor: 'pointer',
+                  marginTop: mobile ? '40vh' : '0',
                   transition: 'all 0.25s ease',
                   transform: hoveredSkill === i ? 'scale(1.12)' : 'scale(1)',
                   boxShadow: hoveredSkill === i ? `0 0 20px ${color}44` : 'none',
@@ -846,51 +847,95 @@ function ArcadeZone({ y, mobile }) {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '1.2rem',
+          gap: '2.5rem',
           pointerEvents: 'all',
         }}>
-          <div style={{ display: 'flex', gap: mobile ? '1rem' : '1.5rem' }}>
-            {[
-              { id: 'memory', label: 'Card Match', desc: 'Find the pairs' },
-              { id: 'dodge', label: 'Dodge', desc: 'Dodge the jellyfish' },
-            ].map(game => (
+          <div style={{ display: 'flex', gap: mobile ? '2rem' : '4.0rem' }}>
+          {[
+            { id: 'memory', label: 'Card\nMatch', desc: 'Find the pairs', gradient: `radial-gradient(circle at 35% 30%, ${C.lightpurple}55, ${C.darkpurple}cc)` },
+            { id: 'dodge', label: 'Dodge', desc: 'Dodge the jellyfish', gradient: `radial-gradient(circle at 35% 30%, ${C.pink}44, ${C.darkpurple}cc)` },
+          ].map(game => {
+            const isActive = activeGame === game.id
+            return (
               <div
                 key={game.id}
-                onClick={() => setActiveGame(activeGame === game.id ? null : game.id)}
+                onClick={() => setActiveGame(isActive ? null : game.id)}
                 style={{
-                  width: mobile ? '130px' : '20vw',
-                  background: activeGame === game.id ? C.darkpurple : 'rgba(57,68,110,0.5)',
-                  border: `1px solid ${activeGame === game.id ? C.purple : C.purple + '55'}`,
-                  borderRadius: '14px',
-                  padding: mobile ? '0.8rem' : '3rem',
-                  textAlign: 'center',
+                  width: mobile ? '140px' : '22vw',
+                  maxWidth: '260px',
+                  aspectRatio: '1',
+                  borderRadius: '50%',
+                  background: isActive
+                    ? `radial-gradient(circle at 35% 30%, ${C.lightpurple}88, ${C.purple}ee)`
+                    : game.gradient,
+                  border: `2px solid ${isActive ? C.lightpurple : C.lightpurple + '55'}`,
+                  boxShadow: isActive
+                    ? `0 0 40px ${C.lightpurple}55, inset 0 0 30px ${C.purple}33`
+                    : `0 0 20px ${C.darkpurple}88, inset 0 0 20px rgba(0,0,0,0.3)`,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: mobile ? '0.4rem' : '0.6rem',
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.3s cubic-bezier(0.34, 1.4, 0.64, 1)',
                   userSelect: 'none',
+                  transform: isActive ? 'scale(1.06)' : 'scale(1)',
+                  position: 'relative',
+                  overflow: 'hidden',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)' }}
-                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)' }}
+                onMouseEnter={e => {
+                  if (!isActive) {
+                    e.currentTarget.style.transform = 'scale(1.08) translateY(-4px)'
+                    e.currentTarget.style.boxShadow = `0 0 40px ${C.lightpurple}44, inset 0 0 30px ${C.purple}22`
+                    e.currentTarget.style.borderColor = C.lightpurple + 'aa'
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (!isActive) {
+                    e.currentTarget.style.transform = 'scale(1)'
+                    e.currentTarget.style.boxShadow = `0 0 20px ${C.darkpurple}88, inset 0 0 20px rgba(0,0,0,0.3)`
+                    e.currentTarget.style.borderColor = C.lightpurple + '55'
+                  }
+                }}
               >
                 <div style={{
+                  position: 'absolute',
+                  top: '12%', left: '20%',
+                  width: '30%', height: '18%',
+                  borderRadius: '50%',
+                  background: 'rgba(255,255,255,0.12)',
+                  filter: 'blur(4px)',
+                  pointerEvents: 'none',
+                }} />
+
+                <span style={{
                   fontFamily: 'Cinzel, serif',
-                  fontSize: mobile ? '1rem' : '1.5rem',
-                  color: C.lightpurple,
-                  letterSpacing: '0.08em',
-                  marginBottom: '0.3rem',
+                  fontSize: mobile ? '1.2rem' : '1.5rem',
+                  color: isActive ? 'white' : C.lightpurple,
+                  letterSpacing: '0.1em',
+                  textAlign: 'center',
+                  lineHeight: 1.2,
+                  whiteSpace: 'pre-line',
+                  transition: 'color 0.2s',
                 }}>
                   {game.label}
-                </div>
-                <div style={{
+                </span>
+
+                <span style={{
                   fontFamily: 'Nunito, sans-serif',
-                  fontSize: mobile ? '0.8rem' : '1.0rem',
-                  color: C.lightpurple,
+                  fontSize: mobile ? '1.0rem' : '1.2rem',
+                  color: isActive ? 'rgba(255,255,255,0.7)' : C.lightpurple + 'aa',
                   letterSpacing: '0.04em',
+                  textAlign: 'center',
+                  transition: 'color 0.2s',
                 }}>
                   {game.desc}
-                </div>
+                </span>
               </div>
-            ))}
-          </div>
+            )
+          })}
+        </div>
 
           {activeGame && (
             <div style={{
