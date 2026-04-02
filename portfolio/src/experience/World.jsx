@@ -229,7 +229,7 @@ function AboutZone({ y, mobile }) {
           <p style={{
             fontFamily: 'Nunito, sans-serif',
             fontSize: mobile ? '1.2rem' : '1.5rem',
-            color: C.lightpink, margin: '0.7rem 0 0', opacity: 0.85,
+            color: C.lightpink, margin: '0.7rem 0 3.0rem', opacity: 0.85,
             whiteSpace: 'normal',
             width: mobile ? '78vw' : '50vw',
             lineHeight: 1.6,
@@ -334,7 +334,7 @@ function ProjectBubble({ cfg, index, project, onClick }) {
  
   return (
     <group ref={bobRef} position={[cfg.x, cfg.y, cfg.z]}>
-      <Html center occlude={false}>
+      <Html center occlude={false} zIndexRange={[0, 0]}>
         <div
           onClick={() => onClick(index)}
           style={{ 
@@ -377,7 +377,7 @@ function ProjectsZone({ y, onProjectClick, mobile }) {
   const configs = mobile ? BUBBLE_CONFIGS_MOBILE : BUBBLE_CONFIGS_DESKTOP
   return (
     <group position={[0, y, 0]}>
-      <Html center position={[0, 2.5, 0]}>
+      <Html center position={[0, 2.5, 0]} zIndexRange={[0, 0]}>
         <div style={{ textAlign: 'center', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
           <h2 style={{ 
             fontFamily: 'Cinzel, serif', 
@@ -405,6 +405,194 @@ function ProjectsZone({ y, onProjectClick, mobile }) {
   )
 }
 
+const SKILLS = [
+  { name: 'React', level: 90, category: 'frontend' },
+  { name: 'Next.js', level: 85, category: 'frontend' },
+  { name: 'TypeScript', level: 75, category: 'frontend' },
+  { name: 'TailwindCSS', level: 90, category: 'frontend' },
+  { name: 'Three.js', level: 70, category: '3d' },
+  { name: 'Blender', level: 55, category: '3d' },
+  { name: 'Python', level: 70, category: 'backend' },
+  { name: 'Node.js', level: 65, category: 'backend' },
+  { name: 'Supabase', level: 75, category: 'backend' },
+  { name: 'Figma', level: 85, category: 'design' },
+  { name: 'Procreate', level: 90, category: 'design' },
+  { name: 'p5.js', level: 60, category: 'creative' },
+]
+
+const CATEGORY_COLORS = {
+  frontend: C.lightpink,
+  backend: C.lightpurple,
+  '3d': C.pink,
+  design: C.light,
+  creative: C.purple,
+}
+
+function SkillsZone({ y, mobile }) {
+  const [hoveredSkill, setHoveredSkill] = useState(null)
+  const bubbleRefs = useRef([])
+
+  const positions = useMemo(() => {
+    const cols = mobile ? 3 : 4
+    const cellW = mobile ? 1.3 : 1.5
+    const cellH = mobile ? 1.1 : 1.3
+    return SKILLS.map((s, i) => {
+      const col = i % cols
+      const row = Math.floor(i / cols)
+      const totalCols = cols
+      const offsetX = (col - (totalCols - 1) / 2) * cellW
+      const offsetY = -(row * cellH) + 1.5
+      const jitterX = (Math.random() - 0.5) * 0.3
+      const jitterY = (Math.random() - 0.5) * 0.2
+      return {
+        x: offsetX + jitterX,
+        y: offsetY + jitterY,
+        z: (Math.random() - 0.5) * 0.5,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.3 + Math.random() * 0.3,
+        size: (mobile ? 55 : 68) + s.level * (mobile ? 0.3 : 0.5),
+      }
+    })
+  }, [mobile])
+
+  useFrame((state) => {
+    bubbleRefs.current.forEach((ref, i) => {
+      if (!ref) return
+      const p = positions[i]
+      ref.position.y = p.y + Math.sin(state.clock.elapsedTime * p.speed + p.phase) * 0.12
+    })
+  })
+
+  return (
+    <group position={[0, y, 0]}>
+      <Html center position={[0, 2.8, 0]} zIndexRange={[0, 0]}>
+        <div style={{ textAlign: 'center', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
+          <h2 style={{
+            fontFamily: 'Cinzel, serif',
+            fontSize: mobile ? '2.0rem' : '2.2rem',
+            color: C.lightpurple, margin: 0, letterSpacing: '0.15em',
+          }}>
+            Skills
+          </h2>
+          <p style={{
+            fontFamily: 'Nunito, sans-serif',
+            fontSize: mobile ? '1.2rem' : '1.5rem',
+            color: C.lightpurple, margin: '0.6rem 0 0', opacity: 0.6, letterSpacing: '0.08em',
+          }}>
+            hover to inspect
+          </p>
+        </div>
+      </Html>
+
+      <Html position={[mobile ? 0 : -4.2, 1.2, 0]} zIndexRange={[0, 0]}>
+        <div style={{
+          width: mobile ? '0px' : '200px',
+          overflow: 'hidden',
+          pointerEvents: 'none',
+        }}>
+          {!mobile && (
+            <div style={{
+              background: 'rgba(10, 6, 22, 0.85)',
+              border: `1px solid ${C.lightpurple}44`,
+              borderRadius: '12px',
+              padding: '1rem 1.2rem',
+              fontFamily: 'Nunito, sans-serif',
+            }}>
+              <div style={{
+                fontFamily: 'Cinzel, serif', fontSize: '0.75rem',
+                color: C.lightpurple, letterSpacing: '0.15em',
+                marginBottom: '0.8rem', opacity: 0.8,
+              }}>
+                PLAYER STATS
+              </div>
+              {Object.entries(CATEGORY_COLORS).map(([cat, color]) => {
+                const catSkills = SKILLS.filter(s => s.category === cat)
+                const avg = Math.round(catSkills.reduce((a, s) => a + s.level, 0) / catSkills.length)
+                return (
+                  <div key={cat} style={{ marginBottom: '0.6rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3px' }}>
+                      <span style={{ fontSize: '0.68rem', color, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                        {cat}
+                      </span>
+                      <span style={{ fontSize: '0.68rem', color, opacity: 0.7 }}>{avg}</span>
+                    </div>
+                    <div style={{ height: '4px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div style={{
+                        height: '100%', width: `${avg}%`,
+                        background: color, borderRadius: '2px',
+                        transition: 'width 1s ease',
+                      }} />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+      </Html>
+
+      {SKILLS.map((skill, i) => {
+        const p = positions[i]
+        const color = CATEGORY_COLORS[skill.category]
+        return (
+          <group
+            key={skill.name}
+            ref={el => bubbleRefs.current[i] = el}
+            position={[p.x + 1.0, p.y, p.z]}
+          >
+            <Html center zIndexRange={[0, 0]}>
+              <div
+                onMouseEnter={() => { setHoveredSkill(i); document.body.style.cursor = 'pointer' }}
+                onMouseLeave={() => { setHoveredSkill(null); document.body.style.cursor = 'default' }}
+                style={{
+                  width: `${p.size}px`,
+                  height: `${p.size}px`,
+                  borderRadius: '50%',
+                  background: hoveredSkill === i
+                    ? `radial-gradient(circle at 38% 35%, ${color}55, rgba(10,6,22,0.95))`
+                    : `radial-gradient(circle at 38% 35%, ${color}22, rgba(10,6,22,0.7))`,
+                  border: `1.5px solid ${color}${hoveredSkill === i ? 'cc' : '55'}`,
+                  display: 'flex', flexDirection: 'column',
+                  alignItems: 'center', justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.25s ease',
+                  transform: hoveredSkill === i ? 'scale(1.12)' : 'scale(1)',
+                  boxShadow: hoveredSkill === i ? `0 0 20px ${color}44` : 'none',
+                  pointerEvents: 'all',
+                  userSelect: 'none',
+                }}
+              >
+                <span style={{
+                  fontFamily: 'Nunito, sans-serif',
+                  fontSize: `${Math.max(9, p.size * 0.14)}px`,
+                  color,
+                  letterSpacing: '0.04em',
+                  textAlign: 'center',
+                  lineHeight: 1.2,
+                  fontWeight: 600,
+                }}>
+                  {skill.name}
+                </span>
+                {hoveredSkill === i && (
+                  <span style={{
+                    fontFamily: 'Nunito, sans-serif',
+                    fontSize: `${Math.max(8, p.size * 0.1)}px`,
+                    color,
+                    opacity: 0.6,
+                    marginTop: '2px',
+                  }}>
+                    Lv. {skill.level}
+                  </span>
+                )}
+              </div>
+            </Html>
+          </group>
+        )
+      })}
+    </group>
+  )
+}
+
 // -- Art -------------------------------------
 const ARTWORKS = [
   { title: 'Nostalgia', img: '/art/piece1.jpg', desc: 'Colored Pencil' },
@@ -413,6 +601,15 @@ const ARTWORKS = [
   { title: 'Love', img: '/art/piece4.jpg', desc: 'Marker' },
   { title: 'Fairytale Love', img: '/art/piece5.jpg', desc: 'Charcoal' },
 ]
+
+function CameraZoom() {
+  const { camera } = useThree()
+  const targetCamZ = useRef(6)
+ 
+  useFrame(() => {
+    camera.position.z += (targetCamZ.current - camera.position.z) * 0.05
+  })
+}
 
 function ArtZone({ y, mobile, onFilmstripFocus }) {
   const { camera } = useThree()
@@ -450,8 +647,8 @@ function ArtZone({ y, mobile, onFilmstripFocus }) {
     <group position={[0, y, 0]}>
       <Html center position={[0, 2.2, 0]}>
         <div style={{ textAlign:'center', pointerEvents:'none', whiteSpace:'nowrap' }}>
-          <h2 style={{ fontFamily:'Cinzel, serif', fontSize:mobile?'1.5rem':'2.2rem', color:C.lightpurple, margin:0, letterSpacing:'0.15em' }}>Art Gallery</h2>
-          <p style={{ fontFamily:'Nunito, sans-serif', fontSize:mobile?'0.9rem':'1.5rem', color:C.lightpurple, margin:'1rem 0 0', opacity:0.7, letterSpacing:'0.1em' }}>
+          <h2 style={{ fontFamily:'Cinzel, serif', fontSize:mobile?'1.5rem':'2.2rem', color:C.purple, margin:0, letterSpacing:'0.15em' }}>Art Gallery</h2>
+          <p style={{ fontFamily:'Nunito, sans-serif', fontSize:mobile?'0.9rem':'1.5rem', color:C.purple, margin:'1rem 0 0', opacity:0.7, letterSpacing:'0.1em' }}>
             drag to browse · click to focus
           </p>
         </div>
@@ -616,6 +813,332 @@ function ArtZone({ y, mobile, onFilmstripFocus }) {
   )
 }
 
+function ArcadeZone({ y, mobile }) {
+  const [activeGame, setActiveGame] = useState(null)
+
+  return (
+    <group position={[0, y, 0]}>
+      <Html center position={[0, 2.8, 0]} zIndexRange={[0, 0]}>
+        <div style={{ textAlign: 'center', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
+          <h2 style={{
+            fontFamily: 'Cinzel, serif',
+            fontSize: mobile ? '2.0rem' : '2.2rem',
+            color: C.darkpurple, margin: 0, letterSpacing: '0.15em',
+          }}>
+            Arcade
+          </h2>
+          <p style={{
+            fontFamily: 'Nunito, sans-serif',
+            fontSize: mobile ? '1.2rem' : '1.5rem',
+            color: C.purple, margin: '0.6rem 0 0', opacity: 0.8, letterSpacing: '0.08em',
+          }}>
+            take a break, play a game
+          </p>
+        </div>
+      </Html>
+
+      <Jellyfish position={[-4.0, -1.5, -1.0]} scale={0.4} phase={1.5} speed={0.5} color={C.lightpurple} />
+      <Jellyfish position={[6.0, 5.5, -1.5]} scale={0.4} phase={1.5} speed={0.5} color={C.lightpink} />
+
+      <Html center position={[0, 1.0, 0]} zIndexRange={[0, 0]}>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '1.2rem',
+          pointerEvents: 'all',
+        }}>
+          <div style={{ display: 'flex', gap: mobile ? '1rem' : '1.5rem' }}>
+            {[
+              { id: 'memory', label: 'Card Match', desc: 'Find the pairs' },
+              { id: 'dodge', label: 'Dodge', desc: 'Dodge the jellyfish' },
+            ].map(game => (
+              <div
+                key={game.id}
+                onClick={() => setActiveGame(activeGame === game.id ? null : game.id)}
+                style={{
+                  width: mobile ? '130px' : '20vw',
+                  background: activeGame === game.id ? C.darkpurple : 'rgba(57,68,110,0.5)',
+                  border: `1px solid ${activeGame === game.id ? C.purple : C.purple + '55'}`,
+                  borderRadius: '14px',
+                  padding: mobile ? '0.8rem' : '3rem',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  userSelect: 'none',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)' }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)' }}
+              >
+                <div style={{
+                  fontFamily: 'Cinzel, serif',
+                  fontSize: mobile ? '1rem' : '1.5rem',
+                  color: C.lightpurple,
+                  letterSpacing: '0.08em',
+                  marginBottom: '0.3rem',
+                }}>
+                  {game.label}
+                </div>
+                <div style={{
+                  fontFamily: 'Nunito, sans-serif',
+                  fontSize: mobile ? '0.8rem' : '1.0rem',
+                  color: C.lightpurple,
+                  letterSpacing: '0.04em',
+                }}>
+                  {game.desc}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {activeGame && (
+            <div style={{
+              background: 'rgba(6, 4, 16, 0.95)',
+              border: `1px solid ${C.purple}55`,
+              borderRadius: '16px',
+              overflow: 'hidden',
+              position: 'relative',
+              animation: 'gameIn 0.3s ease',
+            }}>
+              <style>{`
+                @keyframes gameIn {
+                  from { transform: scale(0.9); opacity: 0; }
+                  to   { transform: scale(1);   opacity: 1; }
+                }
+              `}</style>
+
+              <button
+                onClick={() => setActiveGame(null)}
+                style={{
+                  position: 'absolute', top: '8px', right: '8px',
+                  background: 'rgba(255,255,255,0.07)',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  color: 'rgba(255,255,255,0.6)',
+                  borderRadius: '50%',
+                  width: '26px', height: '26px',
+                  fontSize: '0.8rem', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  zIndex: 10,
+                }}
+              >✕</button>
+
+              {activeGame === 'memory' && <MemoryGame mobile={mobile} />}
+              {activeGame === 'dodge'  && <DodgeGame  mobile={mobile} />}
+            </div>
+          )}
+        </div>
+      </Html>
+    </group>
+  )
+}
+
+const EMOJI_POOL = ['🐙','🐠','🦑','🦀','🐚','🫧','🪸','🐋']
+
+function MemoryGame({ mobile }) {
+  const N = 4 
+  const CARD_SIZE = mobile ? 56 : 68
+
+  const [cards, setCards] = useState(() => makeCards())
+  const [flipped, setFlipped] = useState([])
+  const [matched, setMatched] = useState([])
+  const [moves, setMoves] = useState(0)
+  const [checking, setChecking] = useState(false)
+
+  function makeCards() {
+    const pairs = [...EMOJI_POOL, ...EMOJI_POOL]
+    return pairs.sort(() => Math.random() - 0.5).map((e, i) => ({ id: i, emoji: e }))
+  }
+
+  const flip = (id) => {
+    if (checking) return
+    if (flipped.includes(id) || matched.includes(id)) return
+    if (flipped.length === 1) {
+      const newFlipped = [flipped[0], id]
+      setFlipped(newFlipped)
+      setMoves(m => m + 1)
+      setChecking(true)
+      const [a, b] = newFlipped.map(i => cards[i].emoji)
+      setTimeout(() => {
+        if (a === b) setMatched(m => [...m, ...newFlipped])
+        setFlipped([])
+        setChecking(false)
+      }, 700)
+    } else {
+      setFlipped([id])
+    }
+  }
+
+  const reset = () => { setCards(makeCards()); setFlipped([]); setMatched([]); setMoves(0) }
+  const won = matched.length === cards.length
+
+  return (
+    <div style={{ padding: '12px 14px 14px', userSelect: 'none' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontFamily: 'Nunito, sans-serif' }}>
+        <span style={{ color: C.lightpurple, fontSize: '0.82rem' }}>Moves: <b style={{ color: C.light }}>{moves}</b></span>
+        <button onClick={reset} style={{ background: 'none', border: `1px solid ${C.lightpurple}55`, color: C.lightpurple, borderRadius: '999px', padding: '2px 10px', fontSize: '0.75rem', cursor: 'pointer', fontFamily: 'Nunito, sans-serif' }}>Reset</button>
+      </div>
+      {won && (
+        <div style={{ textAlign: 'center', marginBottom: '8px', fontFamily: 'Cinzel, serif', fontSize: '0.85rem', color: C.accent2 }}>
+          You won in {moves} moves! :D
+        </div>
+      )}
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${N}, ${CARD_SIZE}px)`, gap: '6px' }}>
+        {cards.map((card, i) => {
+          const isFlipped = flipped.includes(i) || matched.includes(i)
+          return (
+            <div
+              key={card.id}
+              onClick={() => flip(i)}
+              style={{
+                width: CARD_SIZE, height: CARD_SIZE,
+                borderRadius: '8px',
+                background: isFlipped ? 'rgba(120,121,170,0.18)' : 'rgba(120,121,170,0.08)',
+                border: `1px solid ${isFlipped ? C.lightpurple + 'aa' : C.lightpurple + '33'}`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: CARD_SIZE * 0.42,
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                transform: isFlipped ? 'scale(1)' : 'scale(0.95)',
+                boxShadow: matched.includes(i) ? `0 0 12px ${C.lightpurple}44` : 'none',
+              }}
+            >
+              {isFlipped ? card.emoji : ''}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+function DodgeGame({ mobile }) {
+  const W = mobile ? 300 : 380
+  const H = mobile ? 260 : 300
+  const PLAYER_R = 12
+  const [playerX, setPlayerX] = useState(W / 2)
+  const [enemies, setEnemies] = useState([])
+  const [score, setScore] = useState(0)
+  const [alive, setAlive] = useState(false)
+  const [dead, setDead] = useState(false)
+  const playerRef = useRef(W / 2)
+  const aliveRef = useRef(false)
+  const frameRef = useRef()
+  const scoreRef = useRef(0)
+  const enemiesRef = useRef([])
+
+  const startGame = () => {
+    playerRef.current = W / 2
+    setPlayerX(W / 2)
+    enemiesRef.current = []
+    setEnemies([])
+    scoreRef.current = 0
+    setScore(0)
+    setDead(false)
+    setAlive(true)
+    aliveRef.current = true
+  }
+
+  useEffect(() => {
+    if (!alive) return
+    let last = performance.now()
+    let spawnTimer = 0
+
+    const tick = (now) => {
+      const dt = Math.min((now - last) / 1000, 0.05)
+      last = now
+      scoreRef.current += dt
+      setScore(Math.floor(scoreRef.current))
+      spawnTimer += dt
+      const speed = 120 + scoreRef.current * 5
+
+      if (spawnTimer > 0.9 - Math.min(scoreRef.current * 0.01, 0.5)) {
+        spawnTimer = 0
+        enemiesRef.current = [...enemiesRef.current, {
+          id: Date.now(), x: 20 + Math.random() * (W - 40), y: -20, r: 14 + Math.random() * 10,
+        }]
+      }
+
+      enemiesRef.current = enemiesRef.current
+        .map(e => ({ ...e, y: e.y + speed * dt }))
+        .filter(e => e.y < H + 30)
+
+      // Collision
+      const px = playerRef.current
+      const py = H - 30
+      for (const e of enemiesRef.current) {
+        const dx = px - e.x, dy = py - e.y
+        if (Math.sqrt(dx * dx + dy * dy) < PLAYER_R + e.r - 4) {
+          aliveRef.current = false
+          setAlive(false)
+          setDead(true)
+          cancelAnimationFrame(frameRef.current)
+          return
+        }
+      }
+
+      setEnemies([...enemiesRef.current])
+      setPlayerX(playerRef.current)
+      if (aliveRef.current) frameRef.current = requestAnimationFrame(tick)
+    }
+
+    frameRef.current = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frameRef.current)
+  }, [alive, W, H])
+
+  const handleMouseMove = (e) => {
+    if (!aliveRef.current) return
+    const rect = e.currentTarget.getBoundingClientRect()
+    playerRef.current = Math.max(PLAYER_R, Math.min(W - PLAYER_R, e.clientX - rect.left))
+  }
+  const handleTouchMove = (e) => {
+    if (!aliveRef.current) return
+    const rect = e.currentTarget.getBoundingClientRect()
+    playerRef.current = Math.max(PLAYER_R, Math.min(W - PLAYER_R, e.touches[0].clientX - rect.left))
+  }
+
+  return (
+    <div style={{ userSelect: 'none' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px 6px', fontFamily: 'Nunito, sans-serif' }}>
+        <span style={{ color: C.lightpurple, fontSize: '0.85rem' }}>Score: <b>{score}</b></span>
+        {dead && <span style={{ color: C.accent, fontSize: '0.85rem' }}>💀 Dodged for {score}s</span>}
+      </div>
+      <div
+        style={{ position: 'relative', width: W, height: H, overflow: 'hidden', cursor: 'none' }}
+        onMouseMove={handleMouseMove}
+        onTouchMove={handleTouchMove}
+      >
+        {!alive && (
+          <div style={{
+            position: 'absolute', inset: 0, display: 'flex',
+            flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            background: 'rgba(6,4,16,0.85)', zIndex: 10,
+          }}>
+            {dead && <div style={{ fontFamily: 'Cinzel, serif', color: C.light, fontSize: '1rem', marginBottom: '0.4rem' }}>Score: {score}s</div>}
+            <button onClick={startGame} style={{
+              fontFamily: 'Nunito, sans-serif', fontSize: '0.88rem',
+              color: 'white', background: `${C.lightpurple}33`,
+              border: `1px solid ${C.purple}88`, borderRadius: '999px',
+              padding: '0.4rem 1.2rem', cursor: 'pointer',
+            }}>
+              {dead ? 'Try again' : 'Start'}
+            </button>
+          </div>
+        )}
+        <svg width={W} height={H} style={{ display: 'block' }}>
+          <circle cx={playerX} cy={H - 30} r={PLAYER_R} fill={C.purple + '88'} stroke={C.lightpink} strokeWidth={2} />
+          <text x={playerX} y={H - 30 + 5} textAnchor="middle" fontSize={14}>🐠</text>
+          {enemies.map(e => (
+            <g key={e.id}>
+              <circle cx={e.x} cy={e.y} r={e.r} fill={C.purple + '66'} stroke={C.lightpurple} strokeWidth={1} />
+              <text x={e.x} y={e.y + 6} textAnchor="middle" fontSize={e.r * 1.2}>🪼</text>
+            </g>
+          ))}
+        </svg>
+      </div>
+    </div>
+  )
+}
+
 // -- CONTACT -----------------------------
 function ContactZone({ y, mobile }) {
   const rings = useRef([])
@@ -699,10 +1222,11 @@ export const ZONES = [
   { y: 0, color: C.light, title: 'Angela Yang', subtitle: 'CS @ UW · Designer · Builder · Artist' },
   { y: -10, color: C.lightpink, title: 'About', subtitle: 'Who I am' },
   { y: -20, color: C.pink, title: 'Projects', subtitle: 'Things I have built' },
-  { y: -30, color: C.lightpurple, title: 'Art Gallery', subtitle: 'Things I have drawn' },
-  { y: -40, color: C.purple, title: 'Contact', subtitle: 'Say hello' },
+  { y: -27, color: C.lightpurple, title: 'Skills', subtitle: 'What I know' },
+  //{ y: -40, color: C.purple, title: 'Art Gallery', subtitle: 'Things I have drawn' },
+  { y: -34, color: C.darkpurple, title: 'Arcade', subtitle: 'Take a break' },
+  { y: -40, color: C.darkpurple, title: 'Contact', subtitle: 'Say hello' },
 ]
-
 export default function World({ targetDepth, onDepthChange, activeProject, onProjectClick, onFilmstripFocus, mobile }) {
   return (
     <>
@@ -718,7 +1242,9 @@ export default function World({ targetDepth, onDepthChange, activeProject, onPro
 
       <AboutZone y={-10.7} mobile={mobile} />
       <ProjectsZone y={-20.5} onProjectClick={onProjectClick} mobile={mobile} />
-      <ArtZone y={-30.5} mobile={mobile} onFilmstripFocus={onFilmstripFocus} />
+      <SkillsZone y={-27.5} mobile={mobile} />
+      <CameraZoom />
+      <ArcadeZone y={-34.5} mobile={mobile} />
       <ContactZone y={-40.5} mobile={mobile} />
     </>
   )

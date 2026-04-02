@@ -4,7 +4,8 @@ import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import World, { ZONES } from './experience/World'
 import HUD from './components/HUD'
 
-const ZONE_DEPTHS = [0, -10, -20, -30.5, -40]
+const ZONE_DEPTHS = [0, -10, -20, -27, -34, -40]
+
 const PROJECTS = [
   { title: 'UW Pawprint', desc: 'Course + housing reviews for UW students.', url: 'https://uw-pawprint.vercel.app/', img: '/projects/pawprint.png', bubble: '/projects/bubble1.png', tags: ['React', 'Next.js', 'Supabase', 'Python'] },
   { title: 'CSEED Buildspace', desc: 'Club showcase site as Design Engineer.', url: 'https://cseed-buildspace.vercel.app/', img: '/projects/buildspace.png', bubble: '/projects/bubble2.png', tags: ['React', 'Next.js', 'TailwindCSS'] },
@@ -14,7 +15,6 @@ const PROJECTS = [
   { title: 'Bear Go Brr', desc: 'Adopt a polar bear, reduce your carbon footprint.', url: 'https://github.com/angela-yang/Penguins', img: '/projects/bear.png', bubble: '/projects/bubble6.png', tags: ['HTML', 'CSS', 'JavaScript', 'Python'] },
   { title: 'Crane Game', desc: 'Find ten paper cranes in the dark.', url: 'https://angela-yang.github.io/crane-game/', img: '/projects/crane.png', bubble: '/projects/bubble7.png', tags: ['p5.js', 'HTML', 'CSS'] },
 ]
-
 
 function lerpColor(a, b, t) {
   const ah = a.replace('#',''), bh = b.replace('#','')
@@ -37,6 +37,11 @@ export default function App() {
   const rafRef = useRef(null)
   const lockScroll = useRef(false)
 
+  const activeProjectRef  = useRef(null)
+  useEffect(() => { activeProjectRef.current = activeProject }, [activeProject])
+
+  const modalOpenDepth = useRef(null)
+
   const handleDepthChange = useCallback((y) => setCameraY(y), [])
 
   useEffect(() => {
@@ -50,10 +55,18 @@ export default function App() {
       const nearest = ZONE_DEPTHS.reduce((a, b) =>
         Math.abs(b - rawDepth.current) < Math.abs(a - rawDepth.current) ? b : a
       )
-      const dist     = nearest - rawDepth.current
+      const dist = nearest - rawDepth.current
       const strength = isScrolling.current ? 0.001 : 0.007
       rawDepth.current += dist * strength
       setTargetDepth(rawDepth.current)
+
+      if (modalOpenDepth.current !== null && activeProjectRef.current !== null) {
+        if (Math.abs(rawDepth.current - modalOpenDepth.current) > 1.5) {
+          setActiveProject(null)
+          modalOpenDepth.current = null
+        }
+      }
+
       rafRef.current = requestAnimationFrame(tick)
     }
     rafRef.current = requestAnimationFrame(tick)
@@ -68,14 +81,12 @@ export default function App() {
     }
 
     const onWheel = (e) => {
-      if (lockScroll.current) return 
+      if (lockScroll.current) return
       markScrolling()
       rawDepth.current = Math.max(-40, Math.min(0, rawDepth.current - e.deltaY * 0.006))
     }
 
-    let touchStartY = 0
-    let touchStartX = 0
-    let axisLocked  = null
+    let touchStartY = 0, touchStartX = 0, axisLocked = null
 
     const onTouchStart = (e) => {
       touchStartY = e.touches[0].clientY
@@ -89,13 +100,9 @@ export default function App() {
       if (lockScroll.current) return
       const dy = touchStartY - e.touches[0].clientY
       const dx = touchStartX - e.touches[0].clientX
-
-      if (!axisLocked) {
-        if (Math.abs(dx) > 8 || Math.abs(dy) > 8)
-          axisLocked = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical'
-      }
+      if (!axisLocked && (Math.abs(dx) > 8 || Math.abs(dy) > 8))
+        axisLocked = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical'
       if (axisLocked !== 'vertical') return
-
       markScrolling()
       touchStartY = e.touches[0].clientY
       rawDepth.current = Math.max(-40, Math.min(0, rawDepth.current - dy * 0.022))
@@ -118,6 +125,11 @@ export default function App() {
     }
   }, [])
 
+  const handleProjectClick = (index) => {
+    setActiveProject(index)
+    modalOpenDepth.current = rawDepth.current
+  }
+
   const t = Math.min(1, Math.abs(cameraY) / 32)
   const bgColor = lerpColor('#1f2f41', '#12141b', t)
 
@@ -139,7 +151,7 @@ export default function App() {
           targetDepth={targetDepth}
           onDepthChange={handleDepthChange}
           activeProject={activeProject}
-          onProjectClick={setActiveProject}
+          onProjectClick={handleProjectClick}
           onFilmstripFocus={(active) => { lockScroll.current = active }}
           mobile={mobile}
         />
@@ -158,11 +170,13 @@ export default function App() {
       </div>
 
       {activeProject !== null && (
-      <ProjectModal
-        project={PROJECTS[activeProject]}
-        onClose={() => setActiveProject(null)}
-        mobile={mobile}
-      />
+        <div style={{ position: 'fixed', inset: 0, zIndex: 9999, pointerEvents: 'all' }}>
+          <ProjectModal
+            project={PROJECTS[activeProject]}
+            onClose={() => setActiveProject(null)}
+            mobile={mobile}
+          />
+        </div>
       )}
     </div>
   )
@@ -181,13 +195,13 @@ function ProjectModal({ project, onClose, mobile }) {
     <div
       onClick={onClose}
       style={{
-        position: 'fixed', inset: 0, zIndex: 1000,
+        position: 'fixed', inset: 0,
+        zIndex: 99999,
         background: 'rgba(4, 4, 14, 0.35)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: '1.5rem',
-        boxSizing: 'border-box',
+        padding: '1.5rem', boxSizing: 'border-box',
         animation: 'backdropIn 0.25s ease forwards',
       }}
     >
@@ -298,14 +312,8 @@ function ProjectModal({ project, onClose, mobile }) {
               letterSpacing: '0.06em',
               transition: 'background 0.18s, border-color 0.18s',
             }}
-            onMouseOver={e => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.12)'
-              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)'
-            }}
-            onMouseOut={e => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.06)'
-              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)'
-            }}
+            onMouseOver={e => { e.currentTarget.style.background='rgba(255,255,255,0.12)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.3)' }}
+            onMouseOut={e  => { e.currentTarget.style.background='rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.18)' }}
           >
             View project →
           </a>

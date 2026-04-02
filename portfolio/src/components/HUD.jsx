@@ -1,5 +1,5 @@
-const NAV_LABELS = ['Intro', 'About', 'Projects', 'Art', 'Contact']
-const NAV_COLORS = ['#BE9DB5', '#A984A0', '#AA6787', '#787caa', '#4f598c']
+const NAV_LABELS = ['Intro', 'About', 'Projects', 'Skills', 'Arcade', 'Contact']
+const NAV_COLORS = ['#BE9DB5', '#A984A0', '#AA6787', '#787caa', '#4f598c', '#354079']
 import { FaLinkedin, FaGithub } from 'react-icons/fa'
 import { IoDocumentSharp } from 'react-icons/io5'
 import { IoMdMail } from 'react-icons/io'
@@ -12,7 +12,7 @@ const SOCIAL_LINKS = [
 ]
 
 export default function HUD({ zones, cameraY, onNavigate, mobile }) {
-  const progress = Math.min(1, Math.abs(cameraY) / 24)
+  const progress = Math.min(1, Math.abs(cameraY) / 40)
   const heroTranslateY = progress * -120
   const heroOpacity = 1 - progress * 5
   const depthMeters = Math.round(Math.abs(cameraY) * 10)
@@ -59,7 +59,7 @@ export default function HUD({ zones, cameraY, onNavigate, mobile }) {
           marginTop: '1rem',
           letterSpacing: '0.15em',
         }}>
-          {mobile ? 'swipe to dive ↓' : 'scroll to dive ↓'}
+          {mobile ? 'swipe to dive deeper ↓' : 'scroll to dive deeper ↓'}
         </p>
       </div>
 
