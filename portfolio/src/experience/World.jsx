@@ -10,6 +10,7 @@ const C = {
   light: '#BE9DB5',
   lightpink: '#A984A0',
   pink: '#AA6787',
+  pinkpurple: '#8f78aa',
   lightpurple: '#787caa',
   purple: '#4f598c',
   darkpurple: '#39446e',
@@ -470,14 +471,14 @@ function SkillsZone({ y, mobile }) {
           <h2 style={{
             fontFamily: 'Cinzel, serif',
             fontSize: mobile ? '2.0rem' : '2.2rem',
-            color: C.lightpurple, margin: 0, letterSpacing: '0.15em',
+            color: C.pinkpurple, margin: 0, letterSpacing: '0.15em',
           }}>
             Skills
           </h2>
           <p style={{
             fontFamily: 'Nunito, sans-serif',
             fontSize: mobile ? '1.2rem' : '1.5rem',
-            color: C.lightpurple, margin: '0.6rem 0 0', opacity: 0.6, letterSpacing: '0.08em',
+            color: C.pinkpurple, margin: '0.6rem 0 0', opacity: 0.6, letterSpacing: '0.08em',
           }}>
             hover to inspect
           </p>
@@ -499,8 +500,8 @@ function SkillsZone({ y, mobile }) {
               fontFamily: 'Nunito, sans-serif',
             }}>
               <div style={{
-                fontFamily: 'Cinzel, serif', fontSize: '0.75rem',
-                color: C.lightpurple, letterSpacing: '0.15em',
+                fontFamily: 'Cinzel, serif', fontSize: '1.0rem',
+                color: C.pinkpurple, letterSpacing: '0.15em',
                 marginBottom: '0.8rem', opacity: 0.8,
               }}>
                 PLAYER STATS
@@ -511,10 +512,10 @@ function SkillsZone({ y, mobile }) {
                 return (
                   <div key={cat} style={{ marginBottom: '0.6rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3px' }}>
-                      <span style={{ fontSize: '0.68rem', color, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                      <span style={{ fontSize: '0.8rem', color, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                         {cat}
                       </span>
-                      <span style={{ fontSize: '0.68rem', color, opacity: 0.7 }}>{avg}</span>
+                      <span style={{ fontSize: '0.8rem', color, opacity: 0.7 }}>{avg}</span>
                     </div>
                     <div style={{ height: '4px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', overflow: 'hidden' }}>
                       <div style={{
@@ -564,7 +565,7 @@ function SkillsZone({ y, mobile }) {
               >
                 <span style={{
                   fontFamily: 'Nunito, sans-serif',
-                  fontSize: `${Math.max(9, p.size * 0.14)}px`,
+                  fontSize: `${Math.max(10, p.size * 0.16)}px`,
                   color,
                   letterSpacing: '0.04em',
                   textAlign: 'center',
@@ -823,14 +824,14 @@ function ArcadeZone({ y, mobile }) {
           <h2 style={{
             fontFamily: 'Cinzel, serif',
             fontSize: mobile ? '2.0rem' : '2.2rem',
-            color: C.darkpurple, margin: 0, letterSpacing: '0.15em',
+            color: C.lightpurple, margin: 0, letterSpacing: '0.15em',
           }}>
             Arcade
           </h2>
           <p style={{
             fontFamily: 'Nunito, sans-serif',
             fontSize: mobile ? '1.2rem' : '1.5rem',
-            color: C.purple, margin: '0.6rem 0 0', opacity: 0.8, letterSpacing: '0.08em',
+            color: C.lightpurple, margin: '0.6rem 0 0', opacity: 0.8, letterSpacing: '0.08em',
           }}>
             take a break, play a game
           </p>

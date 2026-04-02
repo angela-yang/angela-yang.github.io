@@ -1,5 +1,5 @@
 const NAV_LABELS = ['Intro', 'About', 'Projects', 'Skills', 'Arcade', 'Contact']
-const NAV_COLORS = ['#BE9DB5', '#A984A0', '#AA6787', '#787caa', '#636da1', '#4f5b92']
+const NAV_COLORS = ['#BE9DB5', '#A984A0', '#AA6787', '#8f78aa', '#636da1', '#4f5b92']
 import { FaLinkedin, FaGithub } from 'react-icons/fa'
 import { IoDocumentSharp } from 'react-icons/io5'
 import { IoMdMail } from 'react-icons/io'
