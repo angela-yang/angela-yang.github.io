@@ -1211,7 +1211,7 @@ function ContactZone({ y, mobile }) {
           src="coral.png"
           style={{
             position: 'fixed',
-            bottom: '-35vh',
+            bottom: mobile? '-33vh' : '-35vh',
             left: '50%',
             transform: 'translateX(-50%)',
             width: '100vw',

@@ -276,40 +276,40 @@ export default function HUD({ zones, cameraY, onNavigate, mobile }) {
         </div>
       )}
       <a
-          href="https://angela-yang.github.io"
-          target="_blank"
-          rel="noreferrer"
-          style={{
-            position: 'fixed',
-            bottom: mobile ? '16px' : '20px',
-            left: '8%',
-            transform: 'translateX(-50%)',
-            padding: mobile ? '8px 14px' : '10px 18px',
-            fontSize: mobile ? '0.7rem' : '0.85rem',
-            fontFamily: 'Nunito, sans-serif',
-            letterSpacing: '0.08em',
-            color: '#BE9DB5',
-            background: '#39446e66',
-            border: '1px solid #787caa66',
-            borderRadius: '999px',
-            backdropFilter: 'blur(6px)',
-            textDecoration: 'none',
-            pointerEvents: 'all',
-            zIndex: 10,
-            opacity: 0.8,
-            transition: 'all 0.2s ease',
-          }}
-          onMouseEnter={e => {
-            e.currentTarget.style.opacity = '1'
-            e.currentTarget.style.transform = 'translateX(-50%) translateY(-2px)'
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.opacity = '0.8'
-            e.currentTarget.style.transform = 'translateX(-50%) translateY(0)'
-          }}
-        >
-          old portfolio ↗
-        </a>
+        href="https://angela-yang.github.io"
+        target="_blank"
+        rel="noreferrer"
+        style={{
+          position: 'fixed',
+          bottom: mobile ? '16px' : '20px',
+          left: mobile ? '-100px' : '7%',
+          transform: 'translateX(-50%)',
+          padding: mobile ? '8px 14px' : '10px 18px',
+          fontSize: mobile ? '0.7rem' : '0.85rem',
+          fontFamily: 'Nunito, sans-serif',
+          letterSpacing: '0.08em',
+          color: '#BE9DB5',
+          background: '#39446e66',
+          border: '1px solid #787caa66',
+          borderRadius: '999px',
+          backdropFilter: 'blur(6px)',
+          textDecoration: 'none',
+          pointerEvents: 'all',
+          zIndex: 10,
+          opacity: 0.8,
+          transition: 'all 0.2s ease',
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.opacity = '1'
+          e.currentTarget.style.transform = 'translateX(-50%) translateY(-2px)'
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.opacity = '0.8'
+          e.currentTarget.style.transform = 'translateX(-50%) translateY(0)'
+        }}
+      >
+        old portfolio ↗
+      </a>
     </>
   )
 }
