@@ -96,6 +96,18 @@ export default function App() {
       clearTimeout(scrollTimer.current)
     }
 
+    const onTouchMove = (e) => {
+      if (lockScroll.current) return
+      const dy = touchStartY - e.touches[0].clientY
+      const dx = touchStartX - e.touches[0].clientX
+      if (!axisLocked && (Math.abs(dx) > 8 || Math.abs(dy) > 8))
+        axisLocked = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical'
+      if (axisLocked !== 'vertical') return
+      markScrolling()
+      touchStartY = e.touches[0].clientY
+      rawDepth.current = Math.max(-40, Math.min(0, rawDepth.current - dy * 0.022))
+    }
+
     const onTouchEnd = () => {
       scrollTimer.current = setTimeout(() => { isScrolling.current = false }, 200)
       axisLocked = null
@@ -103,10 +115,12 @@ export default function App() {
 
     window.addEventListener('wheel', onWheel, { passive: true })
     window.addEventListener('touchstart', onTouchStart, { passive: true })
+    window.addEventListener('touchmove', onTouchMove, { passive: true })
     window.addEventListener('touchend', onTouchEnd)
     return () => {
       window.removeEventListener('wheel', onWheel)
       window.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('touchmove', onTouchMove)
       window.removeEventListener('touchend', onTouchEnd)
     }
   }, [])
