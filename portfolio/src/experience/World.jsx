@@ -475,21 +475,19 @@ function SkillsZone({ y, mobile }) {
           }}>
             Skills
           </h2>
-          { !mobile && (
-            <p style={{
-              fontFamily: 'Nunito, sans-serif',
-              fontSize: mobile ? '1.2rem' : '1.5rem',
-              color: C.pinkpurple, margin: '0.6rem 0 0', opacity: 0.6, letterSpacing: '0.08em',
-            }}>
-              hover to inspect
-            </p>
-          )}
+          <p style={{
+            fontFamily: 'Nunito, sans-serif',
+            fontSize: mobile ? '1.2rem' : '1.5rem',
+            color: C.pinkpurple, margin: '0.6rem 0 0', opacity: 0.6, letterSpacing: '0.08em',
+          }}>
+            hover to inspect
+          </p>
         </div>
       </Html>
 
-      <Html position={mobile ? [-0.7, 2.5, 0] : [-4.2, 1.2, 0]} zIndexRange={[0, 0]}>
+      <Html position={[mobile ? 0 : -4.2, 1.2, 0]} zIndexRange={[0, 0]}>
         <div style={{
-          width: mobile ? '50vw' : '200px',
+          width: mobile ? '0px' : '200px',
           overflow: 'hidden',
           pointerEvents: 'none',
         }}>
@@ -539,7 +537,7 @@ function SkillsZone({ y, mobile }) {
           <group
             key={skill.name}
             ref={el => bubbleRefs.current[i] = el}
-            position={[mobile ? p.x / 1.5 : p.x + 1.0, p.y, p.z]}
+            position={[mobile? p.x : p.x + 1.0, p.y, p.z]}
           >
             <Html center zIndexRange={[0, 0]}>
               <div
@@ -556,7 +554,6 @@ function SkillsZone({ y, mobile }) {
                   display: 'flex', flexDirection: 'column',
                   alignItems: 'center', justifyContent: 'center',
                   cursor: 'pointer',
-                  marginTop: mobile ? '40vh' : '0',
                   transition: 'all 0.25s ease',
                   transform: hoveredSkill === i ? 'scale(1.12)' : 'scale(1)',
                   boxShadow: hoveredSkill === i ? `0 0 20px ${color}44` : 'none',
