@@ -36,7 +36,7 @@ export default function HUD({ zones, cameraY, onNavigate, mobile }) {
       }}>
         <h1 style={{
           fontFamily: 'Cinzel, serif',
-          fontSize: mobile ? '2.2rem' : '4rem',
+          fontSize: mobile ? '2.5rem' : '4rem',
           color: '#e3ddee',
           letterSpacing: '0.1em',
           margin: 0,
@@ -45,7 +45,7 @@ export default function HUD({ zones, cameraY, onNavigate, mobile }) {
         </h1>
         <p style={{
           fontFamily: 'Nunito, sans-serif',
-          fontSize: mobile ? '0.9rem' : '1.5rem',
+          fontSize: mobile ? '1.0rem' : '1.5rem',
           color: '#BE9DB5',
           marginTop: '0.5rem',
           letterSpacing: mobile ? '0.08em' : '0.2em',
@@ -54,7 +54,7 @@ export default function HUD({ zones, cameraY, onNavigate, mobile }) {
         </p>
         <p style={{
           fontFamily: 'Nunito, sans-serif',
-          fontSize: mobile ? '0.75rem' : '1.0rem',
+          fontSize: mobile ? '1.0rem' : '1.0rem',
           color: '#cfc6e1a4',
           marginTop: '1rem',
           letterSpacing: '0.15em',

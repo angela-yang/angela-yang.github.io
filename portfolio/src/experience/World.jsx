@@ -1,6 +1,6 @@
 import { useRef, useMemo, useState, useEffect } from 'react'
-import { useFrame, useThree, extend } from '@react-three/fiber'
-import { Html, useTexture, useGLTF, shaderMaterial, useAnimations, Clone} from '@react-three/drei'
+import { useFrame, useThree } from '@react-three/fiber'
+import { Html, useGLTF } from '@react-three/drei'
 import { FaLinkedin, FaGithub } from 'react-icons/fa'
 import { IoDocumentSharp } from 'react-icons/io5'
 import { IoMdMail } from 'react-icons/io'
@@ -60,7 +60,7 @@ function Particles({ count = 200 }) {
 function CameraRig({ targetDepth, onDepthChange }) {
   const { camera } = useThree()
   useFrame(() => {
-    camera.position.y += (targetDepth - camera.position.y) * 0.06
+    camera.position.y += (targetDepth - camera.position.y) * 0.08 
     onDepthChange(camera.position.y)
   })
   return null
@@ -98,26 +98,26 @@ function Jellyfish({
   }, [scene, color])
 
   useEffect(() => {
-  clonedScene.traverse((child) => {
-    if (child.isMesh) {
-      child.frustumCulled = false
-      if (!child.material.isMeshStandardMaterial) {
-        const old = child.material
-        child.material = new THREE.MeshStandardMaterial({
-          color: old.color ?? new THREE.Color(color),
-          transparent: true,
-          opacity: old.opacity ?? 1,
-          depthWrite: false, 
-        })
+    clonedScene.traverse((child) => {
+      if (child.isMesh) {
+        child.frustumCulled = false
+        if (!child.material.isMeshStandardMaterial) {
+          const old = child.material
+          child.material = new THREE.MeshStandardMaterial({
+            color: old.color ?? new THREE.Color(color),
+            transparent: true,
+            opacity: old.opacity ?? 1,
+            depthWrite: false, 
+          })
+        }
+        child.material.emissive = new THREE.Color(color)
+        child.material.emissiveIntensity = 0.6
+        child.material.depthWrite = false 
+        child.material.needsUpdate = true
+        materialsRef.current.push(child.material)
       }
-      child.material.emissive = new THREE.Color(color)
-      child.material.emissiveIntensity = 0.6
-      child.material.depthWrite = false 
-      child.material.needsUpdate = true
-      materialsRef.current.push(child.material)
-    }
-  })
-}, [clonedScene, color])
+    })
+  }, [clonedScene, color])
 
   useFrame((state, delta) => {
     if (!groupRef.current) return
@@ -187,11 +187,11 @@ function AboutZone({ y, mobile }) {
   const bubbleRefs = useRef([])
 
   const bubbles = [
-    { pos: [-2.8, 0.4, 0.2], size: 0.5 },
+    { pos: [-2.6, 0.4, 0.2], size: 0.5 },
     { pos: [2.6, 0.6, -0.3], size: 0.4 },
     { pos: [-1.8, -1.0, 0.5], size: 0.3 },
     { pos: [2.0, -0.9, 0.4], size: 0.35 },
-    { pos: [0.8, 1.0, -0.5], size: 0.22 },
+    { pos: [0.8, 0.8, -0.5], size: 0.22 },
     { pos: [-0.6, -1.6, 0.3], size: 0.18 },
   ]
 
@@ -207,31 +207,31 @@ function AboutZone({ y, mobile }) {
 
   return (
     <group ref={group} position={[0, y, 0]}>
-      <Jellyfish position={[4.0, 3.0, -0.5]} scale={0.4} phase={0} speed={0.6} color={C.purple} />
+      <Jellyfish position={[4.0, 3.0, -0.5]} scale={0.4} phase={0} speed={0.6} color={C.pink} />
       <Jellyfish position={[-4.0, -1.5, -1.0]} scale={0.4} phase={1.5} speed={0.5} color={C.lightpurple} />
-      <Jellyfish position={[3.0, -4.5, -1.5]} scale={0.4} phase={1.5} speed={0.5} color={C.pink} />
+      <Jellyfish position={[3.0, -4.5, -1.5]} scale={0.4} phase={1.5} speed={0.5} color={C.lightpink} />
       <Html center position={[0, mobile ? 2.8 : 2.2, 0]} transform={false}>
         <div style={{ textAlign: 'center', pointerEvents: 'none' }}>
           <h2 style={{
             fontFamily: 'Cinzel, serif',
-            fontSize: mobile ? '1.5rem' : '2.2rem',
+            fontSize: mobile ? '2.0rem' : '2.2rem',
             color: C.lightpink, margin: 0, letterSpacing: '0.15em',
           }}>
             About Me
           </h2>
           <p style={{
             fontFamily: 'Nunito, sans-serif',
-            fontSize: mobile ? '0.9rem' : '1.5rem',
-            color: C.lightpink, margin: '0.8rem 0 0', opacity: 0.7, letterSpacing: '0.08em',
+            fontSize: mobile ? '1.2rem' : '1.5rem',
+            color: C.lightpink, margin: '0.8rem 0 0', opacity: 0.85, letterSpacing: '0.08em',
           }}>
             Hi I'm Angela! Welcome to my website :)
           </p>
           <p style={{
             fontFamily: 'Nunito, sans-serif',
-            fontSize: mobile ? '0.8rem' : '1.5rem',
-            color: C.lightpink, margin: '0.7rem 0 0', opacity: 0.7,
+            fontSize: mobile ? '1.2rem' : '1.5rem',
+            color: C.lightpink, margin: '0.7rem 0 0', opacity: 0.85,
             whiteSpace: 'normal',
-            width: mobile ? '78vw' : '62vw',
+            width: mobile ? '78vw' : '50vw',
             lineHeight: 1.6,
           }}>
             I'm pursuing a B.S. in Computer Science at the University of Washington, and
@@ -243,8 +243,8 @@ function AboutZone({ y, mobile }) {
 
       <Html center position={[0, -0.3, 0]} transform={false}>
         <div style={{
-          width: mobile ? '40vw' : '22vw',
-          height: mobile ? '40vw' : '22vw',
+          width: mobile ? '65vw' : '22vw',
+          height: mobile ? '65vw' : '22vw',
           borderRadius: '50%',
           overflow: 'hidden',
           border: `2px solid ${C.lightpink}66`,
@@ -303,13 +303,13 @@ const PROJECTS = [
 ]
 
 const BUBBLE_CONFIGS_DESKTOP = [
-  { x: -1.5, y: 0.5, z: 2.0, size: 120 },
-  { x: 1.2, y: 0.8, z: 2.6, size: 115 },
-  { x: -0.2, y: -0.3, z: 2.5, size: 125 },
-  { x: 0.6, y: 0.6, z: 1.5, size: 100 },
-  { x: -1.6, y: -0.7, z: 2.0, size: 95 },
-  { x: 1.5, y: -0.6, z: 2.0, size: 88 },
-  { x: -0.5, y: 1.0, z: 1.0, size: 90 },
+  { x: -1.8, y: 0.5, z: 2.0, size: 220 },
+  { x: 1.5, y: 0.8, z: 2.6, size: 215 },
+  { x: -0.2, y: -0.5, z: 2.5, size: 210 },
+  { x: 0.6, y: 0.6, z: 1.5, size: 180 },
+  { x: -1.6, y: -0.7, z: 2.0, size: 165 },
+  { x: 1.5, y: -0.8, z: 2.0, size: 158 },
+  { x: -0.9, y: 1.0, z: 1.0, size: 140 },
 ]
 
 const BUBBLE_CONFIGS_MOBILE = [
@@ -322,183 +322,58 @@ const BUBBLE_CONFIGS_MOBILE = [
   { x: -0.3, y: 0.9, z: 1.6, size: 58 },
 ]
 
-function ProjectBubble({ cfg, index, project, isActive, onClick, mobile }) {
-  const [expanded, setExpanded] = useState(false)
+function ProjectBubble({ cfg, index, project, onClick }) {
   const bobRef = useRef()
-
-  const depthT = (cfg.z + 2) / 4
-  const opacity = 0.45 + depthT * 0.55
-  const scale = 0.65 + depthT * 0.55
   const colors = [C.lightpink, C.pink, C.lightpurple, C.purple, C.light, C.lightpink, C.pink]
-  const color = colors[index % colors.length]
-  const SIZE = cfg.size
-
+  const color  = colors[index % colors.length]
+ 
   useFrame((state) => {
-    if (!bobRef.current || expanded) return
-    bobRef.current.position.y = cfg.y + Math.sin(state.clock.elapsedTime * 0.45 + index * 1.1) * 0.18
+    if (!bobRef.current) return
+    bobRef.current.position.y = cfg.y + Math.sin(state.clock.elapsedTime * 0.45 + index * 1.1) * 0.12
   })
-
-  const handleClick = () => { setExpanded(true);  onClick(index) }
-  const handleClose = () => { setExpanded(false); onClick(null)  }
-
+ 
   return (
-    <>
-      <group ref={bobRef} position={[cfg.x, cfg.y, cfg.z]}>
-        <Html center distanceFactor={8 - cfg.z * 1.2} occlude={false}>
-          <div
-            onClick={handleClick}
-            style={{
-              opacity: expanded ? 0 : opacity,
-              transform: `scale(${scale})`,
-              transformOrigin: 'center center',
-              transition: 'opacity 0.2s',
-              pointerEvents: expanded ? 'none' : 'all',
-              cursor: 'pointer',
-              userSelect: 'none',
-              textAlign: 'center',
-              width: `${SIZE}px`,
-              WebkitTapHighlightColor: 'transparent',
-            }}
-          >
-            <img src={project.bubble} alt={project.title}
-              style={{ width: '80%', aspectRatio: '1', objectFit: 'cover', display: 'block', margin: '0 auto' }} />
-            <div style={{
-              marginTop: '7px',
-              fontFamily: 'Nunito, sans-serif',
-              fontSize: `${Math.max(9, SIZE * 0.12)}px`,
-              color, letterSpacing: '0.06em', whiteSpace: 'nowrap',
-            }}>
-              {project.title}
-            </div>
+    <group ref={bobRef} position={[cfg.x, cfg.y, cfg.z]}>
+      <Html center occlude={false}>
+        <div
+          onClick={() => onClick(index)}
+          style={{ 
+            cursor:'pointer', 
+            userSelect:'none', 
+            textAlign:'center', 
+            width:`${cfg.size}px`, 
+            WebkitTapHighlightColor:'transparent', 
+            transition:'transform 0.2s' 
+          }}
+          onMouseEnter={e => e.currentTarget.style.transform='scale(1.06)'}
+          onMouseLeave={e => e.currentTarget.style.transform='scale(1)'}
+        >
+          <img src={project.bubble} alt={project.title}
+            style={{ 
+              width:'80%', 
+              aspectRatio:'1', 
+              objectFit:'cover', 
+              display:'block', 
+              margin:'0 auto', 
+              pointerEvents:'none' 
+            }} 
+          />
+          <div style={{ 
+            marginTop:'7px', 
+            fontFamily:'Nunito, sans-serif', 
+            fontSize:`${Math.max(9, cfg.size * 0.12)}px`, 
+            color, letterSpacing:'0.06em', 
+            whiteSpace:'nowrap' 
+          }}>
+            {project.title}
           </div>
-        </Html>
-      </group>
-
-      {expanded && (
-        <group position={[0, 0, 2.8]}>
-          <Html>
-            <div onClick={handleClose} style={{ position: 'fixed', inset: 0, width: '100vw', height: '100vh', zIndex: 9999, pointerEvents: 'all' }} />
-
-            <div style={{
-              position: 'fixed', top: '50%', left: '50%',
-              zIndex: 10000, pointerEvents: 'all',
-              animation: 'bubbleDropFlip 0.55s cubic-bezier(0.34, 1.2, 0.64, 1) forwards',
-            }}>
-              <div style={{
-                width: mobile ? 'min(88vw, 380px)' : '45vw',
-                height: mobile ? 'min(88vw, 380px)' : '45vw',
-                borderRadius: mobile ? '2rem' : '50%',
-                background: C.purple,
-                opacity: 0.97,
-                border: '5px solid rgba(255,255,255,0.3)',
-                boxShadow: `0 0 80px ${color}44, inset 0 0 60px ${color}11`,
-                display: 'flex', flexDirection: 'column',
-                alignItems: 'center', justifyContent: 'center',
-                padding: mobile ? '1.4rem' : '3rem',
-                boxSizing: 'border-box', textAlign: 'center', overflow: 'hidden',
-              }}>
-                <img src={project.img} alt={project.title}
-                  style={{ 
-                    width: '75%', 
-                    aspectRatio: '16/9', 
-                    objectFit: 'cover', 
-                    borderRadius: '5px', 
-                    border: `1px solid ${color}66`, 
-                    marginBottom: '0.5rem', 
-                    flexShrink: 0 
-                  }} 
-                />
-
-                <h3 style={{ 
-                  fontFamily: 'Cinzel, serif', 
-                  color: 'white', 
-                  fontSize: mobile ? '1.05rem' : '1.8rem', 
-                  letterSpacing: '0.1em', 
-                  margin: '0 0 0.2rem' 
-                }}>
-                  {project.title}
-                </h3>
-
-                <p style={{ 
-                  fontFamily: 'Nunito, sans-serif', 
-                  color: 'rgba(255,255,255,0.6)', 
-                  fontSize: mobile ? '0.78rem' : '1.2rem', 
-                  lineHeight: 1.5, 
-                  margin: '0 0 0.4rem' 
-                }}>
-                  {project.desc}
-                </p>
-
-                {project.tags && (
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', justifyContent: 'center', marginBottom: '0.5rem' }}>
-                    {project.tags.map(tag => (
-                      <span key={tag} style={{ 
-                        fontFamily: 'Nunito, sans-serif', 
-                        fontSize: mobile ? '0.68rem' : '1.2rem', 
-                        color: 'rgba(255,255,255,0.6)', 
-                        background: '#ffffff2a', 
-                        border: '1px solid #ffffff6a', 
-                        borderRadius: '999px', 
-                        padding: '2px 7px' 
-                      }}>
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                <a href={project.url} target="_blank" rel="noreferrer"
-                  style={{ 
-                    color: 'white', 
-                    fontSize: mobile ? '0.78rem' : '1.2rem', 
-                    border: `1px solid ${color}99`, 
-                    padding: '0.25rem 0.9rem', 
-                    borderRadius: '999px', 
-                    textDecoration: 'none', 
-                    fontFamily: 'Nunito, sans-serif', 
-                    background: `${color}33` 
-                  }}
-                >
-                  View Project →
-                </a>
-
-                <button onClick={handleClose}
-                  style={{ 
-                    position: 'absolute', 
-                    top: mobile ? '12px' : '78px', 
-                    right: mobile ? '12px' : '78px', 
-                    width: '28px', 
-                    height: '28px', 
-                    borderRadius: '50%', 
-                    background: 'rgba(255,255,255,0.15)', 
-                    border: '1px solid rgba(255,255,255,0.4)', 
-                    color: 'white', 
-                    fontSize: '0.9rem', 
-                    cursor: 'pointer', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center' 
-                  }}>
-                  ✕
-                </button>
-              </div>
-            </div>
-
-            <style>{`
-              @keyframes bubbleDropFlip {
-                0% { transform: translate(-50%, -140%) scale(0.4) rotateY(90deg); opacity: 0; }
-                60% { transform: translate(-50%, -50%) scale(1.05) rotateY(0deg); opacity: 1; }
-                100% { transform: translate(-50%, -50%) scale(1) rotateY(0deg); opacity: 1; }
-              }
-            `}</style>
-          </Html>
-        </group>
-      )}
-    </>
+        </div>
+      </Html>
+    </group>
   )
 }
 
-function ProjectsZone({ y, activeProject, onProjectClick, mobile }) {
+function ProjectsZone({ y, onProjectClick, mobile }) {
   const configs = mobile ? BUBBLE_CONFIGS_MOBILE : BUBBLE_CONFIGS_DESKTOP
   return (
     <group position={[0, y, 0]}>
@@ -506,7 +381,7 @@ function ProjectsZone({ y, activeProject, onProjectClick, mobile }) {
         <div style={{ textAlign: 'center', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
           <h2 style={{ 
             fontFamily: 'Cinzel, serif', 
-            fontSize: mobile ? '1.5rem' : '2.2rem', 
+            fontSize: mobile ? '2.0rem' : '2.2rem', 
             color: C.pink, 
             margin: 0, 
             letterSpacing: '0.15em' 
@@ -515,9 +390,8 @@ function ProjectsZone({ y, activeProject, onProjectClick, mobile }) {
           </h2>
           <p style={{ 
             fontFamily: 'Nunito, sans-serif', 
-            fontSize: mobile ? '0.9rem' : '1.5rem', 
-            color: C.pink, margin: '1.0rem 0 0', 
-            opacity: 0.7, 
+            fontSize: mobile ? '1.2rem' : '1.5rem', 
+            color: C.pink, margin: '1rem 0 0', opacity: 0.7, 
             letterSpacing: '0.1em' 
           }}>
             tap a bubble to explore
@@ -525,13 +399,13 @@ function ProjectsZone({ y, activeProject, onProjectClick, mobile }) {
         </div>
       </Html>
       {PROJECTS.map((project, i) => (
-        <ProjectBubble key={i} cfg={configs[i]} index={i} project={project} isActive={activeProject === i} onClick={onProjectClick} mobile={mobile} />
+        <ProjectBubble key={i} cfg={configs[i]} index={i} project={project} onClick={onProjectClick} mobile={mobile} />
       ))}
     </group>
   )
 }
 
-// -- ART -----------------------------
+// -- Art -------------------------------------
 const ARTWORKS = [
   { title: 'Nostalgia', img: '/art/piece1.jpg', desc: 'Colored Pencil' },
   { title: 'Memory Project', img: '/art/piece2.jpg', desc: 'Colored Pencil' },
@@ -540,144 +414,204 @@ const ARTWORKS = [
   { title: 'Fairytale Love', img: '/art/piece5.jpg', desc: 'Charcoal' },
 ]
 
-const FRAME_CONFIGS_DESKTOP = [
-  { pos: [-2.2, 0.3, 0.0], rot: [0.1, 0.3, 0.05] },
-  { pos: [0.0, 0.0, 0.5], rot: [0.0, 0.0, 0.00] },
-  { pos: [2.2, 0.3, -0.2], rot: [0.1, -0.3, 0.05] },
-  { pos: [-1.0, -1.2, 0.3], rot: [0.2, 0.1, 0.08] },
-  { pos: [1.2, -1.1, -0.1], rot: [0.1, -0.1, 0.06] },
-]
-
-const FRAME_CONFIGS_MOBILE = [
-  { pos: [-0.9, 0.3, 0.2], rot: [0.05, 0.18, 0.03] },
-  { pos: [0.0, 0.0, 0.5], rot: [0.0, 0.0, 0.0 ] },
-  { pos: [0.9, 0.3, -0.1], rot: [0.05, -0.18, 0.03] },
-  { pos: [-0.5, -1.0, 0.2], rot: [0.1, 0.1, 0.05] },
-  { pos: [0.6, -0.9, 0.0], rot: [0.05, -0.1, 0.04] },
-]
-
-function ArtFrame({ index, totalCount, artwork, floatConfig, isGallery, activeIndex, onFrameClick }) {
-  const meshRef = useRef()
-  const texture = useTexture(artwork.img)
-
-  const getGalleryTransform = (i) => {
-    const ANGLE_STEP = (2 * Math.PI) / totalCount
-    let d = ((i - activeIndex) % totalCount + totalCount) % totalCount
-    if (d > totalCount / 2) d -= totalCount
-    const angle = d * ANGLE_STEP
-    return { x: 0, y: 0, z: 3.5 * Math.cos(angle) - 0.9, rotY: -angle }
-  }
-
-  useFrame((state) => {
-    if (!meshRef.current) return
-    if (!isGallery) {
-      meshRef.current.position.set(...floatConfig.pos)
-      meshRef.current.position.y = floatConfig.pos[1] + Math.sin(state.clock.elapsedTime * 0.4 + index * 1.3) * 0.1
-      meshRef.current.rotation.set(...floatConfig.rot)
-      meshRef.current.rotation.y = floatConfig.rot[1] + Math.sin(state.clock.elapsedTime * 0.3 + index) * 0.08
-      meshRef.current.scale.setScalar(1)
-    } else {
-      const t = getGalleryTransform(index)
-      meshRef.current.position.y += (t.y - meshRef.current.position.y)  * 0.08
-      meshRef.current.position.z += (t.z - meshRef.current.position.z)  * 0.08
-      meshRef.current.rotation.y += (t.rotY - meshRef.current.rotation.y)  * 0.08
-      meshRef.current.rotation.x += (0 - meshRef.current.rotation.x)  * 0.08
-      meshRef.current.rotation.z += (0 - meshRef.current.rotation.z)  * 0.08
-    }
-  })
-
-  return (
-    <mesh ref={meshRef} position={floatConfig.pos} rotation={floatConfig.rot}
-      onClick={() => onFrameClick(index)}
-      onPointerOver={() => { document.body.style.cursor = 'pointer' }}
-      onPointerOut={() => { document.body.style.cursor = 'default' }}>
-      <planeGeometry args={[1.1, 1.1 / 0.8]} />
-      <meshBasicMaterial map={texture} side={THREE.DoubleSide} />
-    </mesh>
-  )
-}
-
-function ArtZone({ y, mobile }) {
-  const [galleryMode, setGalleryMode] = useState(false)
-  const [activeIndex, setActiveIndex] = useState(0)
+function ArtZone({ y, mobile, onFilmstripFocus }) {
   const { camera } = useThree()
-  const targetCamZ = useRef(5)
-
+  const targetCamZ = useRef(6) 
+  const [active, setActive] = useState(0)
+  const stripRef = useRef(null)
+  const dragStart = useRef(null)
+  const dragScroll = useRef(0)
+  const isDragging = useRef(false)
+ 
+  useFrame(() => {
+    camera.position.z += (targetCamZ.current - camera.position.z) * 0.05
+  })
+ 
   useEffect(() => {
     const onKey = (e) => {
-      if (!galleryMode) return
-      if (e.key === 'ArrowLeft')  setActiveIndex(i => (i - 1 + ARTWORKS.length) % ARTWORKS.length)
-      if (e.key === 'ArrowRight') setActiveIndex(i => (i + 1) % ARTWORKS.length)
-      if (e.key === 'Escape')     exitGallery()
+      if (e.key === 'ArrowLeft')  setActive(i => Math.max(0, i-1))
+      if (e.key === 'ArrowRight') setActive(i => Math.min(ARTWORKS.length-1, i+1))
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [galleryMode])
-
-  useFrame(() => { camera.position.z += (targetCamZ.current - camera.position.z) * 0.05 })
-
-  const enterGallery = (i) => { setActiveIndex(i); setGalleryMode(true);  targetCamZ.current = 6 }
-  const exitGallery  = ()  => { setGalleryMode(false); targetCamZ.current = 5 }
-  const prev = () => setActiveIndex(i => (i - 1 + ARTWORKS.length) % ARTWORKS.length)
-  const next = () => setActiveIndex(i => (i + 1) % ARTWORKS.length)
-
-  const frameConfigs = mobile ? FRAME_CONFIGS_MOBILE : FRAME_CONFIGS_DESKTOP
-
-  const btnStyle = {
-    background: 'none', border: `1px solid ${C.lightpurple}88`, color: C.lightpurple,
-    borderRadius: '50%', width: mobile ? '36px' : '44px', height: mobile ? '36px' : '44px',
-    fontSize: mobile ? '1.1rem' : '1.4rem', cursor: 'pointer',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    WebkitTapHighlightColor: 'transparent',
-  }
-
+  }, [])
+ 
+  useEffect(() => {
+    if (!stripRef.current) return
+    const strip = stripRef.current
+    const card  = strip.children[active]
+    if (!card) return
+    strip.scrollTo({ left: card.offsetLeft - strip.offsetWidth/2 + card.offsetWidth/2, behavior: 'smooth' })
+  }, [active])
+ 
+  const CARD_W = mobile ? '72vw' : '320px'
+ 
   return (
     <group position={[0, y, 0]}>
       <Html center position={[0, 2.2, 0]}>
-        <div style={{ textAlign: 'center', pointerEvents: 'none', whiteSpace: 'nowrap' }}>
-          <h2 style={{ fontFamily: 'Cinzel, serif', fontSize: mobile ? '1.5rem' : '2.2rem', color: C.lightpurple, margin: 0, letterSpacing: '0.15em' }}>Art Gallery</h2>
-          <p style={{ fontFamily: 'Nunito, sans-serif', fontSize: mobile ? '0.9rem' : '1.5rem', color: C.lightpurple, margin: '1.0rem 0 1.0rem', opacity: 0.7, letterSpacing: '0.1em' }}>
-            {galleryMode ? 'use arrows to explore' : 'tap a painting to view'}
+        <div style={{ textAlign:'center', pointerEvents:'none', whiteSpace:'nowrap' }}>
+          <h2 style={{ fontFamily:'Cinzel, serif', fontSize:mobile?'1.5rem':'2.2rem', color:C.lightpurple, margin:0, letterSpacing:'0.15em' }}>Art Gallery</h2>
+          <p style={{ fontFamily:'Nunito, sans-serif', fontSize:mobile?'0.9rem':'1.5rem', color:C.lightpurple, margin:'1rem 0 0', opacity:0.7, letterSpacing:'0.1em' }}>
+            drag to browse · click to focus
           </p>
         </div>
       </Html>
-
-      {ARTWORKS.map((artwork, i) => (
-        <ArtFrame key={i} index={i} totalCount={ARTWORKS.length} artwork={artwork}
-          floatConfig={frameConfigs[i % frameConfigs.length]}
-          isGallery={galleryMode} activeIndex={activeIndex}
-          onFrameClick={(idx) => {
-            if (!galleryMode) enterGallery(idx)
-            else if (idx === activeIndex) exitGallery()
-            else setActiveIndex(idx)
-          }} />
-      ))}
-
-      {galleryMode && (
-        <>
-          <Html center position={[0, -2.2, 0]}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontFamily: 'Nunito, sans-serif', pointerEvents: 'all' }}>
-              <button onClick={prev} style={btnStyle}>‹</button>
-              <div style={{ textAlign: 'center', minWidth: mobile ? '44vw' : '30vw' }}>
-                <div style={{ fontFamily: 'Cinzel, serif', fontSize: mobile ? '1rem' : '1.5rem', color: C.light, letterSpacing: '0.1em', marginBottom: '4px' }}>{ARTWORKS[activeIndex].title}</div>
-                <div style={{ fontSize: mobile ? '0.8rem' : '1.2rem', color: C.lightpurple, opacity: 0.7 }}>{ARTWORKS[activeIndex].desc}</div>
-                <div style={{ marginTop: '6px', fontSize: mobile ? '0.75rem' : '1.0rem', color: C.lightpurple, opacity: 0.5 }}>{activeIndex + 1} / {ARTWORKS.length}</div>
+ 
+      <Html center position={[0, -0.5, 0]} transform={false}>
+        <div style={{ width:'100vw', pointerEvents:'all' }}>
+          <style>{`
+            .art-strip {
+              display: flex;
+              gap: ${mobile ? '14px' : '20px'};
+              overflow-x: scroll;
+              scroll-snap-type: x mandatory;
+              padding: ${mobile ? '10px 24px 10px' : '14px 48px 14px'};
+              scrollbar-width: none;
+              -ms-overflow-style: none;
+              cursor: grab;
+              user-select: none;
+            }
+            .art-strip::-webkit-scrollbar { display: none; }
+            .art-strip.dragging { cursor: grabbing; }
+            .art-card {
+              flex-shrink: 0;
+              width: ${CARD_W};
+              scroll-snap-align: center;
+              border-radius: 10px;
+              overflow: hidden;
+              border: 1px solid rgba(120,121,170,0.15);
+              background: rgba(12,8,24,0.7);
+              transition: transform 0.35s cubic-bezier(0.22,1,0.36,1),
+                          opacity  0.35s ease,
+                          border-color 0.35s ease,
+                          box-shadow 0.35s ease;
+            }
+            .art-card.active {
+              border-color: rgba(120,121,170,0.5);
+              box-shadow: 0 0 40px rgba(120,121,170,0.18);
+              transform: scale(1.04);
+              opacity: 1;
+            }
+            .art-card:not(.active) {
+              transform: scale(0.92);
+              opacity: 0.45;
+            }
+            .art-card img {
+              width: 100%;
+              aspect-ratio: 3/4;
+              object-fit: cover;
+              display: block;
+              pointer-events: none;
+            }
+            .art-card-info {
+              padding: ${mobile ? '9px 12px 11px' : '11px 16px 14px'};
+            }
+            .art-card-title {
+              font-family: Cinzel, serif;
+              font-size: ${mobile ? '0.82rem' : '0.95rem'};
+              color: #e3ddee;
+              letter-spacing: 0.08em;
+              margin: 0 0 2px;
+            }
+            .art-card-desc {
+              font-family: Nunito, sans-serif;
+              font-size: ${mobile ? '0.7rem' : '0.78rem'};
+              color: rgba(120,121,170,0.65);
+              letter-spacing: 0.04em;
+            }
+          `}</style>
+ 
+          <div
+            ref={stripRef}
+            className="art-strip"
+            onMouseEnter={() => onFilmstripFocus(true)}
+            onMouseLeave={() => {
+              onFilmstripFocus(false)
+              if (isDragging.current) {
+                isDragging.current = false
+                dragStart.current  = null
+                stripRef.current?.classList.remove('dragging')
+              }
+            }}
+            onMouseDown={e => {
+              isDragging.current = true
+              dragStart.current  = e.clientX
+              dragScroll.current = stripRef.current.scrollLeft
+              stripRef.current.classList.add('dragging')
+            }}
+            onMouseMove={e => {
+              if (!isDragging.current) return
+              stripRef.current.scrollLeft = dragScroll.current - (e.clientX - dragStart.current)
+            }}
+            onMouseUp={e => {
+              if (!isDragging.current) return
+              const dx = e.clientX - dragStart.current
+              if (Math.abs(dx) > 30) dx < 0 ? setActive(i => Math.min(ARTWORKS.length-1,i+1)) : setActive(i => Math.max(0,i-1))
+              isDragging.current = false
+              dragStart.current  = null
+              stripRef.current?.classList.remove('dragging')
+            }}
+            onTouchStart={e => {
+              dragStart.current  = e.touches[0].clientX
+              dragScroll.current = stripRef.current.scrollLeft
+            }}
+            onTouchMove={e => {
+              const dx = e.touches[0].clientX - dragStart.current
+              onFilmstripFocus(Math.abs(dx) > 12)
+            }}
+            onTouchEnd={e => {
+              onFilmstripFocus(false)
+              dragStart.current = null
+            }}
+            onScroll={() => {
+              if (!stripRef.current) return
+              const strip  = stripRef.current
+              const center = strip.scrollLeft + strip.offsetWidth/2
+              let closest  = 0, minDist = Infinity
+              Array.from(strip.children).forEach((card, i) => {
+                const dist = Math.abs(card.offsetLeft + card.offsetWidth/2 - center)
+                if (dist < minDist) { minDist = dist; closest = i }
+              })
+              setActive(closest)
+            }}
+          >
+            {ARTWORKS.map((art, i) => (
+              <div
+                key={i}
+                className={`art-card${i===active?' active':''}`}
+                onClick={() => setActive(i)}
+              >
+                <img src={art.img} alt={art.title} draggable={false} />
+                <div className="art-card-info">
+                  <div className="art-card-title">{art.title}</div>
+                  <div className="art-card-desc">{art.desc}</div>
+                </div>
               </div>
-              <button onClick={next} style={btnStyle}>›</button>
-            </div>
-            <div style={{ textAlign: 'center', marginTop: '0.8rem' }}>
-              <button onClick={exitGallery} style={{ background: 'none', border: 'none', color: C.lightpurple, opacity: 0.5, fontSize: mobile ? '0.8rem' : '1.0rem', cursor: 'pointer', letterSpacing: '0.1em', fontFamily: 'Nunito, sans-serif' }}>✕ close gallery</button>
-            </div>
-          </Html>
-          <Html center position={[0, -3.2, 0]}>
-            <div style={{ display: 'flex', gap: '6px', justifyContent: 'center', pointerEvents: 'all' }}>
-              {ARTWORKS.map((_, i) => (
-                <div key={i} onClick={() => setActiveIndex(i)} style={{ width: i === activeIndex ? '20px' : '8px', height: '8px', borderRadius: '4px', background: i === activeIndex ? C.lightpurple : `${C.lightpurple}44`, cursor: 'pointer', transition: 'all 0.3s ease' }} />
+            ))}
+          </div>
+ 
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'1rem', marginTop:'10px' }}>
+            <button
+              onClick={() => setActive(i => Math.max(0,i-1))}
+              disabled={active===0}
+              style={{ background:'none', border:`1px solid ${C.lightpurple}55`, color:C.lightpurple, borderRadius:'50%', width:mobile?'30px':'36px', height:mobile?'30px':'36px', fontSize:'1rem', cursor:active===0?'default':'pointer', opacity:active===0?0.25:0.8, display:'flex', alignItems:'center', justifyContent:'center', transition:'opacity 0.2s', WebkitTapHighlightColor:'transparent' }}
+            >‹</button>
+ 
+            <div style={{ display:'flex', gap:'5px' }}>
+              {ARTWORKS.map((_,i) => (
+                <div key={i} onClick={() => setActive(i)}
+                  style={{ width:i===active?'16px':'5px', height:'5px', borderRadius:'3px', background:i===active?C.lightpurple:`${C.lightpurple}33`, cursor:'pointer', transition:'all 0.3s ease' }} />
               ))}
             </div>
-          </Html>
-        </>
-      )}
+ 
+            <button
+              onClick={() => setActive(i => Math.min(ARTWORKS.length-1,i+1))}
+              disabled={active===ARTWORKS.length-1}
+              style={{ background:'none', border:`1px solid ${C.lightpurple}55`, color:C.lightpurple, borderRadius:'50%', width:mobile?'30px':'36px', height:mobile?'30px':'36px', fontSize:'1rem', cursor:active===ARTWORKS.length-1?'default':'pointer', opacity:active===ARTWORKS.length-1?0.25:0.8, display:'flex', alignItems:'center', justifyContent:'center', transition:'opacity 0.2s', WebkitTapHighlightColor:'transparent' }}
+            >›</button>
+          </div>
+        </div>
+      </Html>
     </group>
   )
 }
@@ -769,7 +703,7 @@ export const ZONES = [
   { y: -40, color: C.purple, title: 'Contact', subtitle: 'Say hello' },
 ]
 
-export default function World({ targetDepth, onDepthChange, activeProject, onProjectClick, mobile }) {
+export default function World({ targetDepth, onDepthChange, activeProject, onProjectClick, onFilmstripFocus, mobile }) {
   return (
     <>
       <ambientLight intensity={0.4} />
@@ -783,9 +717,9 @@ export default function World({ targetDepth, onDepthChange, activeProject, onPro
       <CameraRig targetDepth={targetDepth} onDepthChange={onDepthChange} />
 
       <AboutZone y={-10.7} mobile={mobile} />
-      <ProjectsZone y={-20.5} activeProject={activeProject} onProjectClick={onProjectClick} mobile={mobile} />
-      <ArtZone y={-30.5} mobile={mobile} />
-      <ContactZone  y={-40.5} mobile={mobile} />
+      <ProjectsZone y={-20.5} onProjectClick={onProjectClick} mobile={mobile} />
+      <ArtZone y={-30.5} mobile={mobile} onFilmstripFocus={onFilmstripFocus} />
+      <ContactZone y={-40.5} mobile={mobile} />
     </>
   )
 }
