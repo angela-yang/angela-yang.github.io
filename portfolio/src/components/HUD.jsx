@@ -117,8 +117,8 @@ export default function HUD({ zones, cameraY, onNavigate, mobile }) {
         const depthFromEvent = (clientY) => {
           const rect = trackRef.current.getBoundingClientRect()
           const pct = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height))
-          const minDepth = Math.min(...zones.map(z => z.y))  // e.g. -40
-          return pct * minDepth  // 0 at top, minDepth at bottom
+          const minDepth = Math.min(...zones.map(z => z.y))
+          return pct * minDepth
         }
 
         return (
@@ -131,14 +131,14 @@ export default function HUD({ zones, cameraY, onNavigate, mobile }) {
             flexDirection: 'column',
             alignItems: 'center',
             gap: '0.5rem',
-            pointerEvents: 'all',   // changed from 'none' so it receives events
+            pointerEvents: 'all',
             zIndex: 20,
             userSelect: 'none',
           }}>
             <div
               ref={trackRef}
               style={{
-                width: '20px',           // wider hit area than the visual bar
+                width: '20px', 
                 height: mobile ? '90px' : '160px',
                 display: 'flex',
                 alignItems: 'center',
@@ -275,6 +275,41 @@ export default function HUD({ zones, cameraY, onNavigate, mobile }) {
           <div style={{ width: '1px', height: '60px', background: '#787caa8f' }} />
         </div>
       )}
+      <a
+          href="https://angela-yang.github.io"
+          target="_blank"
+          rel="noreferrer"
+          style={{
+            position: 'fixed',
+            bottom: mobile ? '16px' : '20px',
+            left: '8%',
+            transform: 'translateX(-50%)',
+            padding: mobile ? '8px 14px' : '10px 18px',
+            fontSize: mobile ? '0.7rem' : '0.85rem',
+            fontFamily: 'Nunito, sans-serif',
+            letterSpacing: '0.08em',
+            color: '#BE9DB5',
+            background: '#39446e66',
+            border: '1px solid #787caa66',
+            borderRadius: '999px',
+            backdropFilter: 'blur(6px)',
+            textDecoration: 'none',
+            pointerEvents: 'all',
+            zIndex: 10,
+            opacity: 0.8,
+            transition: 'all 0.2s ease',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.opacity = '1'
+            e.currentTarget.style.transform = 'translateX(-50%) translateY(-2px)'
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.opacity = '0.8'
+            e.currentTarget.style.transform = 'translateX(-50%) translateY(0)'
+          }}
+        >
+          old portfolio ↗
+        </a>
     </>
   )
 }

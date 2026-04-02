@@ -96,18 +96,6 @@ export default function App() {
       clearTimeout(scrollTimer.current)
     }
 
-    const onTouchMove = (e) => {
-      if (lockScroll.current) return
-      const dy = touchStartY - e.touches[0].clientY
-      const dx = touchStartX - e.touches[0].clientX
-      if (!axisLocked && (Math.abs(dx) > 8 || Math.abs(dy) > 8))
-        axisLocked = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical'
-      if (axisLocked !== 'vertical') return
-      markScrolling()
-      touchStartY = e.touches[0].clientY
-      rawDepth.current = Math.max(-40, Math.min(0, rawDepth.current - dy * 0.022))
-    }
-
     const onTouchEnd = () => {
       scrollTimer.current = setTimeout(() => { isScrolling.current = false }, 200)
       axisLocked = null
@@ -115,12 +103,10 @@ export default function App() {
 
     window.addEventListener('wheel', onWheel, { passive: true })
     window.addEventListener('touchstart', onTouchStart, { passive: true })
-    window.addEventListener('touchmove', onTouchMove, { passive: true })
     window.addEventListener('touchend', onTouchEnd)
     return () => {
       window.removeEventListener('wheel', onWheel)
       window.removeEventListener('touchstart', onTouchStart)
-      window.removeEventListener('touchmove', onTouchMove)
       window.removeEventListener('touchend', onTouchEnd)
     }
   }, [])
@@ -208,11 +194,11 @@ function ProjectModal({ project, onClose, mobile }) {
       <style>{`
         @keyframes backdropIn {
           from { opacity: 0; }
-          to   { opacity: 1; }
+          to { opacity: 1; }
         }
         @keyframes cardIn {
           from { opacity: 0; transform: translateY(16px) scale(0.96); }
-          to   { opacity: 1; transform: translateY(0)    scale(1);    }
+          to { opacity: 1; transform: translateY(0) scale(1); }
         }
       `}</style>
 
@@ -261,7 +247,7 @@ function ProjectModal({ project, onClose, mobile }) {
         <div style={{ padding: mobile ? '1.2rem 1.4rem 1.5rem' : '1.4rem 1.8rem 1.8rem' }}>
           <h2 style={{
             fontFamily: 'Cinzel, serif',
-            fontSize: mobile ? '1.05rem' : '1.3rem',
+            fontSize: mobile ? '1.2rem' : '1.5rem',
             color: 'rgba(255,255,255,0.92)',
             letterSpacing: '0.1em',
             margin: '0 0 0.45rem',
@@ -271,7 +257,7 @@ function ProjectModal({ project, onClose, mobile }) {
 
           <p style={{
             fontFamily: 'Nunito, sans-serif',
-            fontSize: mobile ? '0.83rem' : '0.9rem',
+            fontSize: mobile ? '0.9rem' : '1.0rem',
             color: 'rgba(255,255,255,0.5)',
             lineHeight: 1.65,
             margin: '0 0 1rem',
@@ -283,7 +269,7 @@ function ProjectModal({ project, onClose, mobile }) {
             {project.tags.map(tag => (
               <span key={tag} style={{
                 fontFamily: 'Nunito, sans-serif',
-                fontSize: '0.68rem',
+                fontSize: '0.8rem',
                 color: 'rgba(255,255,255,0.45)',
                 border: '1px solid rgba(255,255,255,0.12)',
                 borderRadius: '999px',
