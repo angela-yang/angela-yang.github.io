@@ -314,13 +314,13 @@ const BUBBLE_CONFIGS_DESKTOP = [
 ]
 
 const BUBBLE_CONFIGS_MOBILE = [
-  { x: -0.6, y: 0.5, z: 2.5, size: 78 },
-  { x: 0.7, y: 0.8, z: 2.8, size: 75 },
-  { x: 0.0, y: -0.2, z: 2.6, size: 82 },
-  { x: 0.5, y: 0.5, z: 2.0, size: 66 },
-  { x: -0.8, y: -0.6, z: 2.2, size: 62 },
-  { x: 0.9, y: -0.5, z: 2.1, size: 60 },
-  { x: -0.3, y: 0.9, z: 1.6, size: 58 },
+  { x: -0.6, y: 0.1, z: 2.5, size: 158 },
+  { x: 0.3, y: 0.8, z: 2.8, size: 155 },
+  { x: 0.0, y: -0.6, z: 2.6, size: 162 },
+  { x: 0.8, y: 0, z: 2.0, size: 146 },
+  { x: -0.7, y: -1.1, z: 2.2, size: 112 },
+  { x: 0.7, y: -1.3, z: 2.1, size: 110 },
+  { x: -0.6, y: 1.0, z: 1.6, size: 108 },
 ]
 
 function ProjectBubble({ cfg, index, project, onClick }) {
