@@ -538,7 +538,7 @@ function SkillsZone({ y, mobile }) {
           <group
             key={skill.name}
             ref={el => bubbleRefs.current[i] = el}
-            position={[p.x + 1.0, p.y, p.z]}
+            position={[mobile? p.x : p.x + 1.0, p.y, p.z]}
           >
             <Html center zIndexRange={[0, 0]}>
               <div
@@ -1206,6 +1206,21 @@ function ContactZone({ y, mobile }) {
             </a>
           ))}
         </div>
+        <img
+          src="coral.png"
+          style={{
+            position: 'fixed',
+            bottom: '-35vh',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '100vw',
+            height: 'auto',
+            objectFit: 'contain',
+            pointerEvents: 'none',
+            zIndex: 0,
+            opacity: 0.5
+          }}
+        />
       </Html>
 
       {[1.0, 1.5, 2.0].map((radius, i) => (
